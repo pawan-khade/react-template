@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Header from './Layout/Header';
+import Content from './Layout/Content';
+import AlertDismissible from './AlertDismissible';
+
+export const ShowContext = React.createContext();
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [show, setShow] = useState(false);
+    const [msg, setMsg]   = useState();
+
+
+    return (
+      <div>
+        <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
+          <Header/>
+          <Content/>
+        </ShowContext.Provider>
+        <AlertDismissible myShow={show} mySetShow={setShow} myMsg={msg}/>
+      </div>
+    );
 }
 
 export default App;
