@@ -27,7 +27,6 @@ function StudHome()
         let sorted = {};
         sorted = unsortedData.sort(function(a,b)
         {
-          console.log(a.paper.from_date);
           return a.paper.from_date - b.paper.from_date;
         });
         //----------------------------------------------------------------------

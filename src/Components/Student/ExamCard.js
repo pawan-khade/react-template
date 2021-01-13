@@ -12,13 +12,32 @@ function ExamCard(props)
     let Theme           = '';
     let BtnTheme        = '';
     let myLink          = '';
+    let Now             = '';
+    let status          = '';
 
-    const status      = props.exam.examstatus;
+    StartTime         = props.exam.paper.from_date;
+    EndTime           = props.exam.paper.to_date;
+    Now               = props.exam.now;
+    //----------------------Dynamic status------------------------------------------
+      if((EndTime < Now) && (props.exam.examstatus!=='inprogress'))
+      {
+        status='expired';
+      }
+      else if(props.exam.examstatus==='inprogress')
+      {
+        status = 'inprogress';
+      }
+    //------------------------------------------------------------------------------
+    if(props.exam.examstatus==='over')
+    {
+      status        = props.exam.examstatus;
+    }
     const PaperName   = props.exam.paper.paper_name;
     TotalQuestions    = props.exam.paper.questions;
     ExamDuration      = props.exam.paper.duration;
-    StartTime         = props.exam.paper.from_date;
-    EndTime           = props.exam.paper.to_date;
+
+
+    //---------------------Status according to database-------------------------
 
     if(status === 'over' || status  === 'expired')
     {
@@ -31,8 +50,8 @@ function ExamCard(props)
       else
       {
         BtnCaption='Expired';
-        Theme = 'bg-warning';
-        BtnTheme = 'btn btn-info';
+        Theme = 'bg-danger';
+        BtnTheme = 'btn btn-danger';
       }
       myLink = <Link to="" className={BtnTheme} onClick={e => e.preventDefault()}>{BtnCaption}</Link>
     }
@@ -43,15 +62,33 @@ function ExamCard(props)
         BtnCaption='Start Exam';
         Theme = 'text-white bg-dark';
         BtnTheme = 'btn btn-primary';
+        if(StartTime > Now)
+        {
+          BtnCaption='Coming Soon';
+          Theme = 'bg-warning';
+          BtnTheme = 'btn btn-warning';
+
+          myLink = <Link className={BtnTheme}>{BtnCaption}</Link>;
+        }
+        else
+        {
+          myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
+        }
       }
       else
       {
         BtnCaption='Continue Exam';
         Theme = 'text-white bg-primary';
         BtnTheme = 'btn btn-success';
+        myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
       }
-      myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
     }
+//------------------------------------------------------------------------------
+
+//----------------------Dynamic status------------------------------------------
+
+//------------------------------------------------------------------------------
+
 
     const userRequest = { btnCaption:BtnCaption, paperName:PaperName, startTime:StartTime,  endTime:EndTime, totQuestions:TotalQuestions, examDuration:ExamDuration, theme:Theme, btnTheme:BtnTheme }
     return (
