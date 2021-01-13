@@ -22,13 +22,16 @@ function StudHome()
         const res = await API.get('/exam');
         const exams = await res.data;
 
+        //-------------------Sort data according to exam date for cards---------
         let unsortedData= exams.data;
         let sorted = {};
         sorted = unsortedData.sort(function(a,b)
         {
+          console.log(a.paper.from_date);
           return a.paper.from_date - b.paper.from_date;
         });
-        //---------------------------------------------------------------------
+        //----------------------------------------------------------------------
+
         let compleated = 0;
         let yetToStart = 0;
         let resume     = 0;
