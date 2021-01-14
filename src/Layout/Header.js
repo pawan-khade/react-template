@@ -12,12 +12,33 @@ function Header()
     let location                        =   useLocation();
     let [toggle, setToggle]             =   useState(true);
     let [isLoggedIn, setIsLoggedIn]     =   useState(false);
+    let [isStartExam, setIsStartExam]   =   useState(false);
 
     useEffect(() =>
     {
       let PathName = location.pathname;
       const searchString = process.env.REACT_APP_NON_AUTH_PATHS.split(' ').find((str) => str === PathName);
-
+      if(PathName==='/startexam')
+      {
+        if(window.innerWidth < 1000)
+        {
+            setIsStartExam(true);
+            setToggle(true);
+            document.body.classList.remove('sb-nav-fixed');document.body.classList.remove('sb-sidenav-toggled');
+        }
+        else
+        {
+            setIsStartExam(true);
+            setToggle(true);
+            document.body.classList.add('sb-sidenav-toggled');document.body.classList.remove('sb-nav-fixed');
+        }
+      }
+      else
+      {
+        setIsStartExam(false);
+        setToggle(false);
+        document.body.classList.add('sb-nav-fixed');document.body.classList.remove('sb-sidenav-toggled');
+      }
       if(PathName!==searchString)
       {
           setIsLoggedIn(true);
@@ -30,8 +51,9 @@ function Header()
 
 
     return(
+          !isStartExam ?
             <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-                <a className="navbar-brand" href="_blank">GudExams</a>
+                <a className="navbar-brand" href={void(0)}>GudExams</a>
                 <button className="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" onClick={() => {toggleSidebar(setToggle,toggle)}}><i className="fas fa-bars"></i></button>
 
                 <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -44,12 +66,13 @@ function Header()
                 </form>
                 { isLoggedIn ? <LoginButton url={'/logout'} label={'Logout'} setIsLoggedIn={setIsLoggedIn}/>: <LoginButton url={'/login'} label={'Login'}/>}
             </nav>
+            : null
     );
 }
 
 function toggleSidebar(setToggle,toggle)
 {
-    setToggle(toggle =!toggle);
+    setToggle(!toggle);
     if(!toggle)
     {
         document.body.classList.add('sb-sidenav-toggled');document.body.classList.remove('sb-nav-fixed');

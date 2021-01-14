@@ -12,7 +12,7 @@ function OverallSummery(props) {
                   <div className="card-body col-lg-12 row" style={{float:"right" ,width:"350px"}}>
 
                     <div className="col-lg-2" style={{marginBottom:"5px"}}>
-                      <button className="btn btn-danger" style={{height:"30px"}}> </button>
+                      <button className="btn btn-danger" style={{height:"30px"}}>{parseInt(props.data.location.state.currentQuestionIndex)+1}</button>
                     </div>
                     <div className="col-lg-10" style={{fontSize:"8"}}>
                       Current Question

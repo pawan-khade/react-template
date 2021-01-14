@@ -18,7 +18,6 @@ function StudHome()
   {
     (async function anyNameFunction()
     {
-
         const res = await API.get('/exam');
         const exams = await res.data;
 
@@ -35,20 +34,39 @@ function StudHome()
         let yetToStart = 0;
         let resume     = 0;
         let expired    = 0;
+        let EndTime    = '';
+        let Now        = '';
 
         Object.keys(sorted).forEach(function(key)
         {
+          EndTime           = sorted[key].paper.to_date;
+          Now               = sorted[key].now;
+
           if(sorted[key].examstatus === 'over')
           {
             compleated = compleated+1;
           }
           else if(sorted[key].examstatus === '')
           {
-            yetToStart = yetToStart+1;
+            if(EndTime < Now)
+            {
+              expired = expired+1;
+            }
+            else
+            {
+              yetToStart = yetToStart+1;
+            }
           }
           else if(sorted[key].examstatus === 'inprogress')
           {
-            resume = resume+1;
+            if(EndTime < Now)
+            {
+              expired = expired+1;
+            }
+            else
+            {
+              resume = resume+1;
+            }
           }
           else if(sorted[key].examstatus === 'expired')
           {

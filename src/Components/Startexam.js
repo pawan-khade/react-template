@@ -14,8 +14,7 @@ import {ShowContext} from '../App';
 function Startexam(props)
 {
   const {setShow,setMsg} = useContext(ShowContext);
-  let history                         =   useHistory();
-
+  let history                          =   useHistory();
   let [myOption, setMyOption]          = useState();
   if(props.location.state)
   {
@@ -27,6 +26,13 @@ function Startexam(props)
   let [selectedOptions, setSelectedOptions] = useState(originalSelectedOptions);
 
   useEffect(() => {
+    if (props.location.state === undefined){
+      history.replace('/studenthome');
+    }
+  }, [props.location])
+
+
+  useEffect(() => {
     if(myOption)
     {
       setSelectedOptions(prev => {
@@ -34,23 +40,22 @@ function Startexam(props)
       });
     }
   }, [myOption]);
-
+//----------------------Catching Opening of other window------------------------
   useEffect(() =>
   {
-    window.addEventListener('blur', onBlur);
-    window.myParameter    = props;
-    window.setShow        = setShow;
-    window.setMsg         = setMsg;
-    window.myHistory      = history;
+    const onBlurCallback = () => onBlur(props, setShow, setMsg, history);
+    window.addEventListener('blur', onBlurCallback);
     return () =>
     {
-      window.removeEventListener('blur', onBlur);
-      window.myParameter    = '';
-      window.setShow        = '';
-      window.setMsg         = '';
-      window.myHistory      = '';
+      window.removeEventListener('blur', onBlurCallback);
     };
-  });
+  }, [props.location]);
+//------------------------------------------------------------------------------
+//------------------------Restraining back button of browser--------------------
+  useEffect(() => {
+  window.history.pushState(props.location.state, '', '/startexam');
+}, [props.location]);
+//------------------------------------------------------------------------------
 
   return (
     props.location.state ?
@@ -87,15 +92,11 @@ function Startexam(props)
   );
 }
 
-const onBlur = async (evt) =>
+async function onBlur(props, setShow, setMsg, history)
 {
-  const exam                    = evt.currentTarget.myParameter.location.state.exam;
-  const total_allowable_alerts  = evt.currentTarget.myParameter.location.state.exam.paper.exam_switch_alerts;
-  let history                   = evt.currentTarget.myHistory;
-
+  const exam                    = props.location.state.exam;
+  const total_allowable_alerts  = props.location.state.exam.paper.exam_switch_alerts;
   const ExamId                  = exam.id;
-  const setShow                 = evt.currentTarget.setShow;
-  const setMsg                  = evt.currentTarget.setMsg;
 
   await API.put('/exam/'+ExamId,{"status": "windowswitch"})
   .then((res) => {

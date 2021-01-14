@@ -1,7 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MathJax from 'react-mathjax-preview';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
+
 
 function Options(props) {
+    const [isOpen, setIsOpen]     = useState(false);
     const projpath                =   process.env.REACT_APP_PROJPATH;
     let opt                       =   '';
     let optType                   =   '';
@@ -33,7 +37,12 @@ function Options(props) {
             <div className="col-lg-11">
               <MathJax math={opt} />
             </div>
-            <img src={opt_path} alt=""/>
+            {isOpen && (<Lightbox
+              mainSrc={opt_path}
+              onCloseRequest={() => setIsOpen(false)}
+              />
+            )}
+            <img src={opt_path} alt="" onClick={() => setIsOpen(true)}/>
           </div>
     );
 }

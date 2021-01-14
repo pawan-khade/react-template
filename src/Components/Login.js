@@ -12,7 +12,7 @@ export default function Login(props)
   const [myRecaptcha, setMyRecaptcha]             =   useState();
   const [myMsg, setMyMsg]                         =   useState();
 
-  useEffect(() => updateFlag(setFlag), []);
+  useEffect(() => {updateFlag(setFlag);}, []);
 
   return (
     flag !== undefined && <Formik
@@ -104,7 +104,7 @@ export default function Login(props)
                                                 )}
                                             </div>)}
 
-                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey="6Lcq1t4ZAAAAAKJJI5QBF89XGNTDBIAODpcaJgOo" onChange={(value) => setMyRecaptcha(value)}/>
+                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey="6LceEOcZAAAAAIc_LC_IgqVWIAEiB1PriQGqMtc5" onChange={(value) => setMyRecaptcha(value)}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>
@@ -135,6 +135,7 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
 {
     await API.post('/login',{"username":username,"password":password,"inst_id":instId,"flag":flag,"myRecaptcha":myRecaptcha}).then(res =>
     {
+        
             if(res.data.status === 'success')
             {
                 localStorage.setItem("token",JSON.stringify(res.data.token));

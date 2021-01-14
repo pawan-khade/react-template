@@ -19,7 +19,7 @@ function ExamCard(props)
     EndTime           = props.exam.paper.to_date;
     Now               = props.exam.now;
     //----------------------Dynamic status------------------------------------------
-      if((EndTime < Now) && (props.exam.examstatus!=='inprogress'))
+      if(EndTime < Now)
       {
         status='expired';
       }
@@ -53,7 +53,7 @@ function ExamCard(props)
         Theme = 'bg-danger';
         BtnTheme = 'btn btn-danger';
       }
-      myLink = <Link to="" className={BtnTheme} onClick={e => e.preventDefault()}>{BtnCaption}</Link>
+      myLink = <Link to={void(0)} className={BtnTheme} onClick={e => e.preventDefault()}>{BtnCaption}</Link>
     }
     else if(status==='' || status ==='inprogress')
     {
@@ -68,7 +68,7 @@ function ExamCard(props)
           Theme = 'bg-warning';
           BtnTheme = 'btn btn-warning';
 
-          myLink = <Link className={BtnTheme}>{BtnCaption}</Link>;
+          myLink = <Link to={void(0)} className={BtnTheme}>{BtnCaption}</Link>;
         }
         else
         {
@@ -84,16 +84,10 @@ function ExamCard(props)
       }
     }
 //------------------------------------------------------------------------------
-
-//----------------------Dynamic status------------------------------------------
-
-//------------------------------------------------------------------------------
-
-
     const userRequest = { btnCaption:BtnCaption, paperName:PaperName, startTime:StartTime,  endTime:EndTime, totQuestions:TotalQuestions, examDuration:ExamDuration, theme:Theme, btnTheme:BtnTheme }
     return (
             <div className="col-lg-4">
-              <div className='card' style={{minHeight:"370px",margin:"10px"}}>
+              <div className='card' style={{minHeight:"400px",margin:"10px"}}>
                   <div className={"card-header "+userRequest.theme}>
                     <b>{userRequest.paperName}</b>
                   </div>
@@ -117,22 +111,19 @@ function ExamCard(props)
     );
 }
 
-function getTimezoneName() {
-  const today = new Date();
-  const short = today.toLocaleDateString(undefined);
-  const full = today.toLocaleDateString(undefined, { timeZoneName: 'long' });
-
-  // Trying to remove date from the string in a locale-agnostic way
-  const shortIndex = full.indexOf(short);
-  if (shortIndex >= 0) {
-    const trimmed = full.substring(0, shortIndex) + full.substring(shortIndex + short.length);
-
-    // by this time `trimmed` should be the timezone's name with some punctuation -
-    // trim it from both sides
+function getTimezoneName()
+{
+  const today         = new Date();
+  const short         = today.toLocaleDateString(undefined);
+  const full          = today.toLocaleDateString(undefined, { timeZoneName: 'long' });
+  const shortIndex    = full.indexOf(short);
+  if (shortIndex >= 0)
+  {
+    const trimmed     = full.substring(0, shortIndex) + full.substring(shortIndex + short.length);
     return trimmed.replace(/^[\s,.\-:;]+|[\s,.\-:;]+$/g, '');
-
-  } else {
-    // in some magic case when short representation of date is not present in the long one, just return the long one as a fallback, since it should contain the timezone's name
+  }
+  else
+  {
     return full;
   }
 }
