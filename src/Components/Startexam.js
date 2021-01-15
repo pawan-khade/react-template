@@ -10,6 +10,7 @@ import MyTimer from "./Exam/MyTimer.js";
 import { useHistory } from 'react-router-dom';
 import API from '../api';
 import {ShowContext} from '../App';
+import WebCamCapture from './Exam/WebCamCapture';
 
 function Startexam(props)
 {
@@ -27,6 +28,8 @@ function Startexam(props)
 
   useEffect(() => {
     if (props.location.state === undefined){
+      setShow(true);
+      setMsg('You are redirected because you have refreshed the examination page forcefully');
       history.replace('/studenthome');
     }
   }, [props.location])
@@ -81,6 +84,7 @@ function Startexam(props)
                 <NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption}/>
                 <EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>
                 <ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>
+                <WebCamCapture exam={props.location.state.exam.id}/>
               </div>
             </div>
           </div>
