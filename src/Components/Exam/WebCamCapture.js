@@ -19,12 +19,13 @@ const WebCamCapture = (props) => {
         navigator.mediaDevices.getUserMedia({ video: true, voice: true })
         .then(function(stream) 
         {
-            
+            props.setMyCameraPerm(true);
         })
         .catch(function(err) 
         {
+            props.setMyCameraPerm(false);
             setShow(true);
-            setMsg('Without Camera Premission Examination can not be started');
+            setMsg('Without Camera Premission Examination can not be started.');
             history.replace('/studenthome');
         });
         let myCapture = setInterval(capture, CaptureTime);
@@ -34,7 +35,7 @@ const WebCamCapture = (props) => {
             clearInterval(myCapture);
         }
         //------------------------------------------------------------------
-    });  
+    },[history.location]);  
 
     const capture                = React.useCallback(
       () => 

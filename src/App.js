@@ -7,6 +7,8 @@ import { Router } from 'react-router-dom';
 import API from './api';
 
 export const ShowContext = React.createContext();
+export const UserContext = React.createContext();
+
 const browserHistory = createBrowserHistory({});
 
 
@@ -49,16 +51,22 @@ function setupAxios(setShow, setMsg) {
 
 function App()
 {
-    const [show, setShow] = useState(false);
-    const [msg, setMsg]   = useState();
+    const [show, setShow]         = useState(false);
+    const [msg, setMsg]           = useState();
+    const [userType, setUserType] = useState();
+
     setupAxios(setShow, setMsg);
     return (
       <div>
       <Router history={browserHistory}>
-        <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
-          <Header/>
-          <Content/>
-        </ShowContext.Provider>
+
+        <UserContext.Provider value={{userType:userType,setUserType:setUserType}}>
+          <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
+            <Header/>
+            <Content/>
+          </ShowContext.Provider>
+        </UserContext.Provider>
+
         <AlertDismissible myShow={show} mySetShow={setShow} myMsg={msg}/>
         </Router>
       </div>

@@ -7,7 +7,11 @@ import StudHome from '../Components/Student/StudHome';
 import Instructions from '../Components/Student/Instructions';
 import Startexam from '../Components/Startexam';
 
-function Content() {
+import AdminHome from '../Components/Admin/Adminhome';
+import ClearSession from '../Components/Admin/ClearSession';
+
+function Content() 
+{
         return (
                 <div id="layoutSidenav">
                     <div id="layoutSidenav_nav"><Sidebar /></div>
@@ -18,6 +22,9 @@ function Content() {
                             <Route exact path="/studenthome" component={StudHome} />
                             <Route exact path="/instructions" component={Instructions} />
                             <Route exact path="/startexam" component={Startexam} />
+
+                            <Route exact path="/adminhome" component={AdminHome} />
+                            <Route exact path="/clearsession" component={ClearSession} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

@@ -2,9 +2,13 @@ import React, { useState , useEffect } from 'react';
 import API from '../../api';
 import CountCard from './CountCard';
 import ExamCard from './ExamCard';
+import { useHistory, useLocation } from 'react-router-dom';
 
 function StudHome()
 {
+  let history                                     =   useHistory();
+  const location                                  =   useLocation();
+
   const [userRequest, setUserRequest] = useState({
     loading: true,
     myExams: null,
@@ -14,6 +18,13 @@ function StudHome()
     resumeExam:0,
     expiredExam:0
   });
+
+  //------------------------Restraining back button of browser--------------------
+  useEffect(() => {
+    window.history.pushState(location.state, '', '/studenthome');
+  }, [location]);
+  //------------------------------------------------------------------------------
+
   useEffect(() =>
   {
     (async function anyNameFunction()

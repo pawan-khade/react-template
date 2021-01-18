@@ -15,8 +15,11 @@ import WebCamCapture from './Exam/WebCamCapture';
 function Startexam(props)
 {
   const {setShow,setMsg} = useContext(ShowContext);
-  let history                          =   useHistory();
-  let [myOption, setMyOption]          = useState();
+  let history                                     =   useHistory();
+  let [myOption, setMyOption]                     =   useState();
+  let [myPhotoCapture, setMyPhotoCapture]         =   useState(false);
+  let [myCameraPerm, setMyCameraPerm]             =   useState(false);
+
   if(props.location.state)
   {
     var originalSelectedOptions        = getSelectedOptions(props.location.state.questions);
@@ -57,6 +60,26 @@ function Startexam(props)
 //------------------------Restraining back button of browser--------------------
   useEffect(() => {
   window.history.pushState(props.location.state, '', '/startexam');
+  return () =>
+    {
+      window.history.pushState(props.location.state, '', '/studenthome');
+    };
+}, [props.location]);
+//------------------------------------------------------------------------------
+//------------------------Proctoring -------------------------------------------
+useEffect(() => {
+
+  if(props.location.state)
+  {
+    if(props.location.state.exam.paper.photo_capture)
+    {
+      setMyPhotoCapture(true);
+    }
+    else
+    {
+      setMyCameraPerm(true);
+    }
+  }
 }, [props.location]);
 //------------------------------------------------------------------------------
 
@@ -70,27 +93,27 @@ function Startexam(props)
                 </div>
                 <div className="col-lg-4">
                       <i className="fas fa-clock fa-lg"></i> &nbsp;&nbsp;
-                      <MyTimer data={props} />
+                      {myCameraPerm && (<MyTimer data={props} />)}
                 </div>
               </div>
           </div>
 
           <div className="card col-lg-8">
             <div className="card-body">
-              <QuestionAnswer questions={props} setMyOption={setMyOption}  selectedOptions={selectedOptions}/>
+            {myCameraPerm && (<QuestionAnswer questions={props} setMyOption={setMyOption}  selectedOptions={selectedOptions}/>)}
               <hr/>
               <div className="col-lg-12 row">
-                <PreviousButton data={props} setMyOption={setMyOption}/>
-                <NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption}/>
-                <EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>
-                <ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>
-                <WebCamCapture exam={props.location.state.exam.id}/>
+              {myCameraPerm && (<PreviousButton data={props} setMyOption={setMyOption}/>)}
+              {myCameraPerm && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption}/>)}
+              {myCameraPerm && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
+              {myCameraPerm && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
+                {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm}/>)}
               </div>
             </div>
           </div>
           <div className="col-lg-4" style={{float: "right"}}>
-            <QuestionButtons qas={props}/>
-            <OverallSummery data={props}/>
+          {myCameraPerm && (<QuestionButtons qas={props}/>)}
+          {myCameraPerm && (<OverallSummery data={props}/>)}
           </div>
       </div> : null
   );

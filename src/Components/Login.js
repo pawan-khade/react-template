@@ -1,16 +1,18 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect, useContext  } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../api';
 import ReCAPTCHA   from "react-google-recaptcha";
 import { useHistory } from 'react-router-dom';
+import {UserContext} from '../App';
 
 export default function Login(props)
 {
-  let history = useHistory();
-  const [flag, setFlag]                           =   useState();
-  const [myRecaptcha, setMyRecaptcha]             =   useState();
-  const [myMsg, setMyMsg]                         =   useState();
+  const {userType, setUserType}                    = useContext(UserContext);
+  let history                                      = useHistory();
+  const [flag, setFlag]                            =   useState();
+  const [myRecaptcha, setMyRecaptcha]              =   useState();
+  const [myMsg, setMyMsg]                          =   useState();
 
   useEffect(() => {updateFlag(setFlag);}, []);
 
@@ -20,7 +22,7 @@ export default function Login(props)
         onSubmit={(values,{ setSubmitting }) =>
         {
           if (myRecaptcha !== undefined){
-            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history);
+            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setUserType);
           }
         }}
         validationSchema={Yup.object().shape({
@@ -131,7 +133,7 @@ export default function Login(props)
   );
 }
 
-async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history)
+async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history,setUserType)
 {
     await API.post('/login',{"username":username,"password":password,"inst_id":instId,"flag":flag,"myRecaptcha":myRecaptcha}).then(res =>
     {
@@ -139,7 +141,16 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
             if(res.data.status === 'success')
             {
                 localStorage.setItem("token",JSON.stringify(res.data.token));
-                history.replace('/studenthome');
+                if(res.data.data.role === 'STUDENT')
+                {
+                    setUserType('STUDENT');
+                    history.replace({ pathname: '/studenthome',state:{userType: 'STUDENT'}});
+                }
+                else if(res.data.data.role === 'ADMIN')
+                {
+                    setUserType('ADMIN');
+                    history.replace({ pathname: '/adminhome',state:{userType: 'ADMIN'}});
+                }
             }
             else
             {
