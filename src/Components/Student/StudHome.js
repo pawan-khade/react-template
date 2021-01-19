@@ -99,7 +99,7 @@ function StudHome()
             </ol>
             <div className="row col-lg-12">
               <CountCard count={userRequest.numExams} label={"All"} color={"danger"}/>
-              <CountCard count={userRequest.compExams} label={"Compleated"} color={"success"}/>
+              <CountCard count={userRequest.compExams} label={"Completed"} color={"success"}/>
               <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"}/>
               <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"}/>
               <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"}/>
