@@ -4,6 +4,7 @@ import ClearSession from './ClearSession';
 
 function ClearSessionUserInfo(props) {
     const [sessionCleared ,setSessionCleared] = useState(false);
+    const [message ,setMessage] = useState('');
         return (
             <>
                 <div className="col-lg-12">
@@ -79,12 +80,12 @@ function ClearSessionUserInfo(props) {
                     : null}
                 </div>
                 <div className="col-lg-12">
-                    <center><button onClick={() => {clearSession(props.userData.uid,setSessionCleared,props.setUserData)}} className="btn btn-info">Clear Session</button></center>
+                    <center><button onClick={() => {clearSession(props.userData.uid,setSessionCleared,props.setUserData,setMessage)}} className="btn btn-info">Clear Session</button></center>
                 </div>
                 <div className="col-lg-12">
                     {sessionCleared ? 
                         <div className="alert alert-dark" role="alert" style={{marginTop:"5px"}}>
-                            Session Cleared Successfully
+                            {message}
                         </div>
                     : null}
                 </div>
@@ -92,20 +93,33 @@ function ClearSessionUserInfo(props) {
         );
 }
 
-async function clearSession(uid,setSessionCleared,setUserData)
+async function clearSession(uid,setSessionCleared,setUserData,setMessage)
 {
-    const res = await API.put('/sessions',{"uid" : uid, "type" : "clearsession"});
-    if(res.data.status === 'success')
+    await API.put('/sessions',{"uid" : uid, "type" : "clearsession"})
+    .then(function (res) 
     {
-        setSessionCleared(true);
-        setTimeout(() => {
-            setUserData(undefined);
-        }, 7000);
-    }
-    else
+        if(res.data.status === 'success')
+        {
+            setSessionCleared(true);
+            setMessage(res.data.message);
+            setTimeout(() => {
+                setUserData(undefined);
+            }, 7000);
+        }
+        else 
+        {
+            setSessionCleared(true);
+            setMessage(res.data.message);
+            setTimeout(() => {
+                setUserData(undefined);
+            }, 7000);
+        }
+    })
+    .catch(function (error) 
     {
         setSessionCleared(false);
-    }
+        setMessage('Problem Clearing Session of this User.');
+    })
 }
 
 export default ClearSessionUserInfo;

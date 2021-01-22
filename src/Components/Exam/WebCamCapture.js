@@ -1,7 +1,7 @@
 import React, { useState,useEffect, useContext } from 'react';
 import Webcam from "react-webcam";
 import { useHistory } from 'react-router-dom';
-import {ShowContext} from '../../App';
+import {PopupContext} from '../../App';
 import API from '../../api';
 
 const CaptureTime = process.env.REACT_APP_PHOTO_CAPTURE_TIME * 1000;
@@ -11,7 +11,7 @@ const WebCamCapture = (props) => {
     const [imgSrc, setimgSrc]   = useState(null);
     const videoConstraints      = {facingMode: "user"};
     let history                 = useHistory();
-    const {setShow,setMsg}      = useContext(ShowContext);
+    const {setPopupShow,setPopupMsg}      = useContext(PopupContext);
     const exam = props.exam;
     
   
@@ -24,8 +24,8 @@ const WebCamCapture = (props) => {
         .catch(function(err) 
         {
             props.setMyCameraPerm(false);
-            setShow(true);
-            setMsg('Without Camera Premission Examination can not be started.');
+            setPopupShow(true);
+            setPopupMsg('Without Camera Premission Examination can not be started.');
             history.replace('/studenthome');
         });
         let myCapture = setInterval(capture, CaptureTime);

@@ -66,6 +66,7 @@ async function saveAndChangeIndex(props,index,history,maxQuestions,myOption,setS
              if(curOptionStatus === 'unanswered'){
                newOptionStatus = 'answered';
                myQuestions[myIndex].answered = newOptionStatus;
+               myQuestions[myIndex].stdanswer = myOption;
                myUnsolvedQuestionIndexes = myUnsolvedQuestionIndexes.filter(item => item !== myIndex);
                mySolvedQuestionIndexes.push(myIndex);
                myUnsolvedQuestionIndexes.sort();
@@ -74,6 +75,7 @@ async function saveAndChangeIndex(props,index,history,maxQuestions,myOption,setS
              else if(curOptionStatus === 'unansweredandreview'){
                newOptionStatus = 'answeredandreview';
                myQuestions[myIndex].answered = newOptionStatus;
+               myQuestions[myIndex].stdanswer = myOption;
                myMarkedUnsolvedIndexes = myMarkedUnsolvedIndexes.filter(item => item !== myIndex);
                myMarkedSolvedIndexes.push(myIndex);
                myMarkedUnsolvedIndexes.sort();
@@ -83,6 +85,7 @@ async function saveAndChangeIndex(props,index,history,maxQuestions,myOption,setS
                newOptionStatus = curOptionStatus;
              }
              //-----------------------------------------------------------------
+             var originalSelectedOptions        = getSelectedOptions(myQuestions);
 
              if(index < maxQuestions)
              {
@@ -94,6 +97,20 @@ async function saveAndChangeIndex(props,index,history,maxQuestions,myOption,setS
                  markedSolvedIndexes                :  myMarkedSolvedIndexes,
                  markedUnsolvedIndexes              :  myMarkedUnsolvedIndexes
                }
+               props.setMyOption(undefined);
+               history.replace("/startexam", examDetailsButtons) ;
+             }
+             if(index === maxQuestions)
+             {
+               const examDetailsButtons = {
+                 exam                               :  props.data.location.state.exam,
+                 questions                          :  myQuestions,
+                 currentQuestionIndex               :  myIndex,
+                 solvedQuestionIndexes              :  mySolvedQuestionIndexes, unsolvedQuestionIndexes            :  myUnsolvedQuestionIndexes,
+                 markedSolvedIndexes                :  myMarkedSolvedIndexes,
+                 markedUnsolvedIndexes              :  myMarkedUnsolvedIndexes
+               }
+               props.setSelectedOptions(originalSelectedOptions);
                props.setMyOption(undefined);
                history.replace("/startexam", examDetailsButtons) ;
              }
@@ -173,6 +190,17 @@ async function getQuestions(exam)
     return null;
   }
 }
+
+function getSelectedOptions(questions)
+{
+  let originalSelectedOptions = {};
+  questions.map((question,index) =>
+  {
+    originalSelectedOptions[index] = question.stdanswer
+  });
+  return originalSelectedOptions;
+}
+
 
 function getIndexes(myQuestions,searchString)
 {

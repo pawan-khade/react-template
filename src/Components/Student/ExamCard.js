@@ -45,13 +45,13 @@ function ExamCard(props)
       {
         BtnCaption='Completed';
         Theme = 'text-white bg-success'
-        BtnTheme = 'btn btn-secondary';
+        BtnTheme = 'btn btn-success';
       }
       else
       {
         BtnCaption='Expired';
-        Theme = 'bg-danger';
-        BtnTheme = 'btn btn-danger';
+        Theme = 'bg-info';
+        BtnTheme = 'btn btn-info';
       }
       myLink = <Link to={void(0)} className={BtnTheme} onClick={e => e.preventDefault()}>{BtnCaption}</Link>
     }
@@ -60,8 +60,8 @@ function ExamCard(props)
       if(status ==='')
       {
         BtnCaption='Start Exam';
-        Theme = 'text-white bg-dark';
-        BtnTheme = 'btn btn-primary';
+        Theme = 'text-white bg-warning';
+        BtnTheme = 'btn btn-warning';
         if(StartTime > Now)
         {
           BtnCaption='Coming Soon';
@@ -79,7 +79,7 @@ function ExamCard(props)
       {
         BtnCaption='Continue Exam';
         Theme = 'text-white bg-primary';
-        BtnTheme = 'btn btn-success';
+        BtnTheme = 'btn btn-primary';
         myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
       }
     }

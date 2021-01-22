@@ -14,7 +14,7 @@ function Sidebar()
                         <div className="nav">
                             <div className="sb-sidenav-menu-heading">Main Menu</div>
                             <Link className="nav-link" to={{pathname: "/studenthome", 
-                            state:{ userType:'STUDENT' }}}>
+                                state:{ userType:'STUDENT' }}}>
                                 <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                                 Home
                             </Link>
@@ -31,15 +31,35 @@ function Sidebar()
                     <div className="nav">
                         <div className="sb-sidenav-menu-heading">Main Menu</div>
                         <Link  className="nav-link" to={{pathname: "/adminhome", 
-                        state:{ userType:'ADMIN' }}}>
+                            state:{ userType:'ADMIN' }}}>
                             <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                             Home
                         </Link>
                         <Link  className="nav-link" to={{pathname: "/clearsession", 
-                        state:{ userType:'ADMIN' }}}>
+                            state:{ userType:'ADMIN' }}}>
                             <div className="sb-nav-link-icon"><i className="fas fa-address-card"></i></div>
                             Clear Session
                         </Link>
+
+                        <a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseConfigurations" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div className="sb-nav-link-icon"><i className="fas fa-cogs"></i></div>
+                                Configurations
+                            <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
+                        </a>
+                        <div className="collapse" id="collapseConfigurations" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav className="sb-sidenav-menu-nested nav">
+                                <Link className="nav-link" to={{pathname: "/configHeader", 
+                                state:{ userType:'ADMIN' }}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
+                                    Configure Header
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/configFooter", 
+                                state:{ userType:'ADMIN' }}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
+                                    Configure Footer
+                                </Link>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </nav>

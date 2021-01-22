@@ -10,11 +10,13 @@ import MyTimer from "./Exam/MyTimer.js";
 import { useHistory } from 'react-router-dom';
 import API from '../api';
 import {ShowContext} from '../App';
+import {PopupContext} from '../App';
 import WebCamCapture from './Exam/WebCamCapture';
 
 function Startexam(props)
 {
-  const {setShow,setMsg} = useContext(ShowContext);
+  const {setShow,setMsg}                          =   useContext(ShowContext);
+  const {setPopupShow,setPopupMsg}                =   useContext(PopupContext);
   let history                                     =   useHistory();
   let [myOption, setMyOption]                     =   useState();
   let [myPhotoCapture, setMyPhotoCapture]         =   useState(false);
@@ -49,7 +51,7 @@ function Startexam(props)
 //----------------------Catching Opening of other window------------------------
   useEffect(() =>
   {
-    const onBlurCallback = () => onBlur(props, setShow, setMsg, history);
+    const onBlurCallback = () => onBlur(props, setPopupShow,setPopupMsg, history);
     window.addEventListener('blur', onBlurCallback);
     return () =>
     {
@@ -104,7 +106,7 @@ useEffect(() => {
               <hr/>
               <div className="col-lg-12 row">
               {myCameraPerm && (<PreviousButton data={props} setMyOption={setMyOption}/>)}
-              {myCameraPerm && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption}/>)}
+              {myCameraPerm && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
               {myCameraPerm && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
               {myCameraPerm && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
                 {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm}/>)}
@@ -112,14 +114,14 @@ useEffect(() => {
             </div>
           </div>
           <div className="col-lg-4" style={{float: "right"}}>
-          {myCameraPerm && (<QuestionButtons qas={props}/>)}
+          {myCameraPerm && (<QuestionButtons qas={props} setSelectedOptions={setSelectedOptions} setMyOption={setMyOption}/>)}
           {myCameraPerm && (<OverallSummery data={props}/>)}
           </div>
       </div> : null
   );
 }
 
-async function onBlur(props, setShow, setMsg, history)
+async function onBlur(props, setPopupShow,setPopupMsg, history)
 {
   const exam                    = props.location.state.exam;
   const total_allowable_alerts  = props.location.state.exam.paper.exam_switch_alerts;
@@ -132,26 +134,29 @@ async function onBlur(props, setShow, setMsg, history)
       if(parseInt(res.data.switchedcount) === parseInt(total_allowable_alerts))
       {
           //---------------end Examination-----------------------------------
-          handleEndExam(exam,history,setShow,setMsg,res.data.switchedcount);
+          handleEndExam(exam,history,setPopupShow,setPopupMsg,res.data.switchedcount);
           //-----------------------------------------------------------------
       }
       else if(parseInt(res.data.switchedcount)+ 5 === parseInt(total_allowable_alerts))
       {
-        alert('Your Window switching limit is about to expire. Continuing switching window now will end your Examination abruptly.');
+        setPopupShow(true);
+        setPopupMsg('Your Window switching limit is about to expire. Continuing switching window now will end your Examination abruptly.');
       }
       else
       {
-        alert('Please do not switch window while exam is in progress. This Event will be Recorded.');
+        setPopupShow(true);
+        setPopupMsg('Please do not switch window while exam is in progress. This Event will be Recorded.');
       }
     }
   })
   .catch((error) =>
   {
-    alert('Please do not switch window while exam is in progress.');
+    setPopupShow(true);
+    setPopupMsg('Please do not switch window while exam is in progress.');
   });
 };
 
-async function handleEndExam(exam,history,setShow,setMsg,cnt)
+async function handleEndExam(exam,history,setPopupShow,setPopupMsg,cnt)
 {
   const ExamId    = exam.id;
 
@@ -159,14 +164,15 @@ async function handleEndExam(exam,history,setShow,setMsg,cnt)
   .then((res) => {
     if(res.data.status === 'success')
     {
-      setShow(true);
-      setMsg('Your Examination is Ended abruptly because you switched window '+cnt+' times.');
+      setPopupShow(true);
+      setPopupMsg('Your Examination is Ended abruptly because you switched window '+cnt+' times.');
       history.replace("/studenthome");
     }
   })
   .catch((error) =>
   {
-    alert('Please do not switch window while exam is in progress.');
+    setPopupShow(true);
+    setPopupMsg('Please do not switch window while exam is in progress.');
   });
 }
 

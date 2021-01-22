@@ -29,6 +29,8 @@ function QuestionButtons(props) {
 
 function changeIndex(props,index,history)
 {
+  var originalSelectedOptions        = getSelectedOptions(props.qas.location.state.questions);
+
   const examDetailsButtons = {
     exam                               :  props.qas.location.state.exam,
     questions                          :  props.qas.location.state.questions,
@@ -37,7 +39,19 @@ function changeIndex(props,index,history)
     markedSolvedIndexes                :  props.qas.location.state.markedSolvedIndexes,
     markedUnsolvedIndexes              :  props.qas.location.state.markedUnsolvedIndexes
   }
+  props.setSelectedOptions(originalSelectedOptions);
+  props.setMyOption(undefined);
   history.replace("/startexam", examDetailsButtons) ;
+}
+
+function getSelectedOptions(questions)
+{
+  let originalSelectedOptions = {};
+  questions.map((question,index) =>
+  {
+    originalSelectedOptions[index] = question.stdanswer
+  });
+  return originalSelectedOptions;
 }
 
 function getColor(index,myIndex,qa)

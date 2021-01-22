@@ -9,6 +9,8 @@ import Startexam from '../Components/Startexam';
 
 import AdminHome from '../Components/Admin/Adminhome';
 import ClearSession from '../Components/Admin/ClearSession';
+import ConfigureHeader from '../Components/Admin/Configurations/ConfigureHeader';
+import ConfigureFooter from '../Components/Admin/Configurations/ConfigureFooter';
 
 function Content() 
 {
@@ -25,6 +27,8 @@ function Content()
 
                             <Route exact path="/adminhome" component={AdminHome} />
                             <Route exact path="/clearsession" component={ClearSession} />
+                            <Route exact path="/configHeader" component={ConfigureHeader} />
+                            <Route exact path="/configFooter" component={ConfigureFooter} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

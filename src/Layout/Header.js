@@ -2,7 +2,7 @@ import React, { useState , useEffect, useContext } from 'react';
 import LoginButton from '../Components/LoginButton';
 import { useHistory, useLocation } from 'react-router-dom';
 import {ShowContext} from '../App';
-
+import API from '../api';
 
 function Header()
 {
@@ -13,6 +13,8 @@ function Header()
     let [toggle, setToggle]             =   useState(true);
     let [isLoggedIn, setIsLoggedIn]     =   useState(false);
     let [isStartExam, setIsStartExam]   =   useState(false);
+    let [isLoaded,setIsLoaded]          =   useState(false);
+    let [myHeader,setMyHeader]          =   useState('GudExams');
 
     useEffect(() =>
     {
@@ -49,11 +51,16 @@ function Header()
       }
     },[location,history,setShow,setMsg]);
 
+    useEffect(() =>
+    {
+        getHeaderData(setIsLoaded,setMyHeader);
+    },[]);
+
 
     return(
           !isStartExam ?
             <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-                <a className="navbar-brand" href={void(0)}>GudExams</a>
+                <a className="navbar-brand" href={void(0)}><img src="assets/images/logo.png" height="50" width="50"></img> {myHeader}</a>
                 <button className="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" onClick={() => {toggleSidebar(setToggle,toggle)}}><i className="fas fa-bars"></i></button>
 
                 <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -81,6 +88,29 @@ function toggleSidebar(setToggle,toggle)
     {
         document.body.classList.add('sb-nav-fixed');document.body.classList.remove('sb-sidenav-toggled');
     }
+}
+
+async function getHeaderData(setIsLoaded,setMyHeader)
+{
+    await API.get('/configurations',{params :{"type":"headerconfig"}})
+    .then(function (res) 
+    {
+        if(res.data.status === 'success')
+        {
+            setMyHeader(res.data.header);
+            setIsLoaded(true);
+        }
+        else
+        {
+            setMyHeader('GudExams');
+            setIsLoaded(true);
+        }
+    })
+    .catch(function (error) 
+    {
+        setMyHeader('GudExams');
+        setIsLoaded(true);
+    })
 }
 
 export default Header;
