@@ -7,12 +7,12 @@ import API from '../../api';
 const CaptureTime = process.env.REACT_APP_PHOTO_CAPTURE_TIME * 1000;
 
 const WebCamCapture = (props) => {
-    const webcamRef             = React.useRef(null);
-    const [imgSrc, setimgSrc]   = useState(null);
-    const videoConstraints      = {facingMode: "user"};
-    let history                 = useHistory();
-    const {setPopupShow,setPopupMsg}      = useContext(PopupContext);
-    const exam = props.exam;
+    const webcamRef                         = React.useRef(null);
+    const [imgSrc, setimgSrc]               = useState(null);
+    const videoConstraints                  = {facingMode: "user"};
+    let history                             = useHistory();
+    const {setPopupShow,setPopupMsg}        = useContext(PopupContext);
+    const exam                              = props.exam;
     
   
     useEffect(() => {    

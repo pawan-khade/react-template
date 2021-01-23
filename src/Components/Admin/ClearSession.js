@@ -1,6 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import {UserContext} from '../../App';
 import {ShowContext} from '../../App';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -12,23 +10,9 @@ import ClearSessionUserInfo from './ClearSessionUserInfo';
 
 function ClearSession(props)
 {
-    const {userType, setUserType}                   =   useContext(UserContext); 
     const {setShow,setMsg}                          =   useContext(ShowContext);
     const [fetchedUserData, setUserData]            =   useState();
     const [flag, setFlag]                           =   useState();
-    let history                                     =   useHistory();
-
-    useEffect(() => 
-    {
-        if(props.location.state)
-        {
-            setUserType(props.location.state.userType);
-        }
-        else
-        {
-            history.replace('/login');
-        }
-    },[props.location.state,history]);
 
     useEffect(() => {updateFlag(setFlag);}, []);
 
@@ -40,7 +24,7 @@ function ClearSession(props)
                 initialValues={{ enrollNo: "",flag:flag ,instId:"" }}
                 onSubmit={(values,{ setSubmitting }) =>
                 {
-                    let userData = fetchUserData(values.enrollNo,setUserData,setShow,setMsg,flag,values.instId);
+                    fetchUserData(values.enrollNo,setUserData,setShow,setMsg,flag,values.instId);
                 }}
                 validationSchema={Yup.object().shape({
                     enrollNo:Yup.string()
@@ -59,7 +43,6 @@ function ClearSession(props)
                         values,
                         touched,
                         errors,
-                        isSubmitting,
                         handleChange,
                         handleBlur,
                         handleSubmit
@@ -128,7 +111,6 @@ function ClearSession(props)
 
 async function fetchUserData(enrollNo,setUserData,setShow,setMsg,flag='1',instId='0000')
 {
-    alert('Flag:'+flag+' Institute ID:'+instId);
     await API.get('/user',{params: {"username" : enrollNo,"instId" : instId, "flag" : flag}})
     .then(res =>
     {

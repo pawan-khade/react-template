@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import API from '../../api';
-import ClearSession from './ClearSession';
 
-function ClearSessionUserInfo(props) {
+function ClearSessionUserInfo(props) 
+{
     const [sessionCleared ,setSessionCleared] = useState(false);
     const [message ,setMessage] = useState('');
+
         return (
             <>
                 <div className="col-lg-12">

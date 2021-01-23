@@ -1,13 +1,14 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect, useContext } from 'react';
 import API from '../../api';
 import CountCard from './CountCard';
 import ExamCard from './ExamCard';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import {UserContext} from '../../App';
 
 function StudHome()
 {
-  let history                                     =   useHistory();
   const location                                  =   useLocation();
+  const {currentUser, setCurrentUser}             =   useContext(UserContext);
 
   const [userRequest, setUserRequest] = useState({
     loading: true,
@@ -20,7 +21,8 @@ function StudHome()
   });
 
   //------------------------Restraining back button of browser--------------------
-  useEffect(() => {
+  useEffect(() => 
+  {
     window.history.pushState(location.state, '', '/studenthome');
   }, [location]);
   //------------------------------------------------------------------------------
@@ -90,12 +92,16 @@ function StudHome()
   },[]);
 
     return (
-      !userRequest.loading ?
+      !userRequest.loading && currentUser ?
       <div>
         <div className="container-fluid">
             <h1 className="mt-4">Student Home</h1>
             <ol className="breadcrumb mb-4">
-                <li className="breadcrumb-item active">Student Home</li>
+              <li className="breadcrumb-item active">
+                <b>Student Name:</b> {currentUser.name} 
+                &nbsp;&nbsp;&nbsp;
+                <b>Enrollment No:</b> ({currentUser.username})
+              </li>
             </ol>
             <div className="row col-lg-12">
               <CountCard count={userRequest.numExams} label={"All"} color={"danger"}/>

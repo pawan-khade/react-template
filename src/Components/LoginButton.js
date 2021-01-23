@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import API from '../api';
 import { useHistory } from 'react-router-dom';
+import {UserContext} from '../App';
 
 function LoginButton(props)
 {
-  let history = useHistory(props);
+  let history                                     =   useHistory(props);
+  const {currentUser, setCurrentUser}             =   useContext(UserContext);
 
   async function loginLogout()
   {
@@ -16,6 +18,7 @@ function LoginButton(props)
 
       if(res.data.status === 'Success')
       {
+        setCurrentUser(undefined);
         await localStorage.clear();
         props.setIsLoggedIn(false);
         history.replace('/login');

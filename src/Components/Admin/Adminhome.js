@@ -1,25 +1,8 @@
-import React, {useContext, useEffect} from 'react';
-import { useHistory } from 'react-router-dom';
-import {UserContext} from '../../App';
+import React from 'react';
 
 function Adminhome(props)
 {
-    const {userType, setUserType}   = useContext(UserContext);
-    let history                     = useHistory();
-    
-    useEffect(() => 
-    {
-        if(props.location.state)
-        {
-          setUserType(props.location.state.userType);
-        }
-        else
-        {
-            history.replace('/login');
-        }
-    });
-    
-    
+  
     return (
       <div>
         <div className="container-fluid">

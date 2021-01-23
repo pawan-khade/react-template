@@ -31,8 +31,10 @@ function Startexam(props)
 
   let [selectedOptions, setSelectedOptions] = useState(originalSelectedOptions);
 
-  useEffect(() => {
-    if (props.location.state === undefined){
+  useEffect(() => 
+  {
+    if (props.location.state === undefined)
+    {
       setShow(true);
       setMsg('You are redirected because you have refreshed the examination page forcefully');
       history.replace('/studenthome');
@@ -62,10 +64,6 @@ function Startexam(props)
 //------------------------Restraining back button of browser--------------------
   useEffect(() => {
   window.history.pushState(props.location.state, '', '/startexam');
-  return () =>
-    {
-      window.history.pushState(props.location.state, '', '/studenthome');
-    };
 }, [props.location]);
 //------------------------------------------------------------------------------
 //------------------------Proctoring -------------------------------------------
@@ -91,11 +89,11 @@ useEffect(() => {
           <div className='card col-lg-12'>
               <div className="card-header bg-primary row" style={{color:"white"}}>
                 <div className="col-lg-8">
-                  <h5><b>Exam Name: {props.location.state.exam.paper.paper_name}</b></h5>
+                  <h5><b>Subject Name: {props.location.state.exam.paper.paper_name} ({props.location.state.exam.paper.paper_code}) </b></h5>
                 </div>
                 <div className="col-lg-4">
-                      <i className="fas fa-clock fa-lg"></i> &nbsp;&nbsp;
-                      {myCameraPerm && (<MyTimer data={props} />)}
+                      <i className="fas fa-clock fa-lg" style={{float:"right"}}></i> &nbsp;&nbsp;
+                      {myCameraPerm && (<div style={{float:"right"}}><MyTimer data={props}/></div>)}
                 </div>
               </div>
           </div>

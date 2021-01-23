@@ -4,13 +4,10 @@ import API from '../api';
 function Footer() 
 {
     const [footerData,setFooterData] = useState('');
-
     let d       = new Date();
     let year    = d.getFullYear();
 
-    useEffect(() => {
-        getFooterData(setFooterData);
-    },[]);
+    useEffect(() => {getFooterData(setFooterData);},[]);
 
     return (
         footerData !=='' ? 

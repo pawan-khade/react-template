@@ -1,29 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
-import {UserContext} from '../../../App';
 
 function ConfigureHeader(props) 
 {
     const [headerData ,setHeaderData]   =   useState(false);
     const [msg ,setMsg]                 =   useState('');
-    const {userType, setUserType}       =   useContext(UserContext); 
-    let history                         =   useHistory();
-
-    useEffect(() => {
-        if(props.location.state)
-        {
-            setUserType(props.location.state.userType);
-        }
-        else
-        {
-            history.replace('/login');
-        }
-    },[props.location.state,history])
 
     return(
         <>
@@ -47,7 +32,6 @@ function ConfigureHeader(props)
                         values,
                         touched,
                         errors,
-                        isSubmitting,
                         handleChange,
                         handleBlur,
                         handleSubmit,

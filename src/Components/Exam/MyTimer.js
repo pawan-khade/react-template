@@ -1,31 +1,43 @@
-import React ,{ useState, useEffect }  from 'react';
+import React ,{ useState, useEffect, useContext }  from 'react';
 import CountdownTimer from "react-component-countdown-timer";
 import { useHistory } from 'react-router-dom';
 import API from '../../api';
+import {UserContext} from '../../App';
 
-function MyTimer(props) {
-        let [timer, setTimer]             =   useState();
-
-        const exam = props.data.location.state.exam;
-        const examId = exam.id;
-        const examDuration = exam.paper.duration;
-        let history                             = useHistory();
+function MyTimer(props) 
+{
+        let [timer, setTimer]                 = useState();
+        const exam                            = props.data.location.state.exam;
+        const examId                          = exam.id;
+        let history                           = useHistory();
+        const {currentUser }                  = useContext(UserContext);
 
         useEffect(() =>
         {
-                getTimer(setTimer,examId,examDuration);
-                const heartBeatDuration = process.env.REACT_APP_HEART_BEAT_DURATION;
-                //------------Elapsed Time Book Keeping-------------------------------
-                let myInterval = setInterval(() => {
-                    manageExamSession(setTimer,examId,examDuration)
-                }, heartBeatDuration)
-                //--------------------------------------------------------------------
-                //--------------Cleanup Function--------------------------------------
-                return () => {
+          let examDuration                    = exam.paper.duration;
+          if(currentUser && currentUser.ph === 'PH')
+          {
+            let extraTime = exam.paper.ph_time;
+            examDuration  = examDuration + extraTime;
+          }
+
+          getTimer(setTimer,examId,examDuration);
+          const heartBeatDuration = process.env.REACT_APP_HEART_BEAT_DURATION;
+
+          //------------Elapsed Time Book Keeping-------------------------------
+          let myInterval = setInterval(() => 
+          {
+            manageExamSession(setTimer,examId,examDuration);
+          }, heartBeatDuration)
+          //--------------------------------------------------------------------
+
+          //--------------Cleanup Function--------------------------------------
+          return () => {
                     clearInterval(myInterval);
-                }
-                //--------------------------------------------------------------------
-        },[examId, examDuration]);
+          }
+          //--------------------------------------------------------------------
+
+        },[examId,currentUser,exam]);
 
         return (
             timer ? <CountdownTimer count={timer} hideDay size={20} backgroundColor="#007bff" color="#ffffff" onEnd={() => {handleEndExam(props,history);}}/> : null

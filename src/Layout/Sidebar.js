@@ -4,17 +4,16 @@ import { Link } from 'react-router-dom';
 
 function Sidebar() 
 {
-    const {userType, setUserType}   = useContext(UserContext);
+    const {currentUser, setCurrentUser}   = useContext(UserContext);
 
-    if(userType === 'STUDENT')
+    if(currentUser && currentUser.role === 'STUDENT')
     {
         return (
                 <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
                     <div className="sb-sidenav-menu">
                         <div className="nav">
                             <div className="sb-sidenav-menu-heading">Main Menu</div>
-                            <Link className="nav-link" to={{pathname: "/studenthome", 
-                                state:{ userType:'STUDENT' }}}>
+                            <Link className="nav-link" to={{pathname: "/studenthome"}}>
                                 <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                                 Home
                             </Link>
@@ -23,20 +22,18 @@ function Sidebar()
                 </nav>
         );
     }
-    else if(userType === 'ADMIN')
+    else if(currentUser && currentUser.role === 'ADMIN')
     {
         return (
             <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
                 <div className="sb-sidenav-menu">
                     <div className="nav">
                         <div className="sb-sidenav-menu-heading">Main Menu</div>
-                        <Link  className="nav-link" to={{pathname: "/adminhome", 
-                            state:{ userType:'ADMIN' }}}>
+                        <Link  className="nav-link" to={{pathname: "/adminhome"}}>
                             <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                             Home
                         </Link>
-                        <Link  className="nav-link" to={{pathname: "/clearsession", 
-                            state:{ userType:'ADMIN' }}}>
+                        <Link  className="nav-link" to={{pathname: "/clearsession"}}>
                             <div className="sb-nav-link-icon"><i className="fas fa-address-card"></i></div>
                             Clear Session
                         </Link>
@@ -48,13 +45,11 @@ function Sidebar()
                         </a>
                         <div className="collapse" id="collapseConfigurations" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav className="sb-sidenav-menu-nested nav">
-                                <Link className="nav-link" to={{pathname: "/configHeader", 
-                                state:{ userType:'ADMIN' }}}>
+                                <Link className="nav-link" to={{pathname: "/configHeader"}}>
                                     <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
                                     Configure Header
                                 </Link>
-                                <Link className="nav-link" to={{pathname: "/configFooter", 
-                                state:{ userType:'ADMIN' }}}>
+                                <Link className="nav-link" to={{pathname: "/configFooter"}}>
                                     <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
                                     Configure Footer
                                 </Link>

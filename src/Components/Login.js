@@ -8,7 +8,7 @@ import {UserContext} from '../App';
 
 export default function Login(props)
 {
-  const {userType, setUserType}                    = useContext(UserContext);
+  const {currentUser, setCurrentUser}              = useContext(UserContext);
   let history                                      = useHistory();
   const [flag, setFlag]                            =   useState();
   const [myRecaptcha, setMyRecaptcha]              =   useState();
@@ -22,7 +22,7 @@ export default function Login(props)
         onSubmit={(values,{ setSubmitting }) =>
         {
           if (myRecaptcha !== undefined){
-            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setUserType);
+            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser);
           }
         }}
         validationSchema={Yup.object().shape({
@@ -133,7 +133,7 @@ export default function Login(props)
   );
 }
 
-async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history,setUserType)
+async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser)
 {
     await API.post('/login',{"username":username,"password":password,"inst_id":instId,"flag":flag,"myRecaptcha":myRecaptcha}).then(res =>
     {
@@ -143,13 +143,13 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
                 localStorage.setItem("token",JSON.stringify(res.data.token));
                 if(res.data.data.role === 'STUDENT')
                 {
-                    setUserType('STUDENT');
-                    history.replace({ pathname: '/studenthome',state:{userType: 'STUDENT'}});
+                    setCurrentUser(res.data.data);
+                    history.replace({ pathname: '/studenthome',state:{currentUser: res.data.data}});
                 }
                 else if(res.data.data.role === 'ADMIN')
                 {
-                    setUserType('ADMIN');
-                    history.replace({ pathname: '/adminhome',state:{userType: 'ADMIN'}});
+                    setCurrentUser(res.data.data);
+                    history.replace({ pathname: '/adminhome',state:{currentUser: res.data.data}});
                 }
             }
             else

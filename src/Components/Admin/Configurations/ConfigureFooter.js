@@ -1,37 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
-import {UserContext} from '../../../App';
 
 function ConfigureFooter(props) 
 {
     const [footerData ,setFooterData]   =   useState(false);
     const [msg ,setMsg]                 =   useState('');
-    const {userType, setUserType}       =   useContext(UserContext); 
-    let history                         =   useHistory();
-
-    useEffect(() => {
-        if(props.location.state)
-        {
-            setUserType(props.location.state.userType);
-        }
-        else
-        {
-            history.replace('/login');
-        }
-    },[props.location.state,history])
-
+    
     return(
         <>
             <Formik
             initialValues={{ orgName: ""}}
             onSubmit={(values,{ setSubmitting }) =>
             {
-                let userData = updateFooterData(values.orgName,setFooterData,setMsg);
+                updateFooterData(values.orgName,setFooterData,setMsg);
             }}
             validationSchema={Yup.object().shape({
                 orgName:Yup.string()
@@ -45,7 +30,6 @@ function ConfigureFooter(props)
                         values,
                         touched,
                         errors,
-                        isSubmitting,
                         handleChange,
                         handleBlur,
                         handleSubmit
