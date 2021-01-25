@@ -6083,6 +6083,18 @@ a.close.disabled {
   background-color: #007bff !important;
 }
 
+.blinking{
+  animation:blinkingText 1.2s infinite !important;
+  font-size:24px;
+}
+@keyframes blinkingText{
+  0%{     color: #ff0000;    }
+  49%{    color: #ff0000; }
+  60%{    color: transparent; }
+  99%{    color:transparent;  }
+  100%{   color: #ff0000;    }
+}
+
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {

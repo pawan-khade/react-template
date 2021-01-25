@@ -12,6 +12,9 @@ import ClearSession from '../Components/Admin/ClearSession';
 import ConfigureHeader from '../Components/Admin/Configurations/ConfigureHeader';
 import ConfigureFooter from '../Components/Admin/Configurations/ConfigureFooter';
 
+import InstHome from '../Components/Institute/InstHome';
+import InstReports from '../Components/Institute/InstReports';
+
 function Content() 
 {
         return (
@@ -29,6 +32,9 @@ function Content()
                             <Route exact path="/clearsession" component={ClearSession} />
                             <Route exact path="/configHeader" component={ConfigureHeader} />
                             <Route exact path="/configFooter" component={ConfigureFooter} />
+
+                            <Route exact path="/insthome" component={InstHome} />
+                            <Route exact path="/instreports" component={InstReports} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

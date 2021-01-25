@@ -29,69 +29,10 @@ function StudHome()
 
   useEffect(() =>
   {
-    (async function anyNameFunction()
-    {
-        const res = await API.get('/exam');
-        const exams = await res.data;
-
-        //-------------------Sort data according to exam date for cards---------
-        let unsortedData= exams.data;
-        let sorted = {};
-        sorted = unsortedData.sort(function(a,b)
-        {
-          return a.paper.from_date - b.paper.from_date;
-        });
-        //----------------------------------------------------------------------
-
-        let compleated = 0;
-        let yetToStart = 0;
-        let resume     = 0;
-        let expired    = 0;
-        let EndTime    = '';
-        let Now        = '';
-
-        Object.keys(sorted).forEach(function(key)
-        {
-          EndTime           = sorted[key].paper.to_date;
-          Now               = sorted[key].now;
-
-          if(sorted[key].examstatus === 'over')
-          {
-            compleated = compleated+1;
-          }
-          else if(sorted[key].examstatus === '')
-          {
-            if(EndTime < Now)
-            {
-              expired = expired+1;
-            }
-            else
-            {
-              yetToStart = yetToStart+1;
-            }
-          }
-          else if(sorted[key].examstatus === 'inprogress')
-          {
-            if(EndTime < Now)
-            {
-              expired = expired+1;
-            }
-            else
-            {
-              resume = resume+1;
-            }
-          }
-          else if(sorted[key].examstatus === 'expired')
-          {
-            expired = expired+1;
-          }
-        });
-        //---------------------------------------------------------------------
-        setUserRequest({ loading:false, myExams:exams, numExams:exams.data.length,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
-    })();
+    getExamData(setUserRequest);
   },[]);
 
-    return (
+  return (
       !userRequest.loading && currentUser ?
       <div>
         <div className="container-fluid">
@@ -104,11 +45,11 @@ function StudHome()
               </li>
             </ol>
             <div className="row col-lg-12">
-              <CountCard count={userRequest.numExams} label={"All"} color={"danger"}/>
-              <CountCard count={userRequest.compExams} label={"Completed"} color={"success"}/>
-              <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"}/>
-              <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"}/>
-              <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"}/>
+              <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest);}}/>
+              <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,'over');}}/>
+              <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,'yettostart');}}/>
+              <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"} onClick={() => {getExamData(setUserRequest,'inprogress');}}/>
+              <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"} onClick={() => {getExamData(setUserRequest,'expired');}}/>
             </div>
             <br/><br/>
             <div className="row col-lg-12">
@@ -121,7 +62,151 @@ function StudHome()
             </div><br/>
         </div>
       </div> : ''
-    );
+  );
+}
+
+
+async function getExamData(setUserRequest,filter1='All')
+{
+        const res = await API.get('/exam');
+        const exams = await res.data;
+
+        //-------------------Sort data according to exam date for cards---------
+        let unsortedData= exams.data;
+        let sorted = {};
+        sorted = unsortedData.sort(function(a,b)
+        {
+          return a.paper.from_date - b.paper.from_date;
+        });
+        //----------------------------------------------------------------------
+        let i               = 0;
+        let compleated      = 0;
+        let yetToStart      = 0;
+        let resume          = 0;
+        let expired         = 0;
+        let EndTime         = '';
+        let Now             = '';
+        let overIndex          = Array();
+        let inprogressIndex    = Array();
+        let yetToStartIndex    = Array();
+        let expiredIndex       = Array();
+
+        console.log(sorted);
+
+        Object.keys(sorted).forEach(function(key)
+        {
+          EndTime           = sorted[key].paper.to_date;
+          Now               = sorted[key].now;
+
+          if(sorted[key].examstatus === 'over')
+          {
+            compleated = compleated+1;
+            overIndex.push(key);
+          }
+          else if(sorted[key].examstatus === '')
+          {
+            if(EndTime < Now)
+            {
+              expired = expired+1;
+              expiredIndex.push(key);
+            }
+            else
+            {
+              yetToStart = yetToStart+1;
+              yetToStartIndex.push(key);
+            }
+          }
+          else if(sorted[key].examstatus === 'inprogress')
+          {
+            if(EndTime < Now)
+            {
+              expired = expired+1;
+              expiredIndex.push(key);
+            }
+            else
+            {
+              resume = resume+1;
+              inprogressIndex.push(key);
+            }
+          }
+          else if(sorted[key].examstatus === 'expired')
+          {
+            expired = expired+1;
+            expiredIndex.push(key);
+          }
+        });
+
+        //---------------------------Filtering array based on examStatus-------
+        if(filter1 === 'over')
+        {
+          for(i=0;i< inprogressIndex.length;i++)
+          {
+            delete sorted[inprogressIndex[i]];
+          }
+          
+          for(i=0;i< yetToStartIndex.length;i++)
+          {
+            delete sorted[yetToStartIndex[i]];
+          }
+          
+          for(i=0;i< expiredIndex.length;i++)
+          {
+            delete sorted[expiredIndex[i]];
+          }
+        }
+        else if(filter1 === 'inprogress')
+        {
+          for(i=0;i< overIndex.length;i++)
+          {
+            delete sorted[overIndex[i]];
+          }
+          
+          for(i=0;i< expiredIndex.length;i++)
+          {
+            delete sorted[expiredIndex[i]];
+          }
+
+          for(i=0;i< yetToStartIndex.length;i++)
+          {
+            delete sorted[yetToStartIndex[i]];
+          }
+        }
+        else if(filter1 === 'expired')
+        {
+          for(i=0;i< overIndex.length;i++)
+          {
+            delete sorted[overIndex[i]];
+          }
+          
+          for(i=0;i< yetToStartIndex.length;i++)
+          {
+            delete sorted[yetToStartIndex[i]];
+          }
+
+          for(i=0;i< inprogressIndex.length;i++)
+          {
+            delete sorted[inprogressIndex[i]];
+          }
+        }
+        else if(filter1 === 'yettostart')
+        {
+          for(i=0;i< overIndex.length;i++)
+          {
+            delete sorted[overIndex[i]];
+          }
+          
+          for(i=0;i< expiredIndex.length;i++)
+          {
+            delete sorted[expiredIndex[i]];
+          }
+
+          for(i=0;i< inprogressIndex.length;i++)
+          {
+            delete sorted[inprogressIndex[i]];
+          }
+        }
+        //---------------------------------------------------------------------
+        setUserRequest({ loading:false, myExams:exams, numExams:exams.data.length,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
 }
 
 export default StudHome;

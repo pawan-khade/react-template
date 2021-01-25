@@ -60,6 +60,30 @@ function Sidebar()
             </nav>
         );
     }
+    else if(currentUser && currentUser.role === 'EADMIN')
+    {
+        return (
+            <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
+                <div className="sb-sidenav-menu">
+                    <div className="nav">
+                        <div className="sb-sidenav-menu-heading">Main Menu</div>
+                        <Link  className="nav-link" to={{pathname: "/insthome"}}>
+                            <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                            Home
+                        </Link>
+                        <Link  className="nav-link" to={{pathname: "/clearsession"}}>
+                            <div className="sb-nav-link-icon"><i className="fas fa-address-card"></i></div>
+                            Clear Session
+                        </Link>
+                        <Link  className="nav-link" to={{pathname: "/instreports"}}>
+                            <div className="sb-nav-link-icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></div>
+                            Reports
+                        </Link>
+                    </div>
+                </div>
+            </nav>
+        );
+    }
     else
     {
         return (

@@ -7,19 +7,17 @@ import API from '../../api';
 
 
 function EndExamButton(props) {
-  const [isLast, setIsLast]               = useState(false);
+  
   const [show, setShow]                   = useState(false);
   let history                             = useHistory();
+  const handleClose = ()                  => setShow(false);
+  const handleShow = ()                   => setShow(true);
+  const index                             = parseInt(props.index);
+  const length                            = parseInt(props.length);
+  let isLast                              = useLast(index,length);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  
 
-  const index = parseInt(props.index);
-  const length= parseInt(props.length);
-
-  useEffect(() => {
-    index === length-1 ? setIsLast(true):  setIsLast(false);
-  },[index,length]);
         return (
           isLast ?
           <>
@@ -42,6 +40,17 @@ function EndExamButton(props) {
           </>
             : null
         );
+}
+
+function useLast(index,length)
+{
+  const [isLast, setIsLast]               = useState(false);
+
+  useEffect(() => {
+    index === length-1 ? setIsLast(true):  setIsLast(false);
+  },[index,length]);
+
+  return isLast;
 }
 
 async function handleEndExam(props,history)

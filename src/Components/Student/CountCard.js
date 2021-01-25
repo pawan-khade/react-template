@@ -5,7 +5,7 @@ function CountCard(props)
     return (
         <div className="col-lg-2" style={{fontSize: "10px"}}>
           <center>
-            <button type="button" className={'btn btn-'+props.color}>{props.count}</button>
+            <button type="button" onClick={props.onClick} className={'btn btn-'+props.color}>{props.count}</button>
           </center>
           <center>{props.label}</center>
         </div>

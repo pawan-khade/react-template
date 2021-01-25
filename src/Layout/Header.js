@@ -14,7 +14,7 @@ function Header()
     let [isLoggedIn, setIsLoggedIn]     =   useState(false);
     let [isStartExam, setIsStartExam]   =   useState(false);
     let [isLoaded,setIsLoaded]          =   useState(false);
-    let [myHeader,setMyHeader]          =   useState('GudExams');
+    let myHeader                        =   useHeader(setIsLoaded);
 
     useEffect(() =>
     {
@@ -51,11 +51,6 @@ function Header()
       }
     },[location,history,setShow,setMsg]);
 
-    useEffect(() =>
-    {
-        getHeaderData(setIsLoaded,setMyHeader);
-    },[]);
-
 
     return(
           !isStartExam ?
@@ -90,27 +85,41 @@ function toggleSidebar(setToggle,toggle)
     }
 }
 
-async function getHeaderData(setIsLoaded,setMyHeader)
+
+
+function useHeader(setIsLoaded)
 {
-    await API.get('/configurations',{params :{"type":"headerconfig"}})
-    .then(function (res) 
+    let [myHeader,setMyHeader]          =   useState('GudExams');
+
+    useEffect(() =>
     {
-        if(res.data.status === 'success')
+        getHeaderData();
+    },[]);
+    
+    async function getHeaderData()
+    {
+        await API.get('/configurations',{params :{"type":"headerconfig"}})
+        .then(function (res) 
         {
-            setMyHeader(res.data.header);
-            setIsLoaded(true);
-        }
-        else
+            if(res.data.status === 'success')
+            {
+                setMyHeader(res.data.header);
+                setIsLoaded(true);
+            }
+            else
+            {
+                setMyHeader('GudExams');
+                setIsLoaded(true);
+            }
+        })
+        .catch(function (error) 
         {
             setMyHeader('GudExams');
             setIsLoaded(true);
-        }
-    })
-    .catch(function (error) 
-    {
-        setMyHeader('GudExams');
-        setIsLoaded(true);
-    })
+        })
+    }
+
+    return myHeader
 }
 
 export default Header;

@@ -10,8 +10,7 @@ import API from './api';
 export const ShowContext  = React.createContext();
 export const PopupContext = React.createContext();
 export const UserContext  = React.createContext();
-
-const browserHistory = createBrowserHistory({});
+const browserHistory      = createBrowserHistory({});
 
 //----------------------Axios Interceptors--------------------------------------
 function setupAxios(setShow, setMsg) 
@@ -43,7 +42,7 @@ function setupAxios(setShow, setMsg)
       else if (status === 429)
       {
           setShow(true);
-          setMsg('Server is Busy. Please wait for some seconds. Your Answers will not be saved till this message keeps appearing.');
+          setMsg('Server is Busy. Please wait for some seconds. Your Response will not be saved till this message keeps appearing.');
       }
       return Promise.reject(error);
     }
@@ -58,11 +57,8 @@ function App()
     const [popupMsg, setPopupMsg]           = useState();
     const [show, setShow]                   = useState(false);
     const [msg, setMsg]                     = useState();
-    const [currentUser, setCurrentUser]     = useState();
-
-
-    useEffect(() => { whoAmI(setCurrentUser);},[]);
-
+    const [currentUser,setCurrentUser]      = useWhoAmI();
+    
     setupAxios(setShow, setMsg);
     return (
       <div>
@@ -83,13 +79,25 @@ function App()
     );
 }
 
-async function whoAmI(setCurrentUser)
+function useWhoAmI()
 {
-  const res = await API.get('/whoAmI');
-    if(res.data.status === 'Success')
-    {
-      setCurrentUser(res.data.data);
-    }
+  const [currentUser, setCurrentUser]     = useState();
+
+  useEffect(() => { whosMe();},[]);
+
+  async function whosMe()
+  {
+    const res = await API.get('/whoAmI');
+      if(res.data.status === 'Success')
+      {
+        setCurrentUser(res.data.data);
+      }
+  }
+
+  return [
+    currentUser,
+    setCurrentUser
+  ]
 }
 
 export default App;

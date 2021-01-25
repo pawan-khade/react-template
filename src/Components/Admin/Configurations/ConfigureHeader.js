@@ -62,7 +62,7 @@ function ConfigureHeader(props)
                                                 <div className="alert alert-info col-lg-12">{errors.orgName}</div>
                                             )}
                                         </Form.Group>
-                                        <div class="col-lg-1"></div>
+                                        <div className="col-lg-1"></div>
                                         
                                         <Form.Group className="col-lg-5 row">
                                             <center>

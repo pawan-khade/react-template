@@ -95,7 +95,7 @@ function ClearSession(props)
                 }
             }
             </Formik>
-            <div class="col-lg-12" style={{marginTop:"20px"}}>
+            <div className="col-lg-12" style={{marginTop:"20px"}}>
                 {fetchedUserData !== undefined ?
                     <ClearSessionUserInfo userData={fetchedUserData} setUserData={setUserData}/>
                 : null}

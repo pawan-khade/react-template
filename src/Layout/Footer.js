@@ -3,11 +3,11 @@ import API from '../api';
 
 function Footer() 
 {
-    const [footerData,setFooterData] = useState('');
-    let d       = new Date();
-    let year    = d.getFullYear();
+    let footerData  = useFooterData();
+    let d           = new Date();
+    let year        = d.getFullYear();
 
-    useEffect(() => {getFooterData(setFooterData);},[]);
+    
 
     return (
         footerData !=='' ? 
@@ -23,24 +23,35 @@ function Footer()
     );
 }
 
-async function getFooterData(setFooterData)
+
+
+
+function useFooterData()
 {
-    await API.get('/configurations',{params :{"type":"footerconfig"}})
-    .then(function (res) 
+    const [footerData,setFooterData] = useState('');
+    useEffect(() => {getFooterData();},[]);
+
+    async function getFooterData()
     {
-        if(res.data.status === 'success')
+        await API.get('/configurations',{params :{"type":"footerconfig"}})
+        .then(function (res) 
         {
-            setFooterData(res.data.footer);
-        }
-        else
+            if(res.data.status === 'success')
+            {
+                setFooterData(res.data.footer);
+            }
+            else
+            {
+                setFooterData('GudExams');
+            }
+        })
+        .catch(function (error) 
         {
             setFooterData('GudExams');
-        }
-    })
-    .catch(function (error) 
-    {
-        setFooterData('GudExams');
-    })
+        })
+    }
+
+    return footerData
 }
 
 export default Footer;

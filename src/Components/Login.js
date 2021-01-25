@@ -8,13 +8,11 @@ import {UserContext} from '../App';
 
 export default function Login(props)
 {
-  const {currentUser, setCurrentUser}              = useContext(UserContext);
-  let history                                      = useHistory();
-  const [flag, setFlag]                            =   useState();
-  const [myRecaptcha, setMyRecaptcha]              =   useState();
-  const [myMsg, setMyMsg]                          =   useState();
-
-  useEffect(() => {updateFlag(setFlag);}, []);
+  const {currentUser, setCurrentUser}              =    useContext(UserContext);
+  let history                                      =    useHistory();
+  const flag                                       =    useFlag();
+  const [myRecaptcha, setMyRecaptcha]              =    useState();
+  const [myMsg, setMyMsg]                          =    useState();
 
   return (
     flag !== undefined && <Formik
@@ -151,6 +149,11 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
                     setCurrentUser(res.data.data);
                     history.replace({ pathname: '/adminhome',state:{currentUser: res.data.data}});
                 }
+                else if(res.data.data.role === 'EADMIN')
+                {
+                    setCurrentUser(res.data.data);
+                    history.replace({ pathname: '/insthome',state:{currentUser: res.data.data}});
+                }
             }
             else
             {
@@ -159,11 +162,22 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
     })
 }
 
-async function updateFlag(setFlag)
+
+
+function useFlag()
 {
-  const res = await API.get('/settings',{params: {"type":"login"}});
-  if(res.data.status==='success')
-  {
-      setFlag(res.data.flag);
-  }
+    const [flag, setFlag]   =    useState();
+
+    useEffect(() => {updateFlag();}, []);
+
+    async function updateFlag()
+    {
+        const res = await API.get('/settings',{params: {"type":"login"}});
+        if(res.data.status==='success')
+        {
+            setFlag(res.data.flag);
+        }
+    }
+
+    return flag;
 }
