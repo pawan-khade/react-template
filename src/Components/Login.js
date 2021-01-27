@@ -5,17 +5,21 @@ import API from '../api';
 import ReCAPTCHA   from "react-google-recaptcha";
 import { useHistory } from 'react-router-dom';
 import {UserContext} from '../App';
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Login(props)
 {
-  const {currentUser, setCurrentUser}              =    useContext(UserContext);
-  let history                                      =    useHistory();
-  const flag                                       =    useFlag();
-  const [myRecaptcha, setMyRecaptcha]              =    useState();
-  const [myMsg, setMyMsg]                          =    useState();
+  const {currentUser, setCurrentUser}               =    useContext(UserContext);
+  let history                                       =    useHistory();
+  const [myRecaptcha, setMyRecaptcha]               =    useState();
+  const [myMsg, setMyMsg]                           =    useState();
+  let [loading, setLoading]                         =    useState(true);
+  const flag                                        =    useFlag(setLoading);
+  const siteKey                                     =    process.env.REACT_APP_CAPTCHA_SITE_KEY;
 
   return (
-    flag !== undefined && <Formik
+    !loading ?
+        flag !== undefined && <Formik
         initialValues={{ username: "", password: "", flag:flag ,instId:"" }}
         onSubmit={(values,{ setSubmitting }) =>
         {
@@ -104,7 +108,7 @@ export default function Login(props)
                                                 )}
                                             </div>)}
 
-                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey="6LceEOcZAAAAAIc_LC_IgqVWIAEiB1PriQGqMtc5" onChange={(value) => setMyRecaptcha(value)}/>
+                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey={siteKey} onChange={(value) => setMyRecaptcha(value)}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>
@@ -128,6 +132,10 @@ export default function Login(props)
         }
     }
     </Formik>
+    :
+    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
+        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+    </div>
   );
 }
 
@@ -164,7 +172,7 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
 
 
 
-function useFlag()
+function useFlag(setLoading)
 {
     const [flag, setFlag]   =    useState();
 
@@ -172,10 +180,12 @@ function useFlag()
 
     async function updateFlag()
     {
+        setLoading(true);
         const res = await API.get('/settings',{params: {"type":"login"}});
         if(res.data.status==='success')
         {
             setFlag(res.data.flag);
+            setLoading(false);
         }
     }
 

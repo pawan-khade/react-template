@@ -94,10 +94,7 @@ async function manageExamSession(setTimer,examId, examDuration,setChangeColor,se
     }
     setTimer(duration - timerData.elapsedTime);
   })
-  .catch((error) =>
-  {
-    console.log(error.response.status);
-  });
+  
 }
 
 

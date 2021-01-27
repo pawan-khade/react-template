@@ -4,11 +4,13 @@ import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function ConfigureHeader(props) 
 {
     const [headerData ,setHeaderData]   =   useState(false);
     const [msg ,setMsg]                 =   useState('');
+    let [loading, setLoading]           =   useState(false);
 
     return(
         <>
@@ -16,7 +18,7 @@ function ConfigureHeader(props)
             initialValues={{ orgName: "",file:""}}
             onSubmit={(values,{ setSubmitting }) =>
             {
-                configHeader(values.orgName,values.file,setHeaderData,setMsg);
+                configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading);
             }}
             validationSchema={Yup.object().shape({
                 orgName:Yup.string()
@@ -94,18 +96,23 @@ function ConfigureHeader(props)
             }
             </Formik>
             <div className="col-lg-12" style={{marginTop:"20px"}}>
-                {headerData ? 
+                {headerData && !loading ? 
                     <div className="alert alert-danger" role="alert">
                         {msg}
                     </div>
-                : null}
+                : 
+                    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
+                        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+                    </div>
+                }
             </div>
         </>
     );
 }
 
-async function configHeader(orgName,file,setHeaderData,setMsg)
+async function configHeader(orgName,file,setHeaderData,setMsg,setLoading)
 {
+    setLoading(true);
     let fd = new FormData();
     fd.append("type", 'headerconfig');
     fd.append("orgName", orgName);
@@ -133,6 +140,7 @@ async function configHeader(orgName,file,setHeaderData,setMsg)
             setHeaderData(false);
             setMsg('');
         }
+        setLoading(false);
     })
     .catch(function (error) 
     {

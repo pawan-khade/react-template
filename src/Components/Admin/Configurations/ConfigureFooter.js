@@ -4,11 +4,13 @@ import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function ConfigureFooter(props) 
 {
     const [footerData ,setFooterData]   =   useState(false);
     const [msg ,setMsg]                 =   useState('');
+    let [loading, setLoading]           =   useState(false);
     
     return(
         <>
@@ -16,7 +18,7 @@ function ConfigureFooter(props)
             initialValues={{ orgName: ""}}
             onSubmit={(values,{ setSubmitting }) =>
             {
-                updateFooterData(values.orgName,setFooterData,setMsg);
+                updateFooterData(values.orgName,setFooterData,setMsg,setLoading);
             }}
             validationSchema={Yup.object().shape({
                 orgName:Yup.string()
@@ -70,18 +72,23 @@ function ConfigureFooter(props)
             }
             </Formik>
             <div className="col-lg-12" style={{marginTop:"20px"}}>
-                {footerData ? 
+                {footerData && !loading ? 
                 <div className="alert alert-danger" role="alert">
                     {msg}
                 </div>
-                : null}
+                : 
+                <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
+                    <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+                </div>
+                }
             </div>
         </>
     );
 }
 
-async function updateFooterData(orgName,setFooterData,setMsg)
+async function updateFooterData(orgName,setFooterData,setMsg,setLoading)
 {
+    setLoading(true);
     const res = await API.put('/configurations',{"orgName" : orgName,"type":"footerconfig"});
     if(res.data.status === 'success')
     {
@@ -94,6 +101,7 @@ async function updateFooterData(orgName,setFooterData,setMsg)
     {
         setFooterData(false);
     }
+    setLoading(false);
     setMsg(res.data.message);
 }
 

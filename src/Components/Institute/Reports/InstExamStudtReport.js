@@ -1,5 +1,5 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation,useHistory} from 'react-router-dom';
 
 function InstExamStudtReport() 
 {
@@ -9,38 +9,49 @@ function InstExamStudtReport()
     let type        = location.state.type;
     let result      = searchResult(allExams,paper_id,type);
     let i           = 1;
+    let history     = useHistory();
 
     console.log(result);
     return (
         <div>
             <div className="container-fluid">
                 <h1 className="mt-4">Student Count Report</h1>
-                <ol className="breadcrumb mb-4">
-    <li className="breadcrumb-item active" style={{color:"maroon"}}><b>Exam Status:</b> {type.toUpperCase()}  &nbsp;&nbsp;&nbsp;<b>Paper Code:</b> {location.state.paper_code}</li>
-                </ol>
+                <div className="breadcrumb col-lg-12" style={{color:"maroon"}}>
+                    <div class="col-lg-4">
+                        <b>Exam Status:</b> {type.toUpperCase()}  
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Paper Code:</b> {location.state.paper_code}
+                    </div>
+                    <div class="col-lg-4">
+                        <button class="btn btn-primary btn-sm" style={{float:"right"}} onClick={() => {history.goBack()}}>Go Back</button>
+                    </div> 
+                </div>
                 <div className="row col-lg-12">
                     <table className="table table-bordered" id="dataTable">
                         <thead>
                         <tr style={{backgroundColor:"aqua"}}>
                             <th>Sr</th>
                             <th>Enrollment Number</th>
-                            <th>Exam Status</th>
                             <th>Exam Start Time</th>
                             <th>Exam End Time</th>
+                            <th>Exam Status</th>
                         </tr>
                         </thead>
                         <tbody>
                         { 
-                            result.map((data, index) => (    
-                            <tr key={index}>
-                                <td><center>{i++}</center></td>
-                                <td><center>{data.stdid.username}</center></td> 
-                                <td><center>{data.examstatus}</center></td>  
-                                <td>{data.startedon}</td>
-                                <td><center>{data.endon}</center></td> 
-                            </tr>                 
-                        ))                                                            
-                    } 
+                                result.map((data, index) => (   
+                                data.stdid ? 
+                                <tr key={index}>
+                                    <td><center>{i++}</center></td>
+                                    <td><center>{data.stdid.username}</center></td> 
+                                    <td>{data.startedon}</td>
+                                    <td><center>{data.endon}</center></td> 
+                                    <td><center>{data.examstatus}</center></td>  
+                                </tr>  
+                                 : null               
+                                ))                                                            
+                        } 
                         </tbody>
                     </table>
                 </div>

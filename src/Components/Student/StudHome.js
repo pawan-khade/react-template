@@ -4,11 +4,13 @@ import CountCard from './CountCard';
 import ExamCard from './ExamCard';
 import { useLocation } from 'react-router-dom';
 import {UserContext} from '../../App';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function StudHome()
 {
   const location                                  =   useLocation();
   const {currentUser, setCurrentUser}             =   useContext(UserContext);
+  let [loading, setLoading]                       =   useState(true);
 
   const [userRequest, setUserRequest] = useState({
     loading: true,
@@ -29,11 +31,11 @@ function StudHome()
 
   useEffect(() =>
   {
-    getExamData(setUserRequest);
+    getExamData(setUserRequest,setLoading);
   },[]);
 
   return (
-      !userRequest.loading && currentUser ?
+      !userRequest.loading && currentUser && !loading?
       <div>
         <div className="container-fluid">
             <h1 className="mt-4">Student Home</h1>
@@ -45,11 +47,11 @@ function StudHome()
               </li>
             </ol>
             <div className="row col-lg-12">
-              <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest);}}/>
-              <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,'over');}}/>
-              <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,'yettostart');}}/>
-              <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"} onClick={() => {getExamData(setUserRequest,'inprogress');}}/>
-              <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"} onClick={() => {getExamData(setUserRequest,'expired');}}/>
+              <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest,setLoading);}}/>
+              <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,setLoading,'over');}}/>
+              <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,setLoading,'yettostart');}}/>
+              <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"} onClick={() => {getExamData(setUserRequest,setLoading,'inprogress');}}/>
+              <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"} onClick={() => {getExamData(setUserRequest,setLoading,'expired');}}/>
             </div>
             <br/><br/>
             <div className="row col-lg-12">
@@ -61,16 +63,20 @@ function StudHome()
             }
             </div><br/>
         </div>
-      </div> : ''
+      </div> : 
+      <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
+        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+      </div>
   );
 }
 
 
-async function getExamData(setUserRequest,filter1='All')
+async function getExamData(setUserRequest,setLoading,filter1='All')
 {
+        setLoading(true);
         const res = await API.get('/exam');
         const exams = await res.data;
-
+        console.log(exams.data);
         //-------------------Sort data according to exam date for cards---------
         let unsortedData= exams.data;
         let sorted = {};
@@ -207,6 +213,7 @@ async function getExamData(setUserRequest,filter1='All')
         }
         //---------------------------------------------------------------------
         setUserRequest({ loading:false, myExams:exams, numExams:exams.data.length,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
+        setLoading(false);
 }
 
 export default StudHome;

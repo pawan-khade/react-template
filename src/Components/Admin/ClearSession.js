@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../api';
 import ClearSessionUserInfo from './ClearSessionUserInfo';
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 function ClearSession(props)
@@ -13,6 +14,7 @@ function ClearSession(props)
     const {setShow,setMsg}                          =   useContext(ShowContext);
     const [fetchedUserData, setUserData]            =   useState();
     const [flag, setFlag]                           =   useState();
+    let [loading, setLoading]                       =   useState(false);
 
     useEffect(() => {updateFlag(setFlag);}, []);
 
@@ -24,7 +26,7 @@ function ClearSession(props)
                 initialValues={{ enrollNo: "",flag:flag ,instId:"" }}
                 onSubmit={(values,{ setSubmitting }) =>
                 {
-                    fetchUserData(values.enrollNo,setUserData,setShow,setMsg,flag,values.instId);
+                    fetchUserData(values.enrollNo,setUserData,setShow,setMsg,setLoading,flag,values.instId);
                 }}
                 validationSchema={Yup.object().shape({
                     enrollNo:Yup.string()
@@ -96,9 +98,13 @@ function ClearSession(props)
             }
             </Formik>
             <div className="col-lg-12" style={{marginTop:"20px"}}>
-                {fetchedUserData !== undefined ?
+                {fetchedUserData !== undefined && !loading ?
                     <ClearSessionUserInfo userData={fetchedUserData} setUserData={setUserData}/>
-                : null}
+                :
+                    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
+                        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+                    </div>
+                }
             </div>
         </>
     );
@@ -109,14 +115,16 @@ function ClearSession(props)
     }
 }
 
-async function fetchUserData(enrollNo,setUserData,setShow,setMsg,flag='1',instId='0000')
+async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag='1',instId='0000')
 {
+    setLoading(true);
     await API.get('/user',{params: {"username" : enrollNo,"instId" : instId, "flag" : flag}})
     .then(res =>
     {
         if(res.data.status === 'success')
         {
             setUserData(res.data);
+            setLoading(false);
         }
         else
         {

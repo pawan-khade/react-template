@@ -8,7 +8,7 @@ function Popup(props)
 
   return (
     (props.popupShow && props.popupMsg!== undefined) ? 
-        <Modal show={props.setPopupShow} onHide={handleClose} size="lg">
+        <Modal show={props.setPopupShow} onHide={handleClose} backdrop="static" size="lg">
             <Modal.Header closeButton style={{backgroundColor:"OliveDrab",color:"white"}}>
                 <Modal.Title>Important Message</Modal.Title>
             </Modal.Header>

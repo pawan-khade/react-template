@@ -4,7 +4,8 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 
-function Options(props) {
+function Options(props) 
+{
     const [isOpen, setIsOpen]     = useState(false);
     const projpath                =   process.env.REACT_APP_PROJPATH;
     let opt                       =   '';
@@ -28,7 +29,7 @@ function Options(props) {
     }
 
     return (
-          <div className="col-lg-12 row">
+          <div className="col-lg-12 row" onClick={() => {props.setMyOption(optType);}} >
             <div className="col-lg-1">
               <input checked={verifyOption(questionIndex, selectedOptions, optType)} type="radio" name="option"  value={optType} onChange={() => {
               props.setMyOption(optType);
@@ -47,7 +48,8 @@ function Options(props) {
     );
 }
 
-function verifyOption(questionIndex, selectedOptions, optType){
+function verifyOption(questionIndex, selectedOptions, optType)
+{
   return selectedOptions[questionIndex] === optType;
 }
 

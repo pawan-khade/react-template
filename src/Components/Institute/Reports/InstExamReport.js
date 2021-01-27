@@ -2,34 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../../api';
 import Axios from 'axios';
+import ClipLoader from "react-spinners/ClipLoader";
+import Moment from 'react-moment';
 
 
 function InstExamReport()
 {
     const [allPapers, setAllPapers]                 =   useState([]);
     const [allExams, setAllExams]                   =   useState([]);
+    let [loading, setLoading]                       =   useState(true);
     let i                                           =   1;
    
 
     useEffect(() => 
     {
-        getPrograms(setAllPapers,setAllExams);
+        getPrograms(setAllPapers,setAllExams,setLoading);
     },[]);
 
     return (
-    allPapers.length > 0 ?
+    allPapers.length > 0 && !loading ?
       <div>
         <div className="container-fluid">
             <h1 className="mt-4">Institute Examination Report</h1>
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Institute Examination Report</li>
             </ol>
-            <div className="row col-lg-12">
+            <div className="row col-lg-12" style={{overflow:"auto"}}>
                 <table className="table table-bordered" id="dataTable">
                     <thead>
                     <tr style={{backgroundColor:"aqua"}}>
                         <th>Sr</th>
-                        <th>Date</th>
+                        <th>Date & Start Time</th>
                         <th>Code</th>
                         <th>Subject Name</th>
                         <th>Marks</th>
@@ -46,7 +49,7 @@ function InstExamReport()
                         allPapers.map((data, index) => (    
                             <tr key={index}>
                                 <td><center>{i++}</center></td>
-                                <td><center>{data.from_date}</center></td> 
+                                <td><center><Moment format="MMMM Do YYYY, H:mm:ss A">{data.from_date}</Moment></center></td> 
                                 <td><center>{data.paper_code}</center></td>  
                                 <td>{data.paper_name}</td>
                                 <td><center>{data.marks}</center></td> 
@@ -78,11 +81,13 @@ function InstExamReport()
             </div>
         </div>
       </div>
-      : null
+      : <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
+            <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+        </div>
     );
 }
 
-async function getPrograms(setAllPapers,setAllExams)
+async function getPrograms(setAllPapers,setAllExams,setLoading)
 {
     let allPapers = [];
     let allExams  = [];
@@ -96,7 +101,7 @@ async function getPrograms(setAllPapers,setAllExams)
                     
                     Axios.all([
                         await API.get('/paper',{ params: {"program_id":res.data.data[i].id}}),
-                        await API.get('/exam',{ params: {"program_id":res.data.data[i].id,"type":"byprogramid"}})
+                        await API.get('/exam/'+res.data.data[i].id,{ params: {"type":"byprogramid"}})
                     ])
                     .then(responseArr => 
                     {
@@ -130,6 +135,7 @@ async function getPrograms(setAllPapers,setAllExams)
                 {
                     setAllPapers(allPapers);
                     setAllExams(allExams);
+                    setLoading(false);
                     //console.log(allExams);
                 } 
             }

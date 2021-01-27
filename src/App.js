@@ -36,13 +36,20 @@ function setupAxios(setShow, setMsg)
   API.interceptors.response.use(response => response,
     error =>
     {
-      const {status} = error.response;
-      if (status === 401)
+      const status = error.response;
+      if (status.status === 401)
+      {
         browserHistory.replace('/login');
-      else if (status === 429)
+      }
+      else if (status.status === 429)
       {
           setShow(true);
           setMsg('Server is Busy. Please wait for some seconds. Your Response will not be saved till this message keeps appearing.');
+      }
+      if (!error.response) 
+      {
+        setShow(true);
+        setMsg('Your Connection to server is lost. Please Contact Internet Service Provider');
       }
       return Promise.reject(error);
     }
