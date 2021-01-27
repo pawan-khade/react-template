@@ -14,6 +14,8 @@ import ConfigureFooter from '../Components/Admin/Configurations/ConfigureFooter'
 
 import InstHome from '../Components/Institute/InstHome';
 import InstReports from '../Components/Institute/InstReports';
+import InstExamReport from '../Components/Institute/Reports/InstExamReport';
+import InstExamStudReport from '../Components/Institute/Reports/InstExamStudtReport';
 
 function Content() 
 {
@@ -35,6 +37,8 @@ function Content()
 
                             <Route exact path="/insthome" component={InstHome} />
                             <Route exact path="/instreports" component={InstReports} />
+                            <Route exact path="/instexamreport" component={InstExamReport} />
+                            <Route exact path="/instexamstudentreport" component={InstExamStudReport} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function InstReports(props)
 {
@@ -10,7 +11,24 @@ function InstReports(props)
                 <li className="breadcrumb-item active">Institute Reports</li>
             </ol>
             <div className="row col-lg-12">
-                
+            <table className="table table-bordered">
+                <thead>
+                    <tr style={{backgroundColor:"aqua"}}>
+                        <th colSpan={3}><center>Institute Reports</center></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <Link  className="nav-link" to={{pathname: "/instexamreport"}}>
+                                Institute Examination Report
+                            </Link>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
       </div>

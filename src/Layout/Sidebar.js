@@ -76,7 +76,7 @@ function Sidebar()
                             Clear Session
                         </Link>
                         <Link  className="nav-link" to={{pathname: "/instreports"}}>
-                            <div className="sb-nav-link-icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></div>
+                            <div className="sb-nav-link-icon"><i className="fas fa-clipboard-list" aria-hidden="true"></i></div>
                             Reports
                         </Link>
                     </div>
