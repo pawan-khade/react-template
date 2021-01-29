@@ -91,7 +91,7 @@ function getData(allPapers,allExams)
     allPapers.map((data, index) => (
         myData.push({
             srno                    : i++,
-            datenstarttime          : data.from_date,
+            datenstarttime          : <Moment format="YYYY-MM-DD H:mm:ss">{data.from_date}</Moment>,
             code                    : data.paper_code,
             subjectname             : data.paper_name,
             marks                   : data.marks,
