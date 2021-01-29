@@ -4,6 +4,9 @@ import API from '../../../api';
 import Axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import Moment from 'react-moment';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
 
 function InstExamReport()
@@ -12,8 +15,32 @@ function InstExamReport()
     const [allExams, setAllExams]                   =   useState([]);
     let [loading, setLoading]                       =   useState(true);
     let i                                           =   1;
-   
+    const header                                    =   getHeader(allExams);
+    const data                                      =   getData(allPapers,allExams);
 
+    const options = {
+        sizePerPageList: [
+            {
+                text: '5', value: 5
+            }, 
+            {
+                text: '10', value: 10
+            }, 
+            {
+                text: '50', value: 50
+            },
+            {
+                text: '500', value: 500
+            }, 
+            {
+                text: '1000', value: 1000
+            }, 
+            {
+                text: '10000', value: 10000
+            }
+        ]
+    };
+   
     useEffect(() => 
     {
         getPrograms(setAllPapers,setAllExams,setLoading);
@@ -28,56 +55,7 @@ function InstExamReport()
                 <li className="breadcrumb-item active">Institute Examination Report</li>
             </ol>
             <div className="row col-lg-12" style={{overflow:"auto"}}>
-                <table className="table table-bordered" id="dataTable">
-                    <thead>
-                    <tr style={{backgroundColor:"aqua"}}>
-                        <th>Sr</th>
-                        <th>Date & Start Time</th>
-                        <th>Code</th>
-                        <th>Subject Name</th>
-                        <th>Marks</th>
-                        <th>Total Q's</th>
-                        <th>Duration</th>
-                        <th>Total<br/>Students</th>
-                        <th>Total<br/>End</th>
-                        <th>Total<br/>Inprogress</th>
-                        <th>Total<br/>Not Attend</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { 
-                        allPapers.map((data, index) => (    
-                            <tr key={index}>
-                                <td><center>{i++}</center></td>
-                                <td><center><Moment format="MMMM Do YYYY, H:mm:ss A">{data.from_date}</Moment></center></td> 
-                                <td><center>{data.paper_code}</center></td>  
-                                <td>{data.paper_name}</td>
-                                <td><center>{data.marks}</center></td> 
-                                <td><center>{data.questions}</center></td>  
-                                <td><center>{data.durations}</center></td>
-                                <td><center>{getCount(allExams,'total',data.id)}</center></td> 
-                                <td><center>
-                                    <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'over',paper_code:data.paper_code}}}>     
-                                        {getCount(allExams,'end',data.id)}
-                                    </Link></center>
-                                </td>                                   
-                                <td><center>
-                                    <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'inprogress',paper_code:data.paper_code}}}>
-                                    {getCount(allExams,'inprogress',data.id)}
-                                    </Link>
-                                    </center>
-                                </td> 
-                                <td><center>
-                                    <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'notattend',paper_code:data.paper_code}}}>
-                                    {getCount(allExams,'notattend',data.id)}
-                                    </Link>
-                                    </center>
-                                </td>                                   
-                            </tr>                 
-                        ))                                                            
-                    } 
-                    </tbody>
-                </table>
+                <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
             </div>
         </div>
       </div>
@@ -85,6 +63,48 @@ function InstExamReport()
             <ClipLoader color={'#ff0000'} loading={loading} size={200} />
         </div>
     );
+}
+
+function getHeader(allExams)
+{
+    let myHeader = [
+        { text: 'Sr No', dataField: 'srno'},
+        { text: 'Date & Start Time', dataField: 'datenstarttime',filter: textFilter()},
+        { text: 'Code', dataField: 'code',filter: textFilter()},
+        { text: 'Subject Name', dataField: 'subjectname',filter: textFilter()},
+        { text: 'Marks', dataField: 'marks'},
+        { text: 'Total Q\'s', dataField: 'totquestions'},
+        { text: 'Duration', dataField: 'duration'},
+        { text: 'Total Students', dataField: 'totstud'},
+        { text: 'Total End', dataField: 'totend'},
+        { text: 'Total Inprogress', dataField: 'totinprogress'},
+        { text: 'Total Not Attend', dataField: 'totnotattend'},
+    ];
+    return myHeader;
+}
+
+function getData(allPapers,allExams)
+{
+    let myData = [];
+    let i = 1;
+
+    allPapers.map((data, index) => (
+        myData.push({
+            srno                    : i++,
+            datenstarttime          : data.from_date,
+            code                    : data.paper_code,
+            subjectname             : data.paper_name,
+            marks                   : data.marks,
+            totquestions            : data.questions,
+            duration                : data.durations,
+            totstud                 : getCount(allExams,'total',data.id),
+            totend                  : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'over',paper_code:data.paper_code}}}> {getCount(allExams,'end',data.id)}</Link>,
+            totinprogress           : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'inprogress',paper_code:data.paper_code}}}> {getCount(allExams,'inprogress',data.id)}  </Link>,
+            totnotattend            : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'notattend',paper_code:data.paper_code}}}>{getCount(allExams,'notattend',data.id)} </Link>
+        })   
+    ))
+
+    return myData;
 }
 
 async function getPrograms(setAllPapers,setAllExams,setLoading)
@@ -98,7 +118,6 @@ async function getPrograms(setAllPapers,setAllExams,setLoading)
             {
                 for(let i=0;i<res.data.data.length;i++)
                 {
-                    
                     Axios.all([
                         await API.get('/paper',{ params: {"program_id":res.data.data[i].id}}),
                         await API.get('/exam/'+res.data.data[i].id,{ params: {"type":"byprogramid"}})
@@ -121,7 +140,6 @@ async function getPrograms(setAllPapers,setAllExams,setLoading)
                             }
                         }
                     });
-                    
                 }
                 allPapers = [...allPapers];
                 allPapers = [...new Set(allPapers)];

@@ -14,7 +14,19 @@ const WebCamCapture = (props) => {
     const {setPopupShow,setPopupMsg}        = useContext(PopupContext);
     const exam                              = props.exam;
     
-  
+    const capture                = React.useCallback(
+    () => 
+        { 
+          if(webcamRef)
+          {
+              const imageSrc           = webcamRef.current.getScreenshot();
+              setimgSrc(imageSrc);  
+              storeSnap(exam,imageSrc);
+          }
+        },
+        [webcamRef,setimgSrc,exam]
+    );
+
     useEffect(() => {    
         navigator.mediaDevices.getUserMedia({ video: true, voice: true })
         .then(function(stream) 
@@ -35,20 +47,7 @@ const WebCamCapture = (props) => {
             clearInterval(myCapture);
         }
         //------------------------------------------------------------------
-    },[history.location]);  
-
-    const capture                = React.useCallback(
-      () => 
-      { 
-        if(webcamRef)
-        {
-            const imageSrc           = webcamRef.current.getScreenshot();
-            setimgSrc(imageSrc);  
-            storeSnap(exam,imageSrc);
-        }
-      },
-      [webcamRef,setimgSrc]
-    );
+    },[history.location,capture,history,props,setPopupMsg,setPopupShow]);   
   
     return (
         <div className="col-lg-12" style={{margin:"20px"}}>

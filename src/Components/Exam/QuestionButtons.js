@@ -47,9 +47,9 @@ function changeIndex(props,index,history)
 function getSelectedOptions(questions)
 {
   let originalSelectedOptions = {};
-  questions.map((question,index) =>
+  originalSelectedOptions = questions.map((question,index) =>
   {
-    originalSelectedOptions[index] = question.stdanswer
+    return question.stdanswer
   });
   return originalSelectedOptions;
 }

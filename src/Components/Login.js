@@ -52,7 +52,7 @@ export default function Login(props)
             } = props;
             return (
 
-                <div>
+                <div style={{marginBottom:"30px"}}>
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-lg-5">
@@ -108,7 +108,7 @@ export default function Login(props)
                                                 )}
                                             </div>)}
 
-                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey={siteKey} onChange={(value) => setMyRecaptcha(value)}/>
+                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" size="compact" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>
@@ -133,8 +133,8 @@ export default function Login(props)
     }
     </Formik>
     :
-    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
-        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
+        <ClipLoader color={'#ff0000'} loading={loading} size={100} />
     </div>
   );
 }

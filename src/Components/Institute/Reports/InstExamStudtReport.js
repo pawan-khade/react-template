@@ -1,5 +1,8 @@
 import React from 'react';
 import {useLocation,useHistory} from 'react-router-dom';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
 function InstExamStudtReport() 
 {
@@ -8,8 +11,33 @@ function InstExamStudtReport()
     let paper_id    = location.state.paper_id;
     let type        = location.state.type;
     let result      = searchResult(allExams,paper_id,type);
+    const header    = getHeader();
+    const data      = getData(result);
     let i           = 1;
     let history     = useHistory();
+
+    const options = {
+        sizePerPageList: [
+            {
+                text: '5', value: 5
+            }, 
+            {
+                text: '10', value: 10
+            }, 
+            {
+                text: '50', value: 50
+            },
+            {
+                text: '500', value: 500
+            }, 
+            {
+                text: '1000', value: 1000
+            }, 
+            {
+                text: 'All', value: data.length
+            }
+        ]
+    };
 
     console.log(result);
     return (
@@ -27,39 +55,55 @@ function InstExamStudtReport()
                         <button class="btn btn-primary btn-sm" style={{float:"right"}} onClick={() => {history.goBack()}}>Go Back</button>
                     </div> 
                 </div>
-                <div className="row col-lg-12">
-                    <table className="table table-bordered" id="dataTable">
-                        <thead>
-                        <tr style={{backgroundColor:"aqua"}}>
-                            <th>Sr</th>
-                            <th>Enrollment Number</th>
-                            <th>Exam Start Time</th>
-                            <th>Exam End Time</th>
-                            <th>Exam Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        { 
-                                result.map((data, index) => (   
-                                data.stdid ? 
-                                <tr key={index}>
-                                    <td><center>{i++}</center></td>
-                                    <td><center>{data.stdid.username}</center></td> 
-                                    <td>{data.startedon}</td>
-                                    <td><center>{data.endon}</center></td> 
-                                    <td><center>{data.examstatus}</center></td>  
-                                </tr>  
-                                 : null               
-                                ))                                                            
-                        } 
-                        </tbody>
-                    </table>
+                <div className="row col-lg-12" style={{overflow:"auto"}}>
+                    <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
                 </div>
 
             </div>
         </div>
     );
 }
+
+function getHeader()
+{
+    let myHeader = [
+        { text: 'Sr No', dataField: 'srno'},
+        { text: 'Enrollment Number', dataField: 'enrollno',filter: textFilter()},
+        { text: 'Exam Start Time', dataField: 'startedon',filter: textFilter()},
+        { text: 'Exam End Time', dataField: 'endon',filter: textFilter()},
+        { text: 'Exam Status', dataField: 'examstatus',filter: textFilter()}
+    ];
+    return myHeader;
+}
+
+
+function getData(result)
+{
+    let myData = [];
+    let i = 1;
+
+    result.filter(function(data) {
+        if(data.stdid)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }).map((data, index) => (
+        myData.push({
+            srno            : i++,
+            enrollno        : data.stdid.username,
+            startedon       : data.startedon,
+            endon           : data.endon,
+            examstatus      : data.examstatus
+        })   
+    ))
+
+    return myData;
+}
+
 
 function searchResult(allExams,paper_id,type)
 {

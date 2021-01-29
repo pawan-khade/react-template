@@ -12,52 +12,6 @@ export const PopupContext = React.createContext();
 export const UserContext  = React.createContext();
 const browserHistory      = createBrowserHistory({});
 
-//----------------------Axios Interceptors--------------------------------------
-function setupAxios(setShow, setMsg) 
-{
-  API.interceptors.request.use(function (config)
-  {
-    if(browserHistory.location.pathname !== '/')
-    {
-      const token = JSON.parse(localStorage.getItem("token"));
-      if (token)
-      {
-        config.headers['Authorization'] = 'Bearer ' + token;
-      }
-    }
-    return config;
-  },
-  function (error)
-  {
-      return Promise.reject(error);
-  });
-
-
-  API.interceptors.response.use(response => response,
-    error =>
-    {
-      const status = error.response;
-      if (status.status === 401)
-      {
-        browserHistory.replace('/login');
-      }
-      else if (status.status === 429)
-      {
-          setShow(true);
-          setMsg('Server is Busy. Please wait for some seconds. Your Response will not be saved till this message keeps appearing.');
-      }
-      if (!error.response) 
-      {
-        setShow(true);
-        setMsg('Your Connection to server is lost. Please Contact Internet Service Provider');
-      }
-      return Promise.reject(error);
-    }
-  );
-}
-//----------------------------End of Axios Interceptors-------------------------
-
-
 function App()
 {
     const [popupShow, setPopupShow]         = useState(false);
@@ -106,5 +60,58 @@ function useWhoAmI()
     setCurrentUser
   ]
 }
+
+
+//----------------------Axios Interceptors--------------------------------------
+function setupAxios(setShow, setMsg) 
+{
+  API.interceptors.request.use(function (config)
+  {
+    if(browserHistory.location.pathname !== '/')
+    {
+      const token = JSON.parse(localStorage.getItem("token"));
+      if (token)
+      {
+        config.headers['Authorization'] = 'Bearer ' + token;
+      }
+    }
+    return config;
+  },
+  function (error)
+  {
+      return Promise.reject(error);
+  });
+
+
+  API.interceptors.response.use(response => response,
+    error =>
+    {
+      const status = error.response;
+
+      if ((status!== undefined) && (status.status === 401))
+      {
+        browserHistory.replace('/login');
+      }
+      else if ((status!== undefined) && (status.status === 429))
+      {
+          setShow(true);
+          setMsg('Server is Busy. Please wait for some seconds. Your Response will not be saved till this message keeps appearing.');
+      }
+      else if(status === undefined || !status)
+      {
+        setShow(true);
+        setMsg('There is some problem with server response.Your Response will not be saved till this message keeps appearing.');
+      }
+
+      if (!error.response) 
+      {
+        setShow(true);
+        setMsg('Your Connection to server is lost. Please Contact Internet Service Provider');
+      }
+      return Promise.reject(error);
+    }
+  );
+}
+//----------------------------End of Axios Interceptors-------------------------
 
 export default App;

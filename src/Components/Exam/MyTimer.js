@@ -86,7 +86,7 @@ async function manageExamSession(setTimer,examId, examDuration,setChangeColor,se
   await API.put('/examSession',{"exam_id": examId})
   .then((res) => {
     const timerData = res.data;
-    console.log('RemainingTime:'+(duration-timerData.elapsedTime)+' exaust_time:'+timer_exaust)
+    //console.log('RemainingTime:'+(duration-timerData.elapsedTime)+' exaust_time:'+timer_exaust)
     if((duration-timerData.elapsedTime) <= timer_exaust)
     {
       setChangeColor('#ff0000');

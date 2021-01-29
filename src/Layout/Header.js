@@ -49,6 +49,17 @@ function Header()
       {
           setIsLoggedIn(false);
       }
+
+      if(PathName === '/login')
+      {
+        document.body.classList.add('bg-primary');
+        setToggle(true);
+        document.body.classList.remove('sb-sidenav-toggled');document.body.classList.remove('sb-nav-fixed');
+      }
+      else
+      {
+        document.body.classList.remove('bg-primary');
+      }
     },[location,history,setShow,setMsg]);
 
 
@@ -66,7 +77,7 @@ function Header()
                         </div>
                     </div>*/}
                 </form>
-                { isLoggedIn ? <LoginButton url={'/logout'} label={'Logout'} setIsLoggedIn={setIsLoggedIn}/>: <LoginButton url={'/login'} label={'Login'}/>}
+                { isLoggedIn ? <LoginButton url={'/logout'} label={'Logout'} setIsLoggedIn={setIsLoggedIn}/>: null}
             </nav>
             : null
     );

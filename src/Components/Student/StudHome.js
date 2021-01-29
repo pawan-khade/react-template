@@ -39,13 +39,15 @@ function StudHome()
       <div>
         <div className="container-fluid">
             <h1 className="mt-4">Student Home</h1>
-            <ol className="breadcrumb mb-4">
-              <li className="breadcrumb-item active">
+            <div className="breadcrumb col-lg-12 row">
+              <div class="col-lg-6">
                 <b>Student Name:</b> {currentUser.name} 
-                &nbsp;&nbsp;&nbsp;
+              </div>
+              <div class="col-lg-6">
                 <b>Enrollment No:</b> ({currentUser.username})
-              </li>
-            </ol>
+              </div>
+            </div>
+            
             <div className="row col-lg-12">
               <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest,setLoading);}}/>
               <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,setLoading,'over');}}/>
@@ -76,7 +78,6 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
         setLoading(true);
         const res = await API.get('/exam');
         const exams = await res.data;
-        console.log(exams.data);
         //-------------------Sort data according to exam date for cards---------
         let unsortedData= exams.data;
         let sorted = {};
@@ -92,12 +93,10 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
         let expired         = 0;
         let EndTime         = '';
         let Now             = '';
-        let overIndex          = Array();
-        let inprogressIndex    = Array();
-        let yetToStartIndex    = Array();
-        let expiredIndex       = Array();
-
-        console.log(sorted);
+        let overIndex          = [];
+        let inprogressIndex    = [];
+        let yetToStartIndex    = [];
+        let expiredIndex       = [];
 
         Object.keys(sorted).forEach(function(key)
         {
