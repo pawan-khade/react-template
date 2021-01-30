@@ -8,6 +8,8 @@ import Instructions from '../Components/Student/Instructions';
 import Startexam from '../Components/Startexam';
 
 import AdminHome from '../Components/Admin/Adminhome';
+import AdminReports from '../Components/Admin/AdminReports';
+import AdminExamReport from '../Components/Admin/Reports/AdminExamReport';
 import ClearSession from '../Components/Admin/ClearSession';
 import ConfigureHeader from '../Components/Admin/Configurations/ConfigureHeader';
 import ConfigureFooter from '../Components/Admin/Configurations/ConfigureFooter';
@@ -31,6 +33,8 @@ function Content()
                             <Route exact path="/startexam" component={Startexam} />
 
                             <Route exact path="/adminhome" component={AdminHome} />
+                            <Route exact path="/adminreports" component={AdminReports} />
+                            <Route exact path="/adminexamreport" component={AdminExamReport} />
                             <Route exact path="/clearsession" component={ClearSession} />
                             <Route exact path="/configHeader" component={ConfigureHeader} />
                             <Route exact path="/configFooter" component={ConfigureFooter} />

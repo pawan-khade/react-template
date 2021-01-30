@@ -118,7 +118,7 @@ function ClearSession(props)
 async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag='1',instId='0000')
 {
     setLoading(true);
-    await API.get('/user',{params: {"username" : enrollNo,"instId" : instId, "flag" : flag}})
+    await API.get('/user/'+enrollNo ,{params: {"instId" : instId, "flag" : flag}})
     .then(res =>
     {
         if(res.data.status === 'success')

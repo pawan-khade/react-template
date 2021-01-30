@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../../api';
 import Axios from 'axios';
@@ -7,17 +7,18 @@ import Moment from 'react-moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import {ShowContext} from '../../../App';
 
 
-function InstExamReport()
+function InstExamReport(props)
 {
+    const {setShow,setMsg}                          =   useContext(ShowContext);
     const [allPapers, setAllPapers]                 =   useState([]);
     const [allExams, setAllExams]                   =   useState([]);
     let [loading, setLoading]                       =   useState(true);
     let i                                           =   1;
     const header                                    =   getHeader(allExams);
     const data                                      =   getData(allPapers,allExams);
-
     const options = {
         sizePerPageList: [
             {
@@ -43,18 +44,19 @@ function InstExamReport()
    
     useEffect(() => 
     {
-        getPrograms(setAllPapers,setAllExams,setLoading);
-    },[]);
+        getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props);
+    },[props.instId]);
 
     return (
     allPapers.length > 0 && !loading ?
       <div>
         <div className="container-fluid">
-            <h1 className="mt-4">Institute Examination Report</h1>
-            <ol className="breadcrumb mb-4">
+            {props.role==='' || props.role===undefined &&(<h1 className="mt-4">Institute Examination Report</h1>)}
+            {props.role==='' || props.role===undefined &&(<ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Institute Examination Report</li>
-            </ol>
+            </ol>)}<br/>
             <div className="row col-lg-12" style={{overflow:"auto"}}>
+                
                 <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
             </div>
         </div>
@@ -107,20 +109,37 @@ function getData(allPapers,allExams)
     return myData;
 }
 
-async function getPrograms(setAllPapers,setAllExams,setLoading)
+async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props)
 {
     let allPapers = [];
     let allExams  = [];
-        const res = await API.get('/program');
+    let res       = [];
+    if(props.role==='ADMIN')
+    {
+        if(props.instId === '')
+        {
+            setMsg('Please Select Institute to get its report...');
+            setShow(true);
+            setAllPapers([]);
+            setAllExams([]);
+        }
+        console.log(props.instId);
+        res = await API.get('/program/'+props.instId);
+    }
+    else
+    {
+        res = await API.get('/program');
+    }
         if(res.data.status==='success')
         {
             if(res.data.data.length > 0)
             {
+                console.log(res.data.data.length);
                 for(let i=0;i<res.data.data.length;i++)
                 {
-                    Axios.all([
-                        await API.get('/paper',{ params: {"program_id":res.data.data[i].id}}),
-                        await API.get('/exam/'+res.data.data[i].id,{ params: {"type":"byprogramid"}})
+                    await Axios.all([
+                            API.get('/paper',{ params: {"program_id":res.data.data[i].id}}),
+                            API.get('/exam/'+res.data.data[i].id,{ params: {"type":"byprogramid"}})
                     ])
                     .then(responseArr => 
                     {
@@ -154,9 +173,24 @@ async function getPrograms(setAllPapers,setAllExams,setLoading)
                     setAllPapers(allPapers);
                     setAllExams(allExams);
                     setLoading(false);
-                    //console.log(allExams);
                 } 
             }
+            else
+            {
+                setAllPapers([]);
+                setAllExams([]);
+                setShow(true);
+                setMsg('No Program Data found for this Institute.Please Add data or Configure it Properly...');
+                setLoading(false);
+            }
+        }
+        else
+        {
+            setAllPapers([]);
+            setAllExams([]);
+            setShow(true);
+            setMsg('Problem fetching data from Server...');
+            setLoading(false);
         }
 }
 

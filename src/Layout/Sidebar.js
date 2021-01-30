@@ -55,6 +55,11 @@ function Sidebar()
                                 </Link>
                             </nav>
                         </div>
+
+                        <Link  className="nav-link" to={{pathname: "/adminreports"}}>
+                            <div className="sb-nav-link-icon"><i className="fas fa-clipboard-list"></i></div>
+                            Reports
+                        </Link>
                     </div>
                 </div>
             </nav>
