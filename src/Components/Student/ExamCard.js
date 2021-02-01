@@ -72,7 +72,7 @@ function ExamCard(props)
         }
         else
         {
-          myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
+          myLink = <Link to={{pathname: '/instructions',state: {exam:props.exam,role:'STUDENT'}}} className={BtnTheme}>{BtnCaption}</Link>;
         }
       }
       else
@@ -80,7 +80,7 @@ function ExamCard(props)
         BtnCaption='Continue Exam';
         Theme = 'text-white bg-primary';
         BtnTheme = 'btn btn-primary';
-        myLink = <Link to={{pathname: '/instructions',state: props.exam }} className={BtnTheme}>{BtnCaption}</Link>;
+        myLink = <Link to={{pathname: '/instructions',state: {exam:props.exam,role:'STUDENT'}}} className={BtnTheme}>{BtnCaption}</Link>;
       }
     }
 //------------------------------------------------------------------------------

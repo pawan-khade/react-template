@@ -9,9 +9,9 @@ function useOptions()
   let [exam, setExam]                   =   useState();
   let myExam                            =   undefined;
 
-  if(location.state)
+  if(location.state.exam)
   {
-    myExam = location.state;
+    myExam = location.state.exam;
   }
   useEffect(() =>
   {
@@ -21,7 +21,14 @@ function useOptions()
     }
     else
     {
-      history.replace("/studenthome");
+      if(location.state.role === 'STUDENT')
+      {
+        history.replace("/studenthome");
+      }
+      else
+      {
+        history.replace("/adminexamreport");
+      }
     }
   }, [myExam,history]);
 
@@ -34,6 +41,7 @@ function Instructions(props)
   const [startexam, setStartexam]     =   useState(true);
   let history                         =   useHistory();
   let exam                            =   useOptions();
+  let location                          =   useLocation();
 
   let button = '';
   let BtnLabel = '';
@@ -47,6 +55,11 @@ function Instructions(props)
         else
         {
           BtnLabel = 'Start Exam';
+        }
+
+        if(location.state.role === 'ADMIN')
+        {
+          BtnLabel = 'Preview Exam';
         }
 
         exam.paper.negative_marks===0 ?negativeMarks = 'No' : negativeMarks = 'Yes';
@@ -78,7 +91,7 @@ function Instructions(props)
                       <div className="card-footer">
                         <center>
                             <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)} /> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
-                            <button disabled={!checked} onClick={() => ExamStart(history,exam,setStartexam)} className="btn btn-success">{BtnLabel}</button>
+                            <button disabled={!checked} onClick={() => ExamStart(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
                         </center>
                       </div>
                   </div>
@@ -92,10 +105,12 @@ function Instructions(props)
     );
 }
 
-async function ExamStart(history,exam,setStartexam)
+async function ExamStart(history,exam,setStartexam,location)
 {
   let examDetails = {}
   //------------------Start Exam------------------------------------------------
+  if(location.state.role==='STUDENT')
+  {
     if(await startMyExam(exam))
     {
         const myQuestions = await getQuestions(exam);
@@ -117,6 +132,11 @@ async function ExamStart(history,exam,setStartexam)
     {
       setStartexam(false);
     }
+  }
+  else
+  {
+    // proof reading and exam preview structure will be here.
+  }
   //----------------------------------------------------------------------------
 }
 

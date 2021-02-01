@@ -18,7 +18,7 @@ function InstExamReport(props)
     let [loading, setLoading]                       =   useState(true);
     let i                                           =   1;
     const header                                    =   getHeader(allExams);
-    const data                                      =   getData(allPapers,allExams);
+    const data                                      =   getData(allPapers,allExams,props);
     const options = {
         sizePerPageList: [
             {
@@ -85,17 +85,20 @@ function getHeader(allExams)
     return myHeader;
 }
 
-function getData(allPapers,allExams)
+function getData(allPapers,allExams,props)
 {
     let myData = [];
     let i = 1;
 
-    allPapers.map((data, index) => (
+    allPapers.map((data, index) => {
+        console.log('index:'+index+' Data:'+allExams[index]);
+        let paper_name = (props.role==='ADMIN') ?  <Link to={{pathname: '/instructions',state: {exam:allExams[index],role:'ADMIN'}}}>{data.paper_name}</Link> :  data.paper_name ;
+
         myData.push({
             srno                    : i++,
             datenstarttime          : <Moment format="YYYY-MM-DD H:mm:ss">{data.from_date}</Moment>,
             code                    : data.paper_code,
-            subjectname             : data.paper_name,
+            subjectname             : paper_name,
             marks                   : data.marks,
             totquestions            : data.questions,
             duration                : data.durations,
@@ -104,7 +107,7 @@ function getData(allPapers,allExams)
             totinprogress           : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'inprogress',paper_code:data.paper_code}}}> {getCount(allExams,'inprogress',data.id)}  </Link>,
             totnotattend            : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'notattend',paper_code:data.paper_code}}}>{getCount(allExams,'notattend',data.id)} </Link>
         })   
-    ))
+    })
 
     return myData;
 }
