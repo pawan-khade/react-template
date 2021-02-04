@@ -16,7 +16,6 @@ function InstExamReport(props)
     const [allPapers, setAllPapers]                 =   useState([]);
     const [allExams, setAllExams]                   =   useState([]);
     let [loading, setLoading]                       =   useState(true);
-    let i                                           =   1;
     const header                                    =   getHeader(allExams);
     const data                                      =   getData(allPapers,allExams,props);
     const options = {
@@ -45,14 +44,14 @@ function InstExamReport(props)
     useEffect(() => 
     {
         getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props);
-    },[props.instId]);
+    },[props.instId,props,setMsg,setShow]);
 
     return (
     allPapers.length > 0 && !loading ?
       <div>
         <div className="container-fluid">
-            {props.role==='' || props.role===undefined &&(<h1 className="mt-4">Institute Examination Report</h1>)}
-            {props.role==='' || props.role===undefined &&(<ol className="breadcrumb mb-4">
+            {(props.role==='' || props.role===undefined) &&(<h1 className="mt-4">Institute Examination Report</h1>)}
+            {(props.role==='' || props.role===undefined) &&(<ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Institute Examination Report</li>
             </ol>)}<br/>
             <div className="row col-lg-12" style={{overflow:"auto"}}>

@@ -50,7 +50,15 @@ function Options(props)
 
 function verifyOption(questionIndex, selectedOptions, optType)
 {
-  return selectedOptions[questionIndex] === optType;
+  //console.log(questionIndex+':'+selectedOptions[questionIndex]+':'+optType);
+  if(selectedOptions[questionIndex])
+  {
+    return selectedOptions[questionIndex].trim() === optType.trim();
+  }
+  else
+  {
+    return selectedOptions[questionIndex] === optType;
+  }
 }
 
 export default Options;

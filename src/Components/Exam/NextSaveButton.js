@@ -16,7 +16,7 @@ function NextSaveButton(props) {
           myIndex < (maxQuestions) ? setIslast(false) : setIslast(true);
         },[myIndex,maxQuestions]);
 
-        console.log('myOption', props.myOption);
+        //console.log('myOption', props.myOption);
         return (
             <div className="col-lg-3">
                 <button className="btn btn-primary"
@@ -83,6 +83,8 @@ async function saveAndChangeIndex(props,index,history,maxQuestions,myOption,setS
              }
              else {
                newOptionStatus = curOptionStatus;
+               myQuestions[myIndex].answered = newOptionStatus;
+               myQuestions[myIndex].stdanswer = myOption;
              }
              //-----------------------------------------------------------------
              var originalSelectedOptions        = getSelectedOptions(myQuestions);

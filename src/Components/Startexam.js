@@ -2,7 +2,9 @@ import React ,{ useState, useEffect, useContext }  from 'react';
 import QuestionAnswer from "./Exam/QuestionAnswer";
 import QuestionButtons from "./Exam/QuestionButtons";
 import NextSaveButton from "./Exam/NextSaveButton";
+import NextButton from "./Exam/NextButton";
 import EndExamButton from "./Exam/EndExamButton";
+import EndPreviewButton from "./Exam/EndPreviewButton";
 import PreviousButton from "./Exam/PreviousButton";
 import OverallSummery from "./Exam/OverallSummery";
 import ReviewLater from "./Exam/ReviewLater";
@@ -24,6 +26,7 @@ function Startexam(props)
 
   if(props.location.state)
   {
+    //console.log(props.location.state.questions);
     var originalSelectedOptions        = getSelectedOptions(props.location.state.questions);
     var questionIndex                  = props.location.state.currentQuestionIndex;
     var myReviewArray                  = getReviewOptions(props.location.state.questions);
@@ -37,7 +40,7 @@ function Startexam(props)
     {
       setShow(true);
       setMsg('You are redirected because you have refreshed the examination page forcefully');
-      history.replace('/studenthome');
+        history.replace('/studenthome');
     }
   }, [props.location])
 
@@ -46,19 +49,22 @@ function Startexam(props)
     if(myOption)
     {
       setSelectedOptions(prev => {
-        return {...prev, [questionIndex]: myOption}
+        return {...prev, [questionIndex]: myOption.trim()}
       });
     }
   }, [myOption]);
 //----------------------Catching Opening of other window------------------------
   useEffect(() =>
   {
-    const onBlurCallback = () => onBlur(props, setPopupShow,setPopupMsg, history);
-    window.addEventListener('blur', onBlurCallback);
-    return () =>
+    if(props.location.state && !props.location.state.preview)
     {
-      window.removeEventListener('blur', onBlurCallback);
-    };
+      const onBlurCallback = () => onBlur(props, setPopupShow,setPopupMsg, history);
+      window.addEventListener('blur', onBlurCallback);
+      return () =>
+      {
+        window.removeEventListener('blur', onBlurCallback);
+      };
+    }
   }, [props.location]);
 //------------------------------------------------------------------------------
 //------------------------Restraining back button of browser--------------------
@@ -93,7 +99,7 @@ useEffect(() => {
                 </div>
                 <div className="col-lg-4">
                       <i className="fas fa-clock fa-lg" style={{float:"right"}}></i> &nbsp;&nbsp;
-                      {myCameraPerm && (<div style={{float:"right"}}><MyTimer data={props}/></div>)}
+                      {myCameraPerm && !props.location.state.preview && (<div style={{float:"right"}}><MyTimer data={props}/></div>)}
                 </div>
               </div>
           </div>
@@ -104,9 +110,17 @@ useEffect(() => {
               <hr/>
               <div className="col-lg-12 row">
               {myCameraPerm && (<PreviousButton data={props} setMyOption={setMyOption}/>)}
-              {myCameraPerm && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
-              {myCameraPerm && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
-              {myCameraPerm && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
+
+              {myCameraPerm && !props.location.state.preview && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
+
+              {myCameraPerm && props.location.state.preview && (<NextButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
+
+              {myCameraPerm && props.location.state.preview && (<EndPreviewButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
+
+              {myCameraPerm && !props.location.state.preview && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
+
+              {myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
+
                 {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm}/>)}
               </div>
             </div>
@@ -180,7 +194,14 @@ function getSelectedOptions(questions)
   let originalSelectedOptions = {};
   questions.map((question,index) =>
   {
-    originalSelectedOptions[index] = question.stdanswer
+    if(question.stdanswer)
+    {
+      originalSelectedOptions[index] = question.stdanswer.trim();
+    }
+    else
+    {
+      originalSelectedOptions[index] = question.stdanswer;
+    }
   });
   return originalSelectedOptions;
 }

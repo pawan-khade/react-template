@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {useLocation,useHistory} from 'react-router-dom';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
@@ -6,15 +6,12 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 
 function InstExamStudtReport() 
 {
-    const location  =  useLocation();
-    let allExams    = location.state.data;
-    let paper_id    = location.state.paper_id;
-    let type        = location.state.type;
-    let result      = searchResult(allExams,paper_id,type);
-    const header    = getHeader();
-    const data      = getData(result);
-    let i           = 1;
-    let history     = useHistory();
+    const location                  = useLocation();
+    let [allExams,paper_id,type]    = useData();
+    let result                      = searchResult(allExams,paper_id,type);
+    const header                    = getHeader();
+    const data                      = getData(result);
+    let history                     = useHistory();
 
     const options = {
         sizePerPageList: [
@@ -41,18 +38,19 @@ function InstExamStudtReport()
 
     console.log(result);
     return (
+        location.state ?
         <div>
             <div className="container-fluid">
                 <h1 className="mt-4">Student Count Report</h1>
                 <div className="breadcrumb col-lg-12" style={{color:"maroon"}}>
-                    <div class="col-lg-4">
+                    <div className="col-lg-4">
                         <b>Exam Status:</b> {type.toUpperCase()}  
                     </div>
-                    <div class="col-lg-4">
+                    <div className="col-lg-4">
                         <b>Paper Code:</b> {location.state.paper_code}
                     </div>
-                    <div class="col-lg-4">
-                        <button class="btn btn-primary btn-sm" style={{float:"right"}} onClick={() => {history.goBack()}}>Go Back</button>
+                    <div className="col-lg-4">
+                        <button className="btn btn-primary btn-sm" style={{float:"right"}} onClick={() => {history.goBack()}}>Go Back</button>
                     </div> 
                 </div>
                 <div className="row col-lg-12" style={{overflow:"auto"}}>
@@ -61,6 +59,7 @@ function InstExamStudtReport()
 
             </div>
         </div>
+        : null
     );
 }
 
@@ -81,26 +80,27 @@ function getData(result)
 {
     let myData = [];
     let i = 1;
-
-    result.filter(function(data) {
-        if(data.stdid)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }).map((data, index) => (
-        myData.push({
-            srno            : i++,
-            enrollno        : data.stdid.username,
-            startedon       : data.startedon,
-            endon           : data.endon,
-            examstatus      : data.examstatus
-        })   
-    ))
-
+    if(result)
+    {
+        result.filter(function(data) {
+            if(data.stdid)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }).map((data, index) => (
+            myData.push({
+                srno            : i++,
+                enrollno        : data.stdid.username,
+                startedon       : data.startedon,
+                endon           : data.endon,
+                examstatus      : data.examstatus
+            })   
+        ))
+    }
     return myData;
 }
 
@@ -143,4 +143,32 @@ function searchResult(allExams,paper_id,type)
     }
 }
 
+
+function useData()
+{
+    let [allExams, setAllExams]     = useState();
+    let [paper_id,setPaperId]       = useState('');
+    let [type,setType]              = useState('');
+
+    let history                     = useHistory();
+    const location                  = useLocation();
+
+    useEffect(() => {
+        
+        if(location.state)
+        {
+            setAllExams(location.state.data);
+            setPaperId(location.state.paper_id);
+            setType(location.state.type);
+        }
+        else
+        {
+            history.replace('/insthome');
+        }
+    },[location.state,history]);
+
+    return [
+        allExams,paper_id,type
+    ];
+}
 export default InstExamStudtReport;

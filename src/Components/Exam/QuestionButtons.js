@@ -32,6 +32,7 @@ function changeIndex(props,index,history)
   var originalSelectedOptions        = getSelectedOptions(props.qas.location.state.questions);
 
   const examDetailsButtons = {
+    preview                            :  props.qas.location.state.preview,
     exam                               :  props.qas.location.state.exam,
     questions                          :  props.qas.location.state.questions,
     currentQuestionIndex               :  index,

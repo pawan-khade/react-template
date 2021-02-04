@@ -9,9 +9,10 @@ function useOptions()
   let [exam, setExam]                   =   useState();
   let myExam                            =   undefined;
 
-  if(location.state.exam)
+  if(location.state && location.state.exam)
   {
     myExam = location.state.exam;
+    //console.log(myExam);
   }
   useEffect(() =>
   {
@@ -21,7 +22,7 @@ function useOptions()
     }
     else
     {
-      if(location.state.role === 'STUDENT')
+      if(location.state && location.state.role === 'STUDENT')
       {
         history.replace("/studenthome");
       }
@@ -91,7 +92,11 @@ function Instructions(props)
                       <div className="card-footer">
                         <center>
                             <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)} /> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
+                            {BtnLabel!=='Preview Exam' ?
                             <button disabled={!checked} onClick={() => ExamStart(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
+                            :
+                            <button disabled={!checked} onClick={() => ExamPreview(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
+                            }
                         </center>
                       </div>
                   </div>
@@ -105,24 +110,56 @@ function Instructions(props)
     );
 }
 
+async function ExamPreview(history,exam,setStartexam,location)
+{
+  let examDetails = {}
+  //------------------Start Exam------------------------------------------------
+  if(location.state.role !== 'STUDENT')
+  {
+        const myQuestions = await getPreviewQuestions(exam);
+        if(myQuestions)
+        {
+          examDetails = {
+          preview                             : true,
+          exam                                : exam,
+          questions                           : myQuestions,
+          currentQuestionIndex                : 0,
+          solvedQuestionIndexes               : [], 
+          unsolvedQuestionIndexes             : [],
+          markedSolvedIndexes                 : [],
+          markedUnsolvedIndexes               : [],
+        }
+        setStartexam(true);
+        history.replace("/startexam", examDetails) ;
+      }
+  }
+  else
+  {
+    setStartexam(false);
+  }
+}
+
+
 async function ExamStart(history,exam,setStartexam,location)
 {
   let examDetails = {}
   //------------------Start Exam------------------------------------------------
-  if(location.state.role==='STUDENT')
+  if(location.state.role === 'STUDENT')
   {
     if(await startMyExam(exam))
     {
         const myQuestions = await getQuestions(exam);
         if(myQuestions)
         {
+          //console.log(myQuestions);
           examDetails = {
-          exam: exam,
-          questions: myQuestions,
-          currentQuestionIndex: 0,
-          solvedQuestionIndexes              :  getIndexes(myQuestions,'answered'), unsolvedQuestionIndexes            :  getIndexes(myQuestions,'unanswered'),
-          markedSolvedIndexes                :  getIndexes(myQuestions,'answeredandreview'),
-          markedUnsolvedIndexes              :  getIndexes(myQuestions,'unansweredandreview'),
+          preview                             :   false,
+          exam                                :   exam,
+          questions                           :   myQuestions,
+          currentQuestionIndex                :   0,
+          solvedQuestionIndexes               :   getIndexes(myQuestions,'answered'), unsolvedQuestionIndexes             :   getIndexes(myQuestions,'unanswered'),
+          markedSolvedIndexes                 :   getIndexes(myQuestions,'answeredandreview'),
+          markedUnsolvedIndexes               :   getIndexes(myQuestions,'unansweredandreview'),
         }
         setStartexam(true);
         history.replace("/startexam", examDetails) ;
@@ -132,10 +169,6 @@ async function ExamStart(history,exam,setStartexam,location)
     {
       setStartexam(false);
     }
-  }
-  else
-  {
-    // proof reading and exam preview structure will be here.
   }
   //----------------------------------------------------------------------------
 }
@@ -156,11 +189,27 @@ async function startMyExam(exam)
   }
 }
 
+
 async function getQuestions(exam)
 {
   const ExamId = exam.id;
 
   const res = await API.get('/answer',{params: {"exam_id": ExamId}});
+  if(res.data.status === 'success')
+  {
+    return res.data.data;
+  }
+  else
+  {
+    return null;
+  }
+}
+
+async function getPreviewQuestions(exam)
+{
+  const PaperId = exam.paper.id;
+
+  const res = await API.get('/questions/'+PaperId,{params: {"type" : "preview"}});
   if(res.data.status === 'success')
   {
     return res.data.data;

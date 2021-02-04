@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-function PreviousButton(props) {
-        const [isfirst, setIsfirst]  = useState(false)
+function NextButton(props) {
+        const [isLast, setIsLast]   = useState(false)
         const myIndex               = parseInt(props.data.location.state.currentQuestionIndex);
         let history                 = useHistory();
+        const maxQuestions          = parseInt(props.data.location.state.questions.length);
 
         useEffect(() =>
         {
-          myIndex === 0 ? setIsfirst(true) : setIsfirst(false);
-        },[props,myIndex]);
+          myIndex+1 < (maxQuestions) ? setIsLast(false) : setIsLast(true);
+        },[myIndex,maxQuestions]);
 
         return (
             <div className="col-lg-3">
                 <button className="btn btn-primary" onClick={() => {props.setMyOption(undefined);
-                  changeIndex(props,(myIndex-1),history)}}
-                disabled={isfirst}>Previous</button>
+                  changeIndex(props,(myIndex+1),history)}}
+                disabled={isLast}>Next</button>
             </div>
         );
 }
@@ -38,4 +39,4 @@ function changeIndex(props,index,history)
 }
 
 
-export default PreviousButton;
+export default NextButton;

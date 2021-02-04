@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useContext  } from 'react';
+import React, { useState , useEffect, useContext, createRef } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../api';
@@ -6,6 +6,10 @@ import ReCAPTCHA   from "react-google-recaptcha";
 import { useHistory } from 'react-router-dom';
 import {UserContext} from '../App';
 import ClipLoader from "react-spinners/ClipLoader";
+
+window.recaptchaOptions = {
+    useRecaptchaNet: true,
+  };
 
 export default function Login(props)
 {
@@ -16,6 +20,7 @@ export default function Login(props)
   let [loading, setLoading]                         =    useState(true);
   const flag                                        =    useFlag(setLoading);
   const siteKey                                     =    process.env.REACT_APP_CAPTCHA_SITE_KEY;
+  const recaptchaRef                                =    createRef();
 
   return (
     !loading ?
@@ -24,7 +29,7 @@ export default function Login(props)
         onSubmit={(values,{ setSubmitting }) =>
         {
           if (myRecaptcha !== undefined){
-            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser);
+            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser,recaptchaRef);
           }
         }}
         validationSchema={Yup.object().shape({
@@ -108,10 +113,10 @@ export default function Login(props)
                                                 )}
                                             </div>)}
 
-                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" size="compact" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)}/>
+                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" size="compact" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)} ref={recaptchaRef}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>
+                                                <button className="btn btn-primary" type="submit" id="submit">Login</button>
                                             </div><br/>
 
                                             {myMsg !== undefined && (
@@ -139,11 +144,10 @@ export default function Login(props)
   );
 }
 
-async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser)
+async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser,recaptchaRef)
 {
     await API.post('/login',{"username":username,"password":password,"inst_id":instId,"flag":flag,"myRecaptcha":myRecaptcha}).then(res =>
     {
-        
             if(res.data.status === 'success')
             {
                 localStorage.setItem("token",JSON.stringify(res.data.token));
@@ -165,6 +169,7 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
             }
             else
             {
+                recaptchaRef.current.reset();
                 setMyMsg(res.data.message);
             }
     })

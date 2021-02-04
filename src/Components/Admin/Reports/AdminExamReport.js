@@ -10,8 +10,8 @@ function AdminExamReport()
     const [value, setValue]     =   useState();
 
     useEffect(() => {
-        getInsts(setInsts);
-    },[]);
+        getInsts(setInsts,setShow,setMsg);
+    },[setMsg,setShow]);
 
     return (
       <>
@@ -47,13 +47,18 @@ function AdminExamReport()
     );
 }
 
-async function getInsts(setInsts)
+async function getInsts(setInsts,setShow,setMsg)
 {
   await API.get('/user',{params: {"role":"EADMIN"}})
   .then((res) => {
     if(res.data.status === 'success')
     {
       setInsts(res.data.data);
+    }
+    else
+    {
+      setShow(true);
+      setMsg('Problem Fetching Data from Server');
     }
   });
 }

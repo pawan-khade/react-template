@@ -5,6 +5,7 @@ import ExamCard from './ExamCard';
 import { useLocation } from 'react-router-dom';
 import {UserContext} from '../../App';
 import ClipLoader from "react-spinners/ClipLoader";
+import SearchBox from './SearchBox';
 
 function StudHome()
 {
@@ -54,14 +55,17 @@ function StudHome()
               <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,setLoading,'yettostart');}}/>
               <CountCard count={userRequest.resumeExam} label={"Resume"} color={"primary"} onClick={() => {getExamData(setUserRequest,setLoading,'inprogress');}}/>
               <CountCard count={userRequest.expiredExam} label={"Expired"} color={"info"} onClick={() => {getExamData(setUserRequest,setLoading,'expired');}}/>
+              <SearchBox getExamData={getExamData} setUserRequest={setUserRequest} setLoading={setLoading}/>
             </div>
             <br/><br/>
             <div className="row col-lg-12">
             {
+              userRequest.numExams ?
               userRequest.myExams ? userRequest.myExams.data.map((exam) =>
               (
                   <ExamCard exam={exam} key={exam.id}/>
               )) : null
+              : null
             }
             </div><br/>
         </div>
@@ -77,7 +81,7 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
 {
         setLoading(true);
         const res = await API.get('/exam');
-        const exams = await res.data;
+        let exams = await res.data;
         //-------------------Sort data according to exam date for cards---------
         let unsortedData= exams.data;
         let sorted = {};
@@ -91,6 +95,7 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
         let yetToStart      = 0;
         let resume          = 0;
         let expired         = 0;
+        let numExams        = exams.data.length;
         let EndTime         = '';
         let Now             = '';
         let overIndex          = [];
@@ -210,8 +215,36 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
             delete sorted[inprogressIndex[i]];
           }
         }
+        else if(filter1==='All')
+        {
+
+        }
+        else
+        {
+          let searched = [];
+          //-------------------------Search Paper Name-------------------------------------
+            for(let i=0;i<sorted.length;i++)
+            {
+              let paper_name = sorted[i].paper.paper_name.toLowerCase();
+              let myFilter = filter1.toLowerCase();
+
+              if(paper_name.includes(myFilter))
+              {
+                searched.push(sorted[i]);
+              }
+            }
+            exams.data = searched;
+          //-------------------------------------------------------------------------------
+        }
         //---------------------------------------------------------------------
-        setUserRequest({ loading:false, myExams:exams, numExams:exams.data.length,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
+        if(exams.data)
+        {
+          setUserRequest({ loading:false, myExams:exams, numExams:numExams,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
+        }
+        else
+        {
+          setUserRequest({ loading:false, myExams:exams, numExams:0,  compExams:compleated, yetToStartExam:yetToStart, resumeExam:resume, expiredExam:expired });
+        }
         setLoading(false);
 }
 
