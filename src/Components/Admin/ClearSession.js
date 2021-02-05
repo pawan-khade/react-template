@@ -24,9 +24,17 @@ function ClearSession(props)
         <>
             <Formik
                 initialValues={{ enrollNo: "",flag:flag ,instId:"" }}
-                onSubmit={(values,{ setSubmitting }) =>
+                onSubmit={async (values,actions) =>
                 {
-                    fetchUserData(values.enrollNo,setUserData,setShow,setMsg,setLoading,flag,values.instId);
+                    await fetchUserData(values.enrollNo,setUserData,setShow,setMsg,setLoading,flag,values.instId);
+                    actions.setSubmitting(false);
+                    actions.resetForm({
+                        values: {
+                        enrollNo: '',
+                        flag: flag,
+                        instId:''
+                        },
+                    });
                 }}
                 validationSchema={Yup.object().shape({
                     enrollNo:Yup.string()
@@ -45,6 +53,7 @@ function ClearSession(props)
                         values,
                         touched,
                         errors,
+                        isSubmitting,
                         handleChange,
                         handleBlur,
                         handleSubmit
@@ -85,7 +94,7 @@ function ClearSession(props)
                                         </div>)}
 
                                         <div className="col-lg-12">
-                                            <center><Button variant="primary" type="submit">
+                                            <center><Button variant="primary" type="submit" disabled={isSubmitting}>
                                                 Submit
                                             </Button></center>
                                         </div>

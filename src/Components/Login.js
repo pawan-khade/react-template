@@ -26,10 +26,19 @@ export default function Login(props)
     !loading ?
         flag !== undefined && <Formik
         initialValues={{ username: "", password: "", flag:flag ,instId:"" }}
-        onSubmit={(values,{ setSubmitting }) =>
+        onSubmit={async (values,actions) =>
         {
           if (myRecaptcha !== undefined){
-            checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser,recaptchaRef);
+            await checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser,recaptchaRef);
+            actions.setSubmitting(false);
+            actions.resetForm({
+                values: {
+                  username: '',
+                  password: '',
+                  flag: flag,
+                  instId:''
+                },
+            });
           }
         }}
         validationSchema={Yup.object().shape({
@@ -69,7 +78,8 @@ export default function Login(props)
                                                 <label>User Name</label>
 
                                                 <input className="form-control py-4" id="username" type="text"
-                                                value ={values.userame}
+                                                name="username"
+                                                value ={values.username}
                                                 placeholder="Enter User Name"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
@@ -84,7 +94,8 @@ export default function Login(props)
                                             <div className="form-group">
                                                 <label className="form-group">Password</label>
 
-                                                <input className="form-control py-4" id="password" type="password"
+                                                <input className="form-control py-4" id="password" name="password"
+                                                type="password"
                                                 value ={values.password}
                                                 placeholder="Enter password"
                                                 onChange={handleChange}
@@ -100,7 +111,7 @@ export default function Login(props)
                                             {flag === 0 && (<div className="form-group">
                                                 <label className="form-group">Inst ID</label>
 
-                                                <input className="form-control py-4" id="instId" type="instId"
+                                                <input className="form-control py-4" id="instId" name="instId" type="instId"
                                                 value ={values.instId}
                                                 placeholder="Enter Institute ID"
                                                 onChange={handleChange}
@@ -116,7 +127,7 @@ export default function Login(props)
                                             <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" size="compact" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)} ref={recaptchaRef}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <button className="btn btn-primary" type="submit" id="submit">Login</button>
+                                                <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>
                                             </div><br/>
 
                                             {myMsg !== undefined && (

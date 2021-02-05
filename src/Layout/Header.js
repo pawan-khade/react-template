@@ -52,13 +52,8 @@ function Header()
 
       if(PathName === '/login')
       {
-        document.body.classList.add('bg-primary');
         setToggle(true);
         document.body.classList.remove('sb-sidenav-toggled');document.body.classList.remove('sb-nav-fixed');
-      }
-      else
-      {
-        document.body.classList.remove('bg-primary');
       }
     },[location,history,setShow,setMsg]);
 

@@ -44,7 +44,7 @@ function InstExamReport(props)
     useEffect(() => 
     {
         getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props);
-    },[props.instId,props,setMsg,setShow]);
+    },[props.instId,setMsg,setShow]);
 
     return (
     allPapers.length > 0 && !loading ?
@@ -90,7 +90,7 @@ function getData(allPapers,allExams,props)
     let i = 1;
 
     allPapers.map((data, index) => {
-        console.log('index:'+index+' Data:'+allExams[index]);
+        //console.log('index:'+index+' Data:'+allExams[index]);
         let paper_name = (props.role==='ADMIN') ?  <Link to={{pathname: '/instructions',state: {exam:allExams[index],role:'ADMIN'}}}>{data.paper_name}</Link> :  data.paper_name ;
 
         myData.push({
@@ -125,7 +125,7 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
             setAllPapers([]);
             setAllExams([]);
         }
-        console.log(props.instId);
+        //console.log(props.instId);
         res = await API.get('/program/'+props.instId);
     }
     else
@@ -136,7 +136,7 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
         {
             if(res.data.data.length > 0)
             {
-                console.log(res.data.data.length);
+                //console.log(res.data.data.length);
                 for(let i=0;i<res.data.data.length;i++)
                 {
                     await Axios.all([

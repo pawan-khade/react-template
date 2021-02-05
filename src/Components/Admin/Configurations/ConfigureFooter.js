@@ -16,9 +16,15 @@ function ConfigureFooter(props)
         <>
             <Formik
             initialValues={{ orgName: ""}}
-            onSubmit={(values,{ setSubmitting }) =>
+            onSubmit={async (values,actions) =>
             {
-                updateFooterData(values.orgName,setFooterData,setMsg,setLoading);
+                await updateFooterData(values.orgName,setFooterData,setMsg,setLoading);
+                actions.setSubmitting(false);
+                actions.resetForm({
+                        values: {
+                        orgName: ''
+                        },
+                });
             }}
             validationSchema={Yup.object().shape({
                 orgName:Yup.string()
@@ -32,6 +38,7 @@ function ConfigureFooter(props)
                         values,
                         touched,
                         errors,
+                        isSubmitting,
                         handleChange,
                         handleBlur,
                         handleSubmit
@@ -61,7 +68,7 @@ function ConfigureFooter(props)
                                             )}
                                         </Form.Group>
                                         <div className="col-lg-2">
-                                            <center><Button variant="primary" type="submit">Submit</Button></center>
+                                            <center><Button variant="primary" type="submit" disabled={isSubmitting}>Submit</Button></center>
                                         </div>
                                     </Form>
                                 </div>

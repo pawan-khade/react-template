@@ -8,7 +8,7 @@ function ClearSessionUserInfo(props)
 
         return (
             <>
-                <div className="col-lg-12">
+                <div className="col-lg-12" style={{overflow:"auto"}}>
                     <table className="table table-bordered">
                         <thead>
                             <tr style={{backgroundColor: "aqua"}}>
@@ -45,7 +45,7 @@ function ClearSessionUserInfo(props)
                         </tbody>
                     </table>
                 </div>
-                <div className="col-lg-12">
+                <div className="col-lg-12" style={{overflow:"auto"}}>
                     {props.userData.role === 'STUDENT' ?
                         <table className="table table-bordered">
                             <thead>

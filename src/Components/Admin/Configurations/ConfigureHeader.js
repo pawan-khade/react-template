@@ -16,9 +16,16 @@ function ConfigureHeader(props)
         <>
             <Formik
             initialValues={{ orgName: "",file:""}}
-            onSubmit={(values,{ setSubmitting }) =>
+            onSubmit={async (values,actions) =>
             {
-                configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading);
+                await configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading);
+                actions.setSubmitting(false);
+                actions.resetForm({
+                        values: {
+                        orgName: '',
+                        file: ''
+                        },
+                });
             }}
             validationSchema={Yup.object().shape({
                 orgName:Yup.string()
@@ -35,6 +42,7 @@ function ConfigureHeader(props)
                         touched,
                         errors,
                         handleChange,
+                        isSubmitting,
                         handleBlur,
                         handleSubmit,
                         setFieldValue
@@ -85,7 +93,7 @@ function ConfigureHeader(props)
                                         </Form.Group>
                                         
                                         <div className="col-lg-12">
-                                            <center><Button variant="primary" type="submit">Submit</Button></center>
+                                            <center><Button variant="primary" type="submit" disabled={isSubmitting}>Submit</Button></center>
                                         </div>
                                     </Form>
                                 </div>
@@ -137,15 +145,16 @@ async function configHeader(orgName,file,setHeaderData,setMsg,setLoading)
         }
         else
         {
-            setHeaderData(false);
-            setMsg('');
+            setMsg(res.data.message);
+            setHeaderData(true);
         }
         setLoading(false);
     })
     .catch(function (error) 
     {
-        setHeaderData(false);
-        setMsg('');
+        setHeaderData(true);
+        setLoading(false);
+        setMsg(error.response.data.message);
     });
 }
 
