@@ -1,6 +1,7 @@
 import React ,{ useState, useEffect }  from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import API from '../../api';
+import WebCamCapture from '../Exam/WebCamCapture';
 
 function useOptions()
 {
@@ -42,7 +43,8 @@ function Instructions(props)
   const [startexam, setStartexam]     =   useState(true);
   let history                         =   useHistory();
   let exam                            =   useOptions();
-  let location                          =   useLocation();
+  let location                        =   useLocation();
+  let [myCameraPerm, setMyCameraPerm] =   useState(false);
 
   let button = '';
   let BtnLabel = '';
@@ -80,22 +82,27 @@ function Instructions(props)
                         <h5><b>{exam.paper.paper_name} Instructions</b></h5>
                       </div>
                       <div className="card-body">
-                        <ul>
-                          <li> Welcome to Online Exam for {exam.paper.paper_name}</li>
-                          <li> Exam has total {exam.paper.questions} Questions</li>
-                          <li> Total time for Exam is {exam.paper.duration} Mins</li>
-                          <li> Negative Marking Exam: <b>{negativeMarks}</b></li>
-                        </ul>
+                        <div className="col-lg-8">
+                          <ul>
+                            <li> Welcome to Online Exam for {exam.paper.paper_name}</li>
+                            <li> Exam has total {exam.paper.questions} Questions</li>
+                            <li> Total time for Exam is {exam.paper.duration} Mins</li>
+                            <li> Negative Marking Exam: <b>{negativeMarks}</b></li>
+                          </ul>
 
-                        <h1><i>Best of Luck for your Exam</i></h1>
+                          <h1><i>Best of Luck for your Exam</i></h1>
+                        </div>
+                        <div className="col-lg-4">
+                          <WebCamCapture exam={location.state.exam.id} setMyCameraPerm={setMyCameraPerm} show={'no'} CaptureTime={location.state.exam.paper.capture_interval} isProctored={location.state.exam.paper.proctoring}/>
+                        </div>
                       </div>
                       <div className="card-footer">
                         <center>
-                            <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)} /> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
+                            <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)}/> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
                             {BtnLabel!=='Preview Exam' ?
-                            <button disabled={!checked} onClick={() => ExamStart(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
+                            <button disabled={(!checked || !myCameraPerm)} onClick={() => ExamStart(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
                             :
-                            <button disabled={!checked} onClick={() => ExamPreview(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
+                            <button disabled={(!checked || !myCameraPerm)} onClick={() => {ExamPreview(history,exam,setStartexam,location);}} className="btn btn-success">{BtnLabel}</button>
                             }
                         </center>
                       </div>
@@ -108,6 +115,11 @@ function Instructions(props)
         </div>
       </div> : ''
     );
+}
+
+function checkCameraPermissions(setStartexam)
+{
+  setStartexam(true);
 }
 
 async function ExamPreview(history,exam,setStartexam,location)

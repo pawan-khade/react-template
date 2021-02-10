@@ -121,7 +121,7 @@ useEffect(() => {
 
               {myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
 
-                {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm}/>)}
+                {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm} CaptureTime={props.location.state.exam.paper.capture_interval} isProctored={props.location.state.exam.paper.proctoring}/>)}
               </div>
             </div>
           </div>

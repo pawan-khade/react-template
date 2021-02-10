@@ -23,18 +23,18 @@ function App()
     setupAxios(setShow, setMsg);
     return (
       <div>
-      <Router history={browserHistory}>
-        <PopupContext.Provider value={{setPopupShow:setPopupShow,setPopupMsg:setPopupMsg}}>
-          <UserContext.Provider value={{currentUser:currentUser,setCurrentUser:setCurrentUser}}>
-            <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
-              <Header/>
-              <Content/>
-            </ShowContext.Provider>
-          </UserContext.Provider>
-        </PopupContext.Provider>
+        <Router history={browserHistory}>
+          <PopupContext.Provider value={{setPopupShow:setPopupShow,setPopupMsg:setPopupMsg}}>
+            <UserContext.Provider value={{currentUser:currentUser,setCurrentUser:setCurrentUser}}>
+              <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
+                <Header/>
+                <Content/>
+              </ShowContext.Provider>
+            </UserContext.Provider>
+          </PopupContext.Provider>
 
-        <Popup setPopupShow={setPopupShow} popupShow={popupShow} popupMsg={popupMsg}/>
-        <AlertDismissible myShow={show} mySetShow={setShow} myMsg={msg}/>
+          <Popup setPopupShow={setPopupShow} popupShow={popupShow} popupMsg={popupMsg}/>
+          <AlertDismissible myShow={show} mySetShow={setShow} myMsg={msg}/>
         </Router>
       </div>
     );

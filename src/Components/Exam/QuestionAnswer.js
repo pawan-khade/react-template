@@ -27,6 +27,7 @@ function QuestionAnswer(props) {
 
   return (
           <div className="col-lg-12 row">
+            {question_path}
             <div className="col-lg-12">
               <b>Question {questions[index].qnid_sr}:</b>
             </div>
