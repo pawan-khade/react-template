@@ -69,13 +69,13 @@ export default function Login(props)
                 <div style={{marginBottom:"30px"}}>
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="col-lg-5">
-                                <div className="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div className="card-header"><h3 className="text-center font-weight-light my-4">GudExams Login</h3></div>
+                            <div className="col-lg-6">
+                                <div className="card shadow-lg border-0 rounded-lg mt-10">
+                                    <div className="card-header"><h3 className="text-center font-weight-light my-4"><b>Login</b></h3></div>
                                     <div className="card-body" >
                                         <form onSubmit={handleSubmit}>
                                             <div className="form-group">
-                                                <label>User Name</label>
+                                                <label><b>User Name</b></label>
 
                                                 <input className="form-control py-4" id="username" type="text"
                                                 name="username"
@@ -92,7 +92,7 @@ export default function Login(props)
 
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-group">Password</label>
+                                                <label className="form-group"><b>Password</b></label>
 
                                                 <input className="form-control py-4" id="password" name="password"
                                                 type="password"
@@ -109,7 +109,7 @@ export default function Login(props)
                                             </div>
 
                                             {flag === 0 && (<div className="form-group">
-                                                <label className="form-group">Inst ID</label>
+                                                <label className="form-group"><b>Inst ID</b></label>
 
                                                 <input className="form-control py-4" id="instId" name="instId" type="instId"
                                                 value ={values.instId}
@@ -124,7 +124,7 @@ export default function Login(props)
                                                 )}
                                             </div>)}
 
-                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" size="compact" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)} ref={recaptchaRef}/>
+                                            <ReCAPTCHA name="myRecaptcha" id="myRecaptcha" sitekey={siteKey} badge="inline" onChange={(value) => setMyRecaptcha(value)} ref={recaptchaRef}/>
 
                                             <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <button className="btn btn-primary" type="submit" id="submit" disabled={isSubmitting}>Login</button>

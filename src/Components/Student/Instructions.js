@@ -79,7 +79,7 @@ function Instructions(props)
             <div className="col-lg-12">
                   <div className='card'>
                       <div className="card-header bg-primary" style={{color:"white"}}>
-                        <h5><b>{exam.paper.paper_name} Instructions</b></h5>
+                        <h5><b>{exam.paper.paper_name}({exam.paper.paper_code}) Instructions</b></h5>
                       </div>
                       <div className="card-body">
                         <div className="col-lg-8">
@@ -88,6 +88,8 @@ function Instructions(props)
                             <li> Exam has total {exam.paper.questions} Questions</li>
                             <li> Total time for Exam is {exam.paper.duration} Mins</li>
                             <li> Negative Marking Exam: <b>{negativeMarks}</b></li>
+                            <li> Close all other windows/apps</li>
+                            <li> Do not close browser/app before logging out</li>
                           </ul>
 
                           <h1><i>Best of Luck for your Exam</i></h1>

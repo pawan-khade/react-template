@@ -12,7 +12,7 @@ function PreviousButton(props) {
         },[props,myIndex]);
 
         return (
-            <div className="col-lg-3">
+            <div className="col-lg-2">
                 <button className="btn btn-primary" onClick={() => {props.setMyOption(undefined);
                   changeIndex(props,(myIndex-1),history)}}
                 disabled={isfirst}>Previous</button>

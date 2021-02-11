@@ -126,7 +126,7 @@ const WebCamCapture = (props) => {
           }
           catch (e)
           {
-            alert("Not an image file Rekognition can process");
+            console.log("Not an image file Rekognition can process");
             return;
           }
         }

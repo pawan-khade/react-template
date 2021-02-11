@@ -94,11 +94,11 @@ function ExamCard(props)
                   <div className="card-body">
                     <h6 className="card-title"><b>Exam Details</b></h6>
                     <ul>
-                        <li>Start Time      : <Moment format="MMMM Do YYYY, H:mm:ss A">{userRequest.startTime}</Moment></li>
-                        <li>End Time        : <Moment format="MMMM Do YYYY, H:mm:ss A">{userRequest.endTime}</Moment></li>
-                        <li>Time Zone: {getTimezoneName()} {Intl.DateTimeFormat().resolvedOptions().timeZone}</li>
-                        <li>No of Questions : {userRequest.totQuestions}</li>
-                        <li>Exam Duration   : {userRequest.examDuration}</li>
+                        <li><b>Start Time      :</b> <Moment format="MMMM Do YYYY, H:mm:ss A">{userRequest.startTime}</Moment></li>
+                        <li><b>End Time        :</b> <Moment format="MMMM Do YYYY, H:mm:ss A">{userRequest.endTime}</Moment></li>
+                        <li><b>Time Zone:</b> {getTimezoneName()} {Intl.DateTimeFormat().resolvedOptions().timeZone}</li>
+                        <li><b>No of Questions :</b> {userRequest.totQuestions}</li>
+                        <li><b>Exam Duration   :</b> {userRequest.examDuration}</li>
                     </ul>
                   </div>
                   <div className="card-footer">

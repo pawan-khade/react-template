@@ -14,7 +14,7 @@ function Header()
     let [isLoggedIn, setIsLoggedIn]     =   useState(false);
     let [isStartExam, setIsStartExam]   =   useState(false);
     let [isLoaded,setIsLoaded]          =   useState(false);
-    let myHeader                        =   useHeader(setIsLoaded);
+    let [myHeader, imgPath]             =   useHeader(setIsLoaded);
 
     useEffect(() =>
     {
@@ -61,7 +61,7 @@ function Header()
     return(
           !isStartExam ?
             <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-                <a className="navbar-brand" href={void(0)}><img src="assets/images/logo.png" height="50" width="50"></img> {myHeader}</a>
+                <a className="navbar-brand" href={void(0)}><img src={imgPath} height="50" width="50"></img> {myHeader}</a>
                 <button className="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" onClick={() => {toggleSidebar(setToggle,toggle)}}><i className="fas fa-bars"></i></button>
 
                <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -96,6 +96,7 @@ function toggleSidebar(setToggle,toggle)
 function useHeader(setIsLoaded)
 {
     let [myHeader,setMyHeader]          =   useState('GudExams');
+    let [imgPath,setImgPath]            =   useState('');
 
     useEffect(() =>
     {
@@ -110,22 +111,25 @@ function useHeader(setIsLoaded)
             if(res.data.status === 'success')
             {
                 setMyHeader(res.data.header);
+                setImgPath(res.data.imgpath);
                 setIsLoaded(true);
             }
             else
             {
                 setMyHeader('GudExams');
+                setImgPath('');
                 setIsLoaded(true);
             }
         })
         .catch(function (error) 
         {
             setMyHeader('GudExams');
+            setImgPath('');
             setIsLoaded(true);
         })
     }
 
-    return myHeader
+    return [myHeader, imgPath];
 }
 
 export default Header;

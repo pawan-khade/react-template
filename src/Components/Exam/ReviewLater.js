@@ -11,7 +11,7 @@ function ReviewLater(props) {
         const reviewVal       = myReviewArray[questionIndex];
 
         return (
-            <div className="col-lg-3">
+            <div className="col-lg-4">
               <input type="checkbox" name="reviewlater" checked={reviewVal} onChange={() => {
                 toggleReview(reviewVal,questionIndex,props,history);
               }}/> To be Reviewed Later
