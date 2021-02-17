@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import API from '../api';
+import {FooterContext} from '../App';
 
 function Footer() 
 {
-    let footerData  = useFooterData();
+    const {footerVal, setFooterVal} = useContext(FooterContext);
+    let footerData  = useFooterData(footerVal);
     let d           = new Date();
     let year        = d.getFullYear();
-
     
 
     return (
@@ -23,10 +24,10 @@ function Footer()
 
 
 
-function useFooterData()
+function useFooterData(footerVal)
 {
     const [footerData,setFooterData] = useState('');
-    useEffect(() => {getFooterData();},[]);
+    useEffect(() => {getFooterData();},[footerVal]);
 
     async function getFooterData()
     {

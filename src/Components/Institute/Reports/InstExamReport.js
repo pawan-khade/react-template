@@ -54,7 +54,7 @@ function InstExamReport(props)
             {(props.role==='' || props.role===undefined) &&(<ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Institute Examination Report</li>
             </ol>)}<br/>
-            <div className="row col-lg-12" style={{overflow:"auto"}}>
+            <div className="row col-lg-12 animate__animated animate__fadeInDown animate_slower" style={{overflow:"auto"}}>
                 
                 <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
             </div>

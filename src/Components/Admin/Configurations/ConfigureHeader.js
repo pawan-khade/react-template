@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
+import {LogoContext} from '../../../App';
 import ClipLoader from "react-spinners/ClipLoader";
 
 function ConfigureHeader(props) 
@@ -11,6 +12,7 @@ function ConfigureHeader(props)
     const [headerData ,setHeaderData]   =   useState(false);
     const [msg ,setMsg]                 =   useState('');
     let [loading, setLoading]           =   useState(false);
+    const {logoVal, setLogoVal}         =   useContext(LogoContext);
 
     return(
         <>
@@ -18,7 +20,7 @@ function ConfigureHeader(props)
             initialValues={{ orgName: "",file:""}}
             onSubmit={async (values,actions) =>
             {
-                await configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading);
+                await configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading,setLogoVal);
                 actions.setSubmitting(false);
                 actions.resetForm({
                         values: {
@@ -55,7 +57,7 @@ function ConfigureHeader(props)
                                 <ol className="breadcrumb mb-4">
                                     <li className="breadcrumb-item active">Configure Header</li>
                                 </ol>
-                                <div className="col-lg-12">
+                                <div className="col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
                                     
                                     <Form className="col-lg-12 row" onSubmit={handleSubmit}>
                                         <Form.Group className="col-lg-6 row">
@@ -105,7 +107,7 @@ function ConfigureHeader(props)
             </Formik>
             <div className="col-lg-12" style={{marginTop:"20px"}}>
                 {headerData && !loading ? 
-                    <div className="alert alert-danger" role="alert">
+                    <div className="alert alert-danger animate__animated animate__tada animate_slower" role="alert">
                         {msg}
                     </div>
                 : 
@@ -118,7 +120,7 @@ function ConfigureHeader(props)
     );
 }
 
-async function configHeader(orgName,file,setHeaderData,setMsg,setLoading)
+async function configHeader(orgName,file,setHeaderData,setMsg,setLoading,setLogoVal)
 {
     setLoading(true);
     let fd = new FormData();
@@ -139,6 +141,7 @@ async function configHeader(orgName,file,setHeaderData,setMsg,setLoading)
         {
             setHeaderData(true);
             setMsg(res.data.message);
+            setLogoVal(Math.random());
             setTimeout(() => {
                 setHeaderData(false);
             }, 10000);

@@ -70,7 +70,7 @@ export default function Login(props)
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-lg-6">
-                                <div className="card shadow-lg border-0 rounded-lg mt-10">
+                                <div className="card shadow-lg border-0 rounded-lg mt-10 animate__animated animate__backInDown animate__slow">
                                     <div className="card-header"><h3 className="text-center font-weight-light my-4"><b>Login</b></h3></div>
                                     <div className="card-body" >
                                         <form onSubmit={handleSubmit}>
@@ -131,7 +131,7 @@ export default function Login(props)
                                             </div><br/>
 
                                             {myMsg !== undefined && (
-                                                <div className="alert alert-success">{myMsg}</div>
+                                                <div className="alert alert-success animate__animated animate__bounceIn animate_slow">{myMsg}</div>
                                             )}
 
                                         </form>

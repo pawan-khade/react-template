@@ -1,7 +1,9 @@
-import React ,{ useState, useEffect }  from 'react';
+import React ,{ useState, useEffect, useContext }  from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import API from '../../api';
 import WebCamCapture from '../Exam/WebCamCapture';
+import {UserContext} from '../../App';
 
 function useOptions()
 {
@@ -9,6 +11,7 @@ function useOptions()
   let location                          =   useLocation();
   let [exam, setExam]                   =   useState();
   let myExam                            =   undefined;
+  
 
   if(location.state && location.state.exam)
   {
@@ -45,6 +48,7 @@ function Instructions(props)
   let exam                            =   useOptions();
   let location                        =   useLocation();
   let [myCameraPerm, setMyCameraPerm] =   useState(false);
+  const {currentUser, setCurrentUser} =   useContext(UserContext);
 
   let button = '';
   let BtnLabel = '';
@@ -70,12 +74,13 @@ function Instructions(props)
 
   return (
       exam ?
-      <div>
+      <div className="animate__animated animate__flash animate_slower">
         <div className="container-fluid">
             <h1 className="mt-4">Exam Instructions</h1>
-            <ol className="breadcrumb mb-4">
-                <li className="breadcrumb-item active">Read Instructions Carefully...</li>
-            </ol>
+            <div className="breadcrumb col-lg-12 row">
+                <div className="breadcrumb-item active col-lg-10">Read Instructions Carefully...</div>
+                <div className="col-lg-2">{currentUser.role==='STUDENT' ? <Link to="studenthome" className="btn btn-danger btn-sm">Go Back</Link>: <Link to="adminexamreport" className="btn btn-danger btn-sm">Go Back</Link>}</div>
+            </div>
             <div className="col-lg-12">
                   <div className='card'>
                       <div className="card-header bg-primary" style={{color:"white"}}>
@@ -102,7 +107,8 @@ function Instructions(props)
                         <center>
                             <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)}/> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
                             {BtnLabel!=='Preview Exam' ?
-                            <button disabled={(!checked || !myCameraPerm)} onClick={() => ExamStart(history,exam,setStartexam,location)} className="btn btn-success">{BtnLabel}</button>
+                            <button disabled={(!checked || !myCameraPerm)} onClick={() => ExamStart(history,exam,setStartexam,location)} 
+                            className="btn btn-success">{BtnLabel}</button>
                             :
                             <button disabled={(!checked || !myCameraPerm)} onClick={() => {ExamPreview(history,exam,setStartexam,location);}} className="btn btn-success">{BtnLabel}</button>
                             }

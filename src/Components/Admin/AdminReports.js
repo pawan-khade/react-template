@@ -10,7 +10,7 @@ function AdminReports(props)
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Admin Reports</li>
             </ol>
-            <div className="row col-lg-12">
+            <div className="row col-lg-12 animate__animated animate__fadeInDown animate_slower">
                 <table className="table table-bordered">
                     <thead>
                         <tr style={{backgroundColor:"aqua"}}>

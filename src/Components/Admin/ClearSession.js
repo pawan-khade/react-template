@@ -64,9 +64,9 @@ function ClearSession(props)
                             <div className="container-fluid">
                                 <h1 className="mt-4">Clear Session</h1>
                                 <ol className="breadcrumb mb-4">
-                                    <li className="breadcrumb-item active">Clear Session</li>
+                                    <li className="breadcrumb-item active">Fill Form to Clear the Session</li>
                                 </ol>
-                                <div className="col-lg-12">
+                                <div className="col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
                                     <Form className="row" onSubmit={handleSubmit}>
                                         <Form.Group className="col-lg-12">
                                             <Form.Control 
@@ -137,6 +137,7 @@ async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag
         }
         else
         {
+            setLoading(false);
             setUserData(undefined);
             setShow(true);
             setMsg('Unable to fetch Data of specified user...');
@@ -144,6 +145,7 @@ async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag
     })
     .catch((error) =>
     {
+        setLoading(false);
         setUserData(undefined);
         setShow(true);
         setMsg('Unable to fetch Data of specified user...');

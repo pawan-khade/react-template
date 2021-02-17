@@ -10,6 +10,8 @@ import API from './api';
 export const ShowContext  = React.createContext();
 export const PopupContext = React.createContext();
 export const UserContext  = React.createContext();
+export const LogoContext  = React.createContext();
+export const FooterContext= React.createContext();
 const browserHistory      = createBrowserHistory({});
 
 function App()
@@ -18,20 +20,26 @@ function App()
     const [popupMsg, setPopupMsg]           = useState();
     const [show, setShow]                   = useState(false);
     const [msg, setMsg]                     = useState();
+    const [logoVal, setLogoVal]             = useState();
+    const [footerVal, setFooterVal]         = useState();
     const [currentUser,setCurrentUser]      = useWhoAmI();
     
     setupAxios(setShow, setMsg);
     return (
       <div>
         <Router history={browserHistory}>
-          <PopupContext.Provider value={{setPopupShow:setPopupShow,setPopupMsg:setPopupMsg}}>
-            <UserContext.Provider value={{currentUser:currentUser,setCurrentUser:setCurrentUser}}>
-              <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
-                <Header/>
-                <Content/>
-              </ShowContext.Provider>
-            </UserContext.Provider>
-          </PopupContext.Provider>
+          <LogoContext.Provider value={{logoVal:logoVal,setLogoVal:setLogoVal}}>
+            <PopupContext.Provider value={{setPopupShow:setPopupShow,setPopupMsg:setPopupMsg}}>
+              <UserContext.Provider value={{currentUser:currentUser,setCurrentUser:setCurrentUser}}>
+                <ShowContext.Provider value={{setShow:setShow,setMsg:setMsg}}>
+                  <Header/>
+                  <FooterContext.Provider value={{footerVal:footerVal,setFooterVal:setFooterVal}}>
+                    <Content/>
+                  </FooterContext.Provider>
+                </ShowContext.Provider>
+              </UserContext.Provider>
+            </PopupContext.Provider>
+          </LogoContext.Provider>
 
           <Popup setPopupShow={setPopupShow} popupShow={popupShow} popupMsg={popupMsg}/>
           <AlertDismissible myShow={show} mySetShow={setShow} myMsg={msg}/>

@@ -53,7 +53,7 @@ function InstExamStudtReport()
                         <button className="btn btn-primary btn-sm" style={{float:"right"}} onClick={() => {history.goBack()}}>Go Back</button>
                     </div> 
                 </div>
-                <div className="row col-lg-12" style={{overflow:"auto"}}>
+                <div className="row col-lg-12 animate__animated animate__fadeInDown animate_slower" style={{overflow:"auto"}}>
                     <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
                 </div>
 

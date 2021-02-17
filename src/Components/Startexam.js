@@ -91,7 +91,7 @@ useEffect(() => {
 
   return (
     props.location.state ?
-      <div className="row">
+      <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
           <div className='card col-lg-12'>
               <div className="card-header bg-primary row" style={{color:"white"}}>
                 <div className="col-lg-8">

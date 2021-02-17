@@ -29,6 +29,7 @@ function Options(props)
     }
 
     return (
+      selectedOptions!== undefined && questionIndex!== undefined ?
           <div className="col-lg-12 row" onClick={() => {props.setMyOption(optType);}} >
             <div className="col-lg-1">
               <input checked={verifyOption(questionIndex, selectedOptions, optType)} type="radio" name="option"  value={optType} onChange={() => {
@@ -45,6 +46,7 @@ function Options(props)
             )}
             <img src={opt_path} alt="" onClick={() => setIsOpen(true)}/>
           </div>
+      : null
     );
 }
 

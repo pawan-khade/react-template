@@ -7,7 +7,7 @@ function ClearSessionUserInfo(props)
     const [message ,setMessage] = useState('');
 
         return (
-            <>
+            <div className="animate__animated animate__pulse animate_slower">
                 <div className="col-lg-12" style={{overflow:"auto"}}>
                     <table className="table table-bordered">
                         <thead>
@@ -90,7 +90,7 @@ function ClearSessionUserInfo(props)
                         </div>
                     : null}
                 </div>
-            </>
+            </div>
         );
 }
 

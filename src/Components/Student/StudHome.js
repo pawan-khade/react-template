@@ -49,7 +49,7 @@ function StudHome()
               </div>
             </div>
             
-            <div className="row col-lg-12">
+            <div className="row col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
               <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest,setLoading);}}/>
               <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,setLoading,'over');}}/>
               <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,setLoading,'yettostart');}}/>
@@ -58,7 +58,7 @@ function StudHome()
               <SearchBox getExamData={getExamData} setUserRequest={setUserRequest} setLoading={setLoading}/>
             </div>
             <br/><br/>
-            <div className="row col-lg-12">
+            <div className="row col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
             {
               userRequest.numExams ?
               userRequest.myExams ? userRequest.myExams.data.map((exam) =>

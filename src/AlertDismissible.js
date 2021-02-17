@@ -10,6 +10,7 @@ function AlertDismissible(props)
         onClose={() => props.mySetShow(false)}
         dismissible
         style={{position:"fixed",top:"83%",width:"58%",left:"22%",zIndex:"99999"}}
+        className="animate__animated animate__tada animate_slower"
         >
         {props.myMsg}
       </Alert> : null
