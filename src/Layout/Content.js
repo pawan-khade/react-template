@@ -19,6 +19,12 @@ import InstReports from '../Components/Institute/InstReports';
 import InstExamReport from '../Components/Institute/Reports/InstExamReport';
 import InstExamStudReport from '../Components/Institute/Reports/InstExamStudtReport';
 
+import GlobalController from '../Components/Admin/Configurations/GlobalController';
+import ClusterController from '../Components/Admin/Configurations/ClusterController';
+import GadminHome from '../Components/Gadmin/GadminHome';
+import CadminHome from '../Components/Cadmin/CadminHome';
+import AddInstitute from '../Components/Cadmin/AddInst';
+
 function Content() 
 {
         return (
@@ -43,6 +49,13 @@ function Content()
                             <Route exact path="/instreports" component={InstReports} />
                             <Route exact path="/instexamreport" component={InstExamReport} />
                             <Route exact path="/instexamstudentreport" component={InstExamStudReport} />
+
+                            <Route exact path="/addGlobController" component={GlobalController} />
+                            <Route exact path="/addClusterController" component={ClusterController} />
+                            <Route exact path="/gadminhome" component={GadminHome} />
+                            <Route exact path="/cadminhome" component={CadminHome} />
+
+                            <Route exact path="/addInstitutes" component={AddInstitute} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

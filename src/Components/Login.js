@@ -177,6 +177,16 @@ async function checkLogin(username,password,instId,flag,myRecaptcha,setMyMsg,his
                     setCurrentUser(res.data.data);
                     history.replace({ pathname: '/insthome',state:{currentUser: res.data.data}});
                 }
+                else if(res.data.data.role === 'GADMIN')
+                {
+                    setCurrentUser(res.data.data);
+                    history.replace({ pathname: '/gadminhome',state:{currentUser: res.data.data}});
+                }
+                else if(res.data.data.role === 'CADMIN')
+                {
+                    setCurrentUser(res.data.data);
+                    history.replace({ pathname: '/cadminhome',state:{currentUser: res.data.data}});
+                }
             }
             else
             {

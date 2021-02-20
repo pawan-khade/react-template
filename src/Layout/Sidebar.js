@@ -53,6 +53,14 @@ function Sidebar()
                                     <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
                                     Configure Footer
                                 </Link>
+                                <Link className="nav-link" to={{pathname: "/addGlobController"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
+                                    Add Global Controller
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/addClusterController"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
+                                    Add Cluster Controller
+                                </Link>
                             </nav>
                         </div>
 
@@ -87,6 +95,52 @@ function Sidebar()
                     </div>
                 </div>
             </nav>
+        );
+    }
+    else if(currentUser && currentUser.role === 'GADMIN')
+    {
+        return (
+                <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
+                    <div className="sb-sidenav-menu">
+                        <div className="nav">
+                            <div className="sb-sidenav-menu-heading">Main Menu</div>
+                            <Link className="nav-link" to={{pathname: "/gadminhome"}}>
+                                <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                                Home
+                            </Link>
+                        </div>
+                    </div>
+                </nav>
+        );
+    }
+    else if(currentUser && currentUser.role === 'CADMIN')
+    {
+        return (
+                <nav className="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
+                    <div className="sb-sidenav-menu">
+                        <div className="nav">
+                            <div className="sb-sidenav-menu-heading">Main Menu</div>
+                            <Link className="nav-link" to={{pathname: "/cadminhome"}}>
+                                <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                                Home
+                            </Link>
+
+                            <a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseConfigurations" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div className="sb-nav-link-icon"><i className="fas fa-cogs"></i></div>
+                                Configurations
+                            <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
+                            </a>
+                            <div className="collapse" id="collapseConfigurations" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav className="sb-sidenav-menu-nested nav">
+                                    <Link className="nav-link" to={{pathname: "/addInstitutes"}}>
+                                        <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
+                                        Add/Upload Institutes
+                                    </Link>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
         );
     }
     else

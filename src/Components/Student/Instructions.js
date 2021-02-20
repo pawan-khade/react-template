@@ -79,7 +79,7 @@ function Instructions(props)
             <h1 className="mt-4">Exam Instructions</h1>
             <div className="breadcrumb col-lg-12 row">
                 <div className="breadcrumb-item active col-lg-10">Read Instructions Carefully...</div>
-                <div className="col-lg-2">{currentUser.role==='STUDENT' ? <Link to="studenthome" className="btn btn-danger btn-sm">Go Back</Link>: <Link to="adminexamreport" className="btn btn-danger btn-sm">Go Back</Link>}</div>
+                <div className="col-lg-2">{currentUser && currentUser.role==='STUDENT' ? <Link to="studenthome" className="btn btn-danger btn-sm">Go Back</Link>: <Link to="adminexamreport" className="btn btn-danger btn-sm">Go Back</Link>}</div>
             </div>
             <div className="col-lg-12">
                   <div className='card'>

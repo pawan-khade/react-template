@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import CountDownButton from './CountDownButton';
 
 function ExamCard(props)
 {
@@ -68,7 +69,7 @@ function ExamCard(props)
           Theme = 'bg-warning';
           BtnTheme = 'btn btn-warning';
 
-          myLink = <Link to={void(0)} className={BtnTheme}>{BtnCaption}</Link>;
+          myLink = <CountDownButton  StartTime ={StartTime} Now={Now} exam={props.exam} role='STUDENT'/>
         }
         else
         {
