@@ -24,6 +24,15 @@ import ClusterController from '../Components/Admin/Configurations/ClusterControl
 import GadminHome from '../Components/Gadmin/GadminHome';
 import CadminHome from '../Components/Cadmin/CadminHome';
 import AddInstitute from '../Components/Cadmin/AddInst';
+import InstituteToClusterAllocation from '../Components/Admin/Configurations/InstClusterAlloc';
+import GlobClusterAlloc from '../Components/Admin/Configurations/GlobClusterAlloc';
+import SubjectMaster from '../Components/Admin/Masters/SubjectMaster';
+
+import ProgramMaster from '../Components/Admin/Masters/ProgramMaster';
+import StudentMaster from '../Components/Admin/Masters/StudentMaster';
+import StudSubjectAlloc from '../Components/Admin/Masters/StudSubjectAlloc';
+import TestMaster from '../Components/Admin/Masters/TestMaster';
+
 
 function Content() 
 {
@@ -56,6 +65,16 @@ function Content()
                             <Route exact path="/cadminhome" component={CadminHome} />
 
                             <Route exact path="/addInstitutes" component={AddInstitute} />
+                            <Route exact path="/instClusterAllocation" component={InstituteToClusterAllocation} />
+
+                            <Route exact path="/globalClusterAllocation" component={GlobClusterAlloc} />
+
+                            <Route exact path="/programMaster" component={ProgramMaster} />
+                            <Route exact path="/subjectMaster" component={SubjectMaster} />
+                            <Route exact path="/studentMaster" component={StudentMaster} />
+
+                            <Route exact path="/studSubjectAlloc" component={StudSubjectAlloc} />
+                            <Route exact path="/addTest" component={TestMaster} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

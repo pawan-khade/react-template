@@ -40,7 +40,7 @@ function Sidebar()
 
                         <a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseConfigurations" aria-expanded="false" aria-controls="collapseLayouts">
                             <div className="sb-nav-link-icon"><i className="fas fa-cogs"></i></div>
-                                Configurations
+                                General Configurations
                             <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
                         </a>
                         <div className="collapse" id="collapseConfigurations" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
@@ -60,6 +60,48 @@ function Sidebar()
                                 <Link className="nav-link" to={{pathname: "/addClusterController"}}>
                                     <div className="sb-nav-link-icon"><i className="fas fa-tools"></i></div>
                                     Add Cluster Controller
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/addInstitutes"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
+                                    Add/Upload Institutes
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/globalClusterAllocation"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
+                                    Global-Cluster Alloc
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/instClusterAllocation"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
+                                    Inst-Cluster Alloc
+                                </Link>
+                            </nav>
+                        </div>
+
+                        <a className="nav-link collapsed" data-toggle="collapse" data-target="#examConfigurations" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div className="sb-nav-link-icon"><i className="fas fa-cogs"></i></div>
+                                Exam Configurations
+                            <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
+                        </a>
+                        <div className="collapse" id="examConfigurations" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav className="sb-sidenav-menu-nested nav">
+                                <Link className="nav-link" to={{pathname: "/programMaster"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-list-alt"></i></div>
+                                    Program Master
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/subjectMaster"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-list-alt"></i></div>
+                                    Subject Master
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/addTest"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-list-alt"></i></div>
+                                    Add Test
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/studentMaster"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-list-alt"></i></div>
+                                    Student Master
+                                </Link>
+                                <Link className="nav-link" to={{pathname: "/studSubjectAlloc"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-list-alt"></i></div>
+                                    Stud Subject Alloc
                                 </Link>
                             </nav>
                         </div>
