@@ -7,13 +7,16 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import {ShowContext} from '../../../App';
 import { Link } from 'react-router-dom';
 
-const SubjectList = (props) => 
+const TopicList = (props) => 
 {
     const {setShow,setMsg}                          =   useContext(ShowContext);
     let [loading, setLoading]                       =   useState(true);
-    let [subjectList, setSubjectList]               =   useState([]);
+    let [topicList, setTopicList]                   =   useState([]);
     const header                                    =   getHeader();
-    const data                                      =   getData(subjectList,props.setMyList,props.myList,setShow,setMsg);
+    const data                                      =   getData(topicList,props.setMyList,props.myList,setShow,setMsg);
+    const paperId                                   = props.paperId;
+    const paperCode                                 = props.paperCode;
+    const paperName                                 = props.paperName;
     
 
     const options = {
@@ -41,11 +44,11 @@ const SubjectList = (props) =>
 
     useEffect(() => 
     {
-        getSubjects(setSubjectList,setLoading);
-    },[props.myList]);
+        getTopics(setTopicList,setLoading,paperId);
+    },[props.myList,paperId]);
 
     return (
-        subjectList.length > 0 && !loading ?
+        topicList.length > 0 && !loading ?
         <div className="col-lg-12" style={{overflow:"auto"}}>
             <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
         </div>
@@ -56,18 +59,18 @@ const SubjectList = (props) =>
     );
 };
 
-async function getSubjects(setSubjectList,setLoading)
+async function getTopics(setTopicList,setLoading,paperId)
 {
-    await API.get('/subject',{params:{'type':'all'}})
+    await API.get('/subject/topic',{params:{'type':'single','paperId':paperId}})
     .then(function (res) 
     {
-        setSubjectList(res.data.data);
+        setTopicList(res.data.data);
         console.log(res.data.data);
         setLoading(false);
     })
     .catch(function (error) 
     {
-        setSubjectList(undefined);
+        setTopicList(undefined);
         setLoading(false);
     });   
 }
@@ -78,7 +81,10 @@ function getHeader()
         { text: 'Sr No', dataField: 'srno'},
         { text: 'Paper Code', dataField: 'paperCode',filter: textFilter()},
         { text: 'Paper Name', dataField: 'paperName',filter: textFilter()},
-        { text: 'Add Topic Data', dataField: 'topicData'},
+        { text: 'Topic', dataField: 'topic'},
+        { text: 'Sub Topic', dataField: 'subTopic'},
+        { text: 'Questions', dataField: 'questions'},
+        { text: 'Marks', dataField: 'marks'},
         { text: 'Delete', dataField: 'delete'},
     ];
     return myHeader;
@@ -92,9 +98,12 @@ function getData(subjectList,setMyList,myList,setShow,setMsg)
     {
         myData.push({
             srno                    : i++,
-            paperCode               : data.paper_code,
-            paperName               : data.paper_name,
-            topicData               : <Link className="nav-link" to={{pathname: "/addTopic",state:{paperId: data.id,paperCode:data.paper_code,paperName:data.paper_name}}}>Add Topics</Link>,
+            paperCode               : data.paper.paper_code,
+            paperName               : data.paper.paper_name,
+            topic                   : data.topic,
+            subTopic                : data.subtopic,
+            questions               : data.questions,
+            marks                   : data.marks,
             delete                  : <button className="btn btn-danger" onClick={()=>{deleteRecord(data.id,setMyList,myList,setShow,setMsg);}}>Delete</button>
         });
     })
@@ -104,7 +113,7 @@ function getData(subjectList,setMyList,myList,setShow,setMsg)
 
 async function deleteRecord(id,setMyList,myList,setShow,setMsg)
 {
-    await API.delete('/subject/'+id)
+    await API.delete('/subject/topic/'+id)
     .then(function (res) 
     {
         if(res.data.status==='success')
@@ -123,4 +132,4 @@ async function deleteRecord(id,setMyList,myList,setShow,setMsg)
     });
 }
 
-export default SubjectList;
+export default TopicList;

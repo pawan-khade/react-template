@@ -5,15 +5,16 @@ import ClipLoader from "react-spinners/ClipLoader";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {ShowContext} from '../../../App';
+import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 
-const SubjectList = (props) => 
+const TestList = (props) => 
 {
     const {setShow,setMsg}                          =   useContext(ShowContext);
     let [loading, setLoading]                       =   useState(true);
-    let [subjectList, setSubjectList]               =   useState([]);
+    let [testList, setTestList]                     =   useState([]);
     const header                                    =   getHeader();
-    const data                                      =   getData(subjectList,props.setMyList,props.myList,setShow,setMsg);
+    const data                                      =   getData(testList,props.setMyList,props.myList,setShow,setMsg);
     
 
     const options = {
@@ -41,11 +42,11 @@ const SubjectList = (props) =>
 
     useEffect(() => 
     {
-        getSubjects(setSubjectList,setLoading);
+        getSubjects(setTestList,setLoading);
     },[props.myList]);
 
     return (
-        subjectList.length > 0 && !loading ?
+        testList.length > 0 && !loading ?
         <div className="col-lg-12" style={{overflow:"auto"}}>
             <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
         </div>
@@ -56,18 +57,18 @@ const SubjectList = (props) =>
     );
 };
 
-async function getSubjects(setSubjectList,setLoading)
+async function getSubjects(setTestList,setLoading)
 {
     await API.get('/subject',{params:{'type':'all'}})
     .then(function (res) 
     {
-        setSubjectList(res.data.data);
+        setTestList(res.data.data);
         console.log(res.data.data);
         setLoading(false);
     })
     .catch(function (error) 
     {
-        setSubjectList(undefined);
+        setTestList(undefined);
         setLoading(false);
     });   
 }
@@ -76,35 +77,43 @@ function getHeader()
 {
     let myHeader = [
         { text: 'Sr No', dataField: 'srno'},
-        { text: 'Paper Code', dataField: 'paperCode',filter: textFilter()},
-        { text: 'Paper Name', dataField: 'paperName',filter: textFilter()},
-        { text: 'Add Topic Data', dataField: 'topicData'},
-        { text: 'Delete', dataField: 'delete'},
+        { text: 'Paper Code/Name', dataField: 'paperCode',filter: textFilter()},
+        { text: 'Marks', dataField: 'marks'},
+        { text: 'Questions', dataField: 'questions'},
+        { text: 'Duration', dataField: 'duration'},
+        { text: 'Start Date', dataField: 'startdate'},
+        { text: 'End Date', dataField: 'enddate'},
+        { text: 'Clear', dataField: 'clear'},
+        { text: 'Configure', dataField: 'configure'},
     ];
     return myHeader;
 }
 
-function getData(subjectList,setMyList,myList,setShow,setMsg)
+function getData(testList,setMyList,myList,setShow,setMsg)
 {
     let myData = [];
     let i = 1;
-    subjectList.map((data, index) => 
+    testList.map((data, index) => 
     {
         myData.push({
             srno                    : i++,
-            paperCode               : data.paper_code,
-            paperName               : data.paper_name,
-            topicData               : <Link className="nav-link" to={{pathname: "/addTopic",state:{paperId: data.id,paperCode:data.paper_code,paperName:data.paper_name}}}>Add Topics</Link>,
-            delete                  : <button className="btn btn-danger" onClick={()=>{deleteRecord(data.id,setMyList,myList,setShow,setMsg);}}>Delete</button>
+            paperCode               : '('+data.paper_code+') '+data.paper_name,
+            marks                   : data.marks,
+            questions               : data.questions,
+            duration                : data.durations,
+            startdate               : data.from_date!=='' ? <Moment format="MMMM Do YYYY, H:mm:ss A">{data.from_date}</Moment> : '',
+            enddate                 : data.to_date!=='' ?<Moment format="MMMM Do YYYY, H:mm:ss A">{data.to_date}</Moment> : '',
+            clear                   : <button className="btn btn-danger" onClick={()=>{clearRecord(data.id,setMyList,myList,setShow,setMsg);}}>Clear</button>,
+            configure                  : data.from_date!=='' ? <Link className="nav-link" to={{pathname: "/configureTest",state:{paperId: data.id,paperCode:data.paper_code,paperName:data.paper_name,data:data}}}>Configure Test</Link> : ''
         });
     })
 
     return myData;
 }
 
-async function deleteRecord(id,setMyList,myList,setShow,setMsg)
+async function clearRecord(id,setMyList,myList,setShow,setMsg)
 {
-    await API.delete('/subject/'+id)
+    await API.put('/subject/test/'+id,{'type':'clearTest'})
     .then(function (res) 
     {
         if(res.data.status==='success')
@@ -123,4 +132,4 @@ async function deleteRecord(id,setMyList,myList,setShow,setMsg)
     });
 }
 
-export default SubjectList;
+export default TestList;

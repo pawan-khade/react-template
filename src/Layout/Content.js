@@ -32,6 +32,8 @@ import ProgramMaster from '../Components/Admin/Masters/ProgramMaster';
 import StudentMaster from '../Components/Admin/Masters/StudentMaster';
 import StudSubjectAlloc from '../Components/Admin/Masters/StudSubjectAlloc';
 import TestMaster from '../Components/Admin/Masters/TestMaster';
+import AddTopic from '../Components/Admin/Masters/AddTopic';
+import ConfigureTest from '../Components/Admin/Masters/ConfigureTest';
 
 
 function Content() 
@@ -75,6 +77,8 @@ function Content()
 
                             <Route exact path="/studSubjectAlloc" component={StudSubjectAlloc} />
                             <Route exact path="/addTest" component={TestMaster} />
+                            <Route exact path="/addTopic" component={AddTopic} />
+                            <Route exact path="/configureTest" component={ConfigureTest} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />
