@@ -41,10 +41,10 @@ function StudHome()
         <div className="container-fluid">
             <h1 className="mt-4">Student Home</h1>
             <div className="breadcrumb col-lg-12 row">
-              <div class="col-lg-6">
+              <div className="col-lg-6">
                 <b>Student Name:</b> {currentUser.name} 
               </div>
-              <div class="col-lg-6">
+              <div className="col-lg-6">
                 <b>Enrollment No:</b> ({currentUser.username})
               </div>
             </div>

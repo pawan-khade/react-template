@@ -125,7 +125,6 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
             setAllPapers([]);
             setAllExams([]);
         }
-        //console.log(props.instId);
         res = await API.get('/program/'+props.instId);
     }
     else
@@ -137,6 +136,7 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
             if(res.data.data.length > 0)
             {
                 //console.log(res.data.data.length);
+                let totalSubjects = 0;
                 for(let i=0;i<res.data.data.length;i++)
                 {
                     await Axios.all([
@@ -149,7 +149,13 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
                         {
                             if(responseArr[0].data.data.length > 0)
                             {
+                                totalSubjects=totalSubjects+responseArr[0].data.data.length;
+                                console.log(responseArr[0].data.data);
                                 allPapers.push(...responseArr[0].data.data);
+                            }
+                            else
+                            {
+                                totalSubjects=totalSubjects+0;
                             }
                         }   
                         
@@ -157,8 +163,20 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
                         {
                             if(responseArr[1].data.data.length > 0)
                             {
+                                totalSubjects=totalSubjects+responseArr[1].data.data.length;
                                 allExams.push(...responseArr[1].data.data);
                             }
+                            else
+                            {
+                                totalSubjects=totalSubjects+0;
+                            }
+                        }
+
+                        if(totalSubjects === 0)
+                        {
+                            setShow(true);
+                            setMsg('No Program Data found for this Institute.Please Add data or Configure it Properly...');
+                            setLoading(false);
                         }
                     });
                 }
@@ -194,6 +212,7 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
             setMsg('Problem fetching data from Server...');
             setLoading(false);
         }
+        setLoading(false);
 }
 
 function getCount(allExams,str,paper_id)

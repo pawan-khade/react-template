@@ -23,6 +23,7 @@ const ConfigureTest = (props) => {
         initialValues= {myInitialValues}
         onSubmit= {async (values,actions) => 
         {
+            console.log(values);
             //-----------------Save Values to Database--------------------------------------------
             setMyMsg('');
             saveExamConfig(values,setLoading,setMyMsg,paperId,props,history);
@@ -56,21 +57,21 @@ const ConfigureTest = (props) => {
                             </div>
                         </div>
                         <form id="form-config" method="post" className="form-horizontal" onSubmit={handleSubmit}>
-                        <div className="row col-lg-12  animate__animated animate__lightSpeedInLeft animate_slower">
+                        <div className="row col-lg-12">
                             <div className="col-lg-12">
                             <table className="table table-bordered" style={{width:"100%"}}>
                                 <thead>
                                     <tr bgcolor="aqua">
-                                        <th width="10%">Sr. No.</th>
-                                        <th width="70%">Description</th>
-                                        <th width="20%">Action</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
                                         <td>
-                                        Enable Score View
+                                        Allow Instant Score View
                                         </td>
                                         <td><center>
                                             <label className="switch">
@@ -78,11 +79,8 @@ const ConfigureTest = (props) => {
                                                 <span className="slider round"></span>
                                             </label></center>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
                                         <td>
-                                        Enable Review Questions
+                                        Enable Review Questions to Candiate
                                         </td>
                                         <td><center>
                                             <label className="switch">
@@ -92,38 +90,32 @@ const ConfigureTest = (props) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>3</td>
+                                    <td>
+                                        Enable Candidate Photo Capture
+                                        </td>
+                                        <td><center>
+                                            <label className="switch">
+                                                <input type="checkbox" name="photo_capture" id="photo_capture" onChange={() => {
+                                                    setFieldValue("photo_capture", !values.photo_capture ?true:false);
+                                            }} onBlur={handleBlur} checked={values.photo_capture ? true:false}/>
+                                                <span className="slider round"></span>
+                                            </label></center>
+                                        </td>
+                                        <td>
+                                        Enter Capture Interval in Seconds
+                                        </td>
+                                        <td> <input type="text" className="form-control" id="capture_interval" name="capture_interval" onChange={handleChange} onBlur={handleBlur} value={values.photo_capture ? values.capture_interval:values.capture_interval=0} disabled={!values.photo_capture? true:false}/></td>                                       
+                                    </tr>
+                                    <tr>
                                         <td>
                                         Enable Proctoring
                                         </td>
                                         <td><center>
                                             <label className="switch">
-                                                <input type="checkbox" name="proctoring" id="proctoring" onChange={() => setFieldValue("proctoring", !values.proctoring ?true:false)} onBlur={handleBlur} checked={values.proctoring ? true:false}/>
+                                                <input type="checkbox" name="proctoring" id="proctoring" onChange={() => setFieldValue("proctoring", !values.proctoring ?true:false)} onBlur={handleBlur} checked={values.photo_capture? values.proctoring ? true:false:values.proctoring=false} disabled={!values.photo_capture? true:false}/>
                                                 <span className="slider round"></span>
                                             </label></center>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>
-                                        Enable Photo Capture
-                                        </td>
-                                        <td><center>
-                                            <label className="switch">
-                                                <input type="checkbox" name="photo_capture" id="photo_capture" onChange={() => setFieldValue("photo_capture", !values.photo_capture ?true:false)} onBlur={handleBlur} checked={values.photo_capture ? true:false}/>
-                                                <span className="slider round"></span>
-                                            </label></center>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>
-                                        Enter Capture Interval in Seconds
-                                        </td>
-                                        <td> <input type="text" className="form-control" id="capture_interval" name="capture_interval" onChange={handleChange} onBlur={handleBlur} value={values.capture_interval}/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
                                         <td>
                                         Enable Negative Marking
                                         </td>
@@ -135,28 +127,20 @@ const ConfigureTest = (props) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>7</td>
                                         <td>
                                         Enter Negative Marks
                                         </td>
-                                        <td> <input type="text" className="form-control" id="negative_marks" name="negative_marks" onChange={handleChange} onBlur={handleBlur} value={values.negative_marks}/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
+                                        <td> <input type="text" className="form-control" id="negative_marks" name="negative_marks" onChange={handleChange} onBlur={handleBlur} value={values.negative_marking ? values.negative_marks : values.negative_marks=0} disabled={!values.negative_marking? true:false}/></td>
                                         <td>
                                         Time Remaining Reminder
                                         </td>
                                         <td> <input type="text" className="form-control" id="time_remaining_reminder" name="time_remaining_reminder" value={values.time_remaining_reminder} onChange={handleChange} onBlur={handleBlur}/></td>
                                     </tr>
                                     <tr>
-                                        <td>9</td>
                                         <td>
                                         Exam Switch Alerts
                                         </td>
                                         <td> <input type="text" className="form-control" id="exam_switch_alerts" name="exam_switch_alerts" value={values.exam_switch_alerts} onChange={handleChange} onBlur={handleBlur} /></td>
-                                    </tr>
-                                    <tr>
-                                        <td>10</td>
                                         <td>
                                         Option Shuffle
                                         </td>
@@ -168,9 +152,8 @@ const ConfigureTest = (props) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>11</td>
                                         <td>
-                                        Show Question Marks
+                                        Show Marks for question in examination
                                         </td>
                                         <td><center>
                                             <label className="switch">
@@ -178,16 +161,13 @@ const ConfigureTest = (props) => {
                                                 <span className="slider round"></span>
                                             </label></center>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>12</td>
                                         <td>
-                                        Enter Physically Handicap Extra Time
+                                        Enter Extra Time for Physically Handicap Students
                                         </td>
                                         <td> <input type="text" className="form-control" id="ph_time" name="ph_time" value={values.ph_time} onChange={handleChange} onBlur={handleBlur} /></td>
                                     </tr>
                                     <tr>
-                                        <td colSpan={3} bgcolor="aqua">
+                                        <td colSpan={4} bgcolor="aqua">
                                             <center>
                                             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Submit</button>
                                             </center>

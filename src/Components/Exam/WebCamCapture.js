@@ -9,6 +9,11 @@ import {UserContext} from '../../App';
 const WebCamCapture = (props) => {
     const {currentUser, setCurrentUser}     = useContext(UserContext);
     let CaptureTime                         = parseInt(props.CaptureTime) * 1000;
+    
+    if(CaptureTime === 0 || CaptureTime === '0')
+    {
+      CaptureTime = 9999999;
+    }
     const webcamRef                         = React.useRef(null);
     const [imgSrc, setimgSrc]               = useState(null);
     const videoConstraints                  = {facingMode: "user"};
@@ -16,7 +21,9 @@ const WebCamCapture = (props) => {
     const {setPopupShow,setPopupMsg}        = useContext(PopupContext);
     const exam                              = props.exam;
     const CapTime                           = props;
+    const capture1                          = props.capture;
     
+
     const capture                = React.useCallback(
     () => 
         { 
@@ -24,18 +31,20 @@ const WebCamCapture = (props) => {
           {
               const imageSrc            = webcamRef.current.getScreenshot();
               setimgSrc(imageSrc); 
-
-              //-----------------Specifically for getting value instead of Promise-----
-              (async () => 
+              if(capture1 !== 'no')
               {
-                let res = await storeSnap(exam,imageSrc);
-                let snapid = res.data.snapid;
-                if(snapid && props.isProctored)
+                //-----------------Specifically for getting value instead of Promise-----
+                (async () => 
                 {
-                  ProcessImage(imageSrc,exam,snapid,setPopupShow,setPopupMsg);
-                }
-              })();
-              //-----------------------------------------------------------------------
+                  let res = await storeSnap(exam,imageSrc);
+                  let snapid = res.data.snapid;
+                  if(snapid && props.isProctored)
+                  {
+                    ProcessImage(imageSrc,exam,snapid,setPopupShow,setPopupMsg);
+                  }
+                })();
+                //-----------------------------------------------------------------------
+              }
           }
         },
         [webcamRef,setimgSrc,exam]

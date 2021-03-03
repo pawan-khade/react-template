@@ -24,6 +24,8 @@ function Startexam(props)
   let [myPhotoCapture, setMyPhotoCapture]         =   useState(false);
   let [myCameraPerm, setMyCameraPerm]             =   useState(false);
 
+  
+
   if(props.location.state)
   {
     //console.log(props.location.state.questions);
@@ -119,7 +121,7 @@ useEffect(() => {
 
               {myCameraPerm && !props.location.state.preview && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
 
-              {myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>)}
+              {parseInt(props.location.state.exam.paper.review_question) ? myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>) : null}
 
                 {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm} CaptureTime={props.location.state.exam.paper.capture_interval} isProctored={props.location.state.exam.paper.proctoring}/>)}
               </div>

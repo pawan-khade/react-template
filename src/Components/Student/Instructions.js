@@ -20,7 +20,7 @@ function useOptions()
   }
   useEffect(() =>
   {
-    if (myExam)
+    if (myExam!== undefined)
     {
       setExam(myExam);
     }
@@ -49,6 +49,7 @@ function Instructions(props)
   let location                        =   useLocation();
   let [myCameraPerm, setMyCameraPerm] =   useState(false);
   const {currentUser, setCurrentUser} =   useContext(UserContext);
+  let shuffleOptions                  =   [];
 
   let button = '';
   let BtnLabel = '';
@@ -70,6 +71,11 @@ function Instructions(props)
         }
 
         exam.paper.negative_marks===0 ?negativeMarks = 'No' : negativeMarks = 'Yes';
+
+        for(let i=0;i<exam.paper.questions;i++)
+        {
+          shuffleOptions.push(shuffleArray(['optiona','optionb','optionc','optiond']));
+        }
   }
 
   return (
@@ -100,17 +106,20 @@ function Instructions(props)
                           <h1><i>Best of Luck for your Exam</i></h1>
                         </div>
                         <div className="col-lg-4">
-                          <WebCamCapture exam={location.state.exam.id} setMyCameraPerm={setMyCameraPerm} show={'no'} CaptureTime={location.state.exam.paper.capture_interval} isProctored={location.state.exam.paper.proctoring}/>
+                          <WebCamCapture exam={location.state.exam.id} setMyCameraPerm={setMyCameraPerm} show={'no'} CaptureTime={location.state.exam.paper.capture_interval} isProctored={location.state.exam.paper.proctoring} capture="no"/>
                         </div>
                       </div>
                       <div className="card-footer">
                         <center>
                             <input type="checkbox" id="read" name="read" defaultChecked={checked} onChange={() => setChecked(!checked)}/> &nbsp;&nbsp;I have read and understood instructions.<br/><br/>
                             {BtnLabel!=='Preview Exam' ?
-                            <button disabled={(!checked || !myCameraPerm)} onClick={() => ExamStart(history,exam,setStartexam,location)} 
+                            <button disabled={(!checked || !myCameraPerm)} 
+                            onClick={() => ExamStart(history,exam,setStartexam,location)} 
                             className="btn btn-success">{BtnLabel}</button>
                             :
-                            <button disabled={(!checked || !myCameraPerm)} onClick={() => {ExamPreview(history,exam,setStartexam,location);}} className="btn btn-success">{BtnLabel}</button>
+                            <button disabled={(!checked || !myCameraPerm)} 
+                            onClick={() => {ExamPreview(history,exam,setStartexam,location);}} 
+                            className="btn btn-success">{BtnLabel}</button>
                             }
                         </center>
                       </div>
@@ -125,13 +134,14 @@ function Instructions(props)
     );
 }
 
-function checkCameraPermissions(setStartexam)
+/*function checkCameraPermissions(setStartexam)
 {
   setStartexam(true);
-}
+}*/
 
 async function ExamPreview(history,exam,setStartexam,location)
 {
+
   let examDetails = {}
   //------------------Start Exam------------------------------------------------
   if(location.state.role !== 'STUDENT')
@@ -251,6 +261,15 @@ function getIndexes(myQuestions,searchString)
     }
   });
   return arr;
+}
+
+function shuffleArray(array) 
+{
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 export default Instructions;

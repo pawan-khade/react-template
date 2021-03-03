@@ -7,8 +7,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 import DateTimePicker from 'react-datetime-picker';
 
 const TestMasterForm = (props) => {
-    const [fromDate, onFromDateChange]          = useState();
-    const [toDate, onToDateChange]              = useState();
+    const [fromDate, onFromDateChange]          = useState(new Date());
+    const [toDate, onToDateChange]              = useState(new Date());
     const [myMsg, setMyMsg]                     = useState('');
     const [subjects,setSubjects]                = useState();
     const [loading, setLoading]                 = useState(false);

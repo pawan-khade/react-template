@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Options from "./Options";
 import MathJax from 'react-mathjax-preview';
 import Lightbox from 'react-image-lightbox';
@@ -8,6 +8,8 @@ function QuestionAnswer(props) {
   const questions             = props.questions.location.state.questions;
   const index                 = props.questions.location.state.currentQuestionIndex;
   const [isOpen, setIsOpen]   = useState(false);
+  const showMarks             = parseInt(props.questions.location.state.exam.paper.question_marks);
+  const shuffleOptions        = parseInt(props.questions.location.state.exam.paper.option_shuffle);
 
   //------------------------------Question Variables----------------------------
   let  question       =   '';
@@ -32,7 +34,10 @@ function QuestionAnswer(props) {
               <b>Question {questions[index].qnid_sr}:</b>
             </div>
             <div className="col-lg-12" style={{height:"200px", overflow:"auto"}}>
-                <MathJax math={question} />
+                {showMarks ? <div style={{float:'right'}}><b>{'Marks: '+questions[index].marks}</b></div>:null}
+
+                <MathJax math={question} /> 
+
                 <br/>
                 {isOpen && (<Lightbox
                   mainSrc={question_path}
@@ -48,6 +53,8 @@ function QuestionAnswer(props) {
 
             <div className="col-lg-12" style={{height:"250px", overflow:"auto"}}>
 
+
+
               <Options id="optiona" opt={questions[index].question.optiona} optimage={questions[index].question.a1} qu={questions[index]} setMyOption={props.setMyOption} data={props} selectedOptions={props.selectedOptions} />
               <hr/>
               <Options id="optionb" opt={questions[index].question.optionb} optimage={questions[index].question.a2} qu={questions[index]} setMyOption={props.setMyOption} data={props} selectedOptions={props.selectedOptions} />
@@ -60,5 +67,13 @@ function QuestionAnswer(props) {
           </div>
   );
 }
+
+/*function shuffleArray(array) 
+{
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+}*/
 
 export default QuestionAnswer;
