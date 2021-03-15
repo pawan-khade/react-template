@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
@@ -13,18 +13,24 @@ function ConfigureHeader(props)
     const [msg ,setMsg]                 =   useState('');
     let [loading, setLoading]           =   useState(false);
     const {logoVal, setLogoVal}         =   useContext(LogoContext);
+    const [databaseHeader,setDatabaseHeader] = useState('');
 
+    useEffect(() => {
+        getHeaderData(setDatabaseHeader);
+    },[]);
+    
     return(
+        databaseHeader!== '' ?
         <>
             <Formik
-            initialValues={{ orgName: "",file:""}}
+            initialValues={{ orgName: databaseHeader,file:""}}
             onSubmit={async (values,actions) =>
             {
                 await configHeader(values.orgName,values.file,setHeaderData,setMsg,setLoading,setLogoVal);
                 actions.setSubmitting(false);
                 actions.resetForm({
                         values: {
-                        orgName: '',
+                        orgName: values.orgName,
                         file: ''
                         },
                 });
@@ -57,7 +63,7 @@ function ConfigureHeader(props)
                                 <ol className="breadcrumb mb-4">
                                     <li className="breadcrumb-item active">Configure Header</li>
                                 </ol>
-                                <div className="col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
+                                <div className="col-lg-12 animate__animated animate__pulse animate_slower">
                                     
                                     <Form className="col-lg-12 row" onSubmit={handleSubmit}>
                                         <Form.Group className="col-lg-6 row">
@@ -117,7 +123,29 @@ function ConfigureHeader(props)
                 }
             </div>
         </>
+        :null
     );
+}
+
+async function getHeaderData(setDatabaseHeader)
+{
+    await API.get('/configurations/1')
+    .then(function (res) 
+    {
+        if(res.data.status === 'success')
+        {
+            setDatabaseHeader(res.data.header);
+        }
+        else
+        {
+            setDatabaseHeader('GudExams');
+        }
+        
+    })
+    .catch(function (error) 
+    {
+        setDatabaseHeader('GudExams');
+    });
 }
 
 async function configHeader(orgName,file,setHeaderData,setMsg,setLoading,setLogoVal)

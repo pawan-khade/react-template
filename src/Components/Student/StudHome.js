@@ -4,7 +4,6 @@ import CountCard from './CountCard';
 import ExamCard from './ExamCard';
 import { useLocation } from 'react-router-dom';
 import {UserContext} from '../../App';
-import ClipLoader from "react-spinners/ClipLoader";
 import SearchBox from './SearchBox';
 
 function StudHome()
@@ -39,7 +38,7 @@ function StudHome()
       !userRequest.loading && currentUser && !loading?
       <div>
         <div className="container-fluid">
-            <h1 className="mt-4">Student Home</h1>
+            <br/>
             <div className="breadcrumb col-lg-12 row">
               <div className="col-lg-6">
                 <b>Student Name:</b> {currentUser.name} 
@@ -49,7 +48,7 @@ function StudHome()
               </div>
             </div>
             
-            <div className="row col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
+            <div className="row col-lg-12 animate__animated animate__pulse animate_slower row">
               <CountCard count={userRequest.numExams} label={"All"} color={"danger"} onClick={() => {getExamData(setUserRequest,setLoading);}}/>
               <CountCard count={userRequest.compExams} label={"Completed"} color={"success"} onClick={() => {getExamData(setUserRequest,setLoading,'over');}}/>
               <CountCard count={userRequest.yetToStartExam} label={"Yet To Start"} color={"warning"} onClick={() => {getExamData(setUserRequest,setLoading,'yettostart');}}/>
@@ -58,7 +57,7 @@ function StudHome()
               <SearchBox getExamData={getExamData} setUserRequest={setUserRequest} setLoading={setLoading}/>
             </div>
             <br/><br/>
-            <div className="row col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
+            <div className="row col-lg-12 animate__animated animate__pulse animate_slower">
             {
               userRequest.numExams ?
               userRequest.myExams ? userRequest.myExams.data.map((exam) =>
@@ -69,10 +68,9 @@ function StudHome()
             }
             </div><br/>
         </div>
-      </div> : 
-      <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
-        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-      </div>
+      </div> 
+      : 
+      <div className="custom-loader"></div>
   );
 }
 
@@ -102,18 +100,18 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
         let inprogressIndex    = [];
         let yetToStartIndex    = [];
         let expiredIndex       = [];
-
+        
         Object.keys(sorted).forEach(function(key)
         {
           EndTime           = sorted[key].paper.to_date;
           Now               = sorted[key].now;
-
+          
           if(sorted[key].examstatus === 'over')
           {
             compleated = compleated+1;
             overIndex.push(key);
           }
-          else if(sorted[key].examstatus === '')
+          else if(sorted[key].examstatus === '' || sorted[key].examstatus === null)
           {
             if(EndTime < Now)
             {
@@ -145,7 +143,7 @@ async function getExamData(setUserRequest,setLoading,filter1='All')
             expiredIndex.push(key);
           }
         });
-
+        
         //---------------------------Filtering array based on examStatus-------
         if(filter1 === 'over')
         {

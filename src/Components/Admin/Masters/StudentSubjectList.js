@@ -1,7 +1,6 @@
 import React,{useState,useEffect,useContext} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import API from '../../../api';
-import ClipLoader from "react-spinners/ClipLoader";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {ShowContext} from '../../../App';
@@ -49,9 +48,7 @@ const StudentSubjectList = (props) =>
             <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
         </div>
         :   
-        <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
-            <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-        </div>
+        null
     );
 };
 
@@ -61,7 +58,6 @@ async function getStudentSubjects(setStudentList,setLoading)
     .then(function (res) 
     {
         setStudentList(res.data.data);
-        console.log(res.data.data);
         setLoading(false);
     })
     .catch(function (error) 
@@ -79,6 +75,7 @@ function getHeader()
         { text: 'Student Name', dataField: 'studname',filter: textFilter()},
         { text: 'Inst Id', dataField: 'instid',filter: textFilter()},
         { text: 'Semester', dataField: 'semester',filter: textFilter()},
+        { text: 'Program', dataField: 'program',filter: textFilter()},
         { text: 'Subject', dataField: 'subject',filter: textFilter()},
         { text: 'Delete', dataField: 'delete'},
     ];
@@ -97,6 +94,7 @@ function getData(studentList,setMyList,myList,setShow,setMsg)
             studname                : data.stdid.name,
             instid                  : data.stdid.inst_id,
             semester                : data.stdid.semester,
+            program                 : data.paper.program.program_code,
             subject                 : '('+data.paper.paper_code+') '+data.paper.paper_name,
             delete                  : <button className="btn btn-danger" onClick={()=>{deleteRecord(data.id,setMyList,myList,setShow,setMsg);}}>Delete</button>
         });

@@ -1,7 +1,6 @@
 import React,{useState,useEffect,useContext} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import API from '../../../api';
-import ClipLoader from "react-spinners/ClipLoader";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {ShowContext} from '../../../App';
@@ -49,9 +48,7 @@ const StudentList = (props) =>
             <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
         </div>
         :   
-        <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
-            <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-        </div>
+        null
     );
 };
 

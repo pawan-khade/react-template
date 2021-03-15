@@ -16,7 +16,7 @@ const ConfigureTest = (props) => {
     const [myMsg, setMyMsg]         = useState('');
     const [loading, setLoading]     = useState(false);
 
-    const myInitialValues           = {'score_view':subjectData.score_view,'review_question':subjectData.review_question,'proctoring':subjectData.proctoring,'photo_capture':subjectData.photo_capture,'capture_interval':subjectData.capture_interval,'negative_marking':subjectData.negative_marking,'negative_marks':subjectData.negative_marks,'time_remaining_reminder':subjectData.time_remaining_reminder,'exam_switch_alerts':subjectData.exam_switch_alerts,'option_shuffle':subjectData.option_shuffle,'question_marks':subjectData.question_marks,'ph_time':subjectData.ph_time};
+    const myInitialValues           = {'score_view':subjectData.score_view,'review_question':subjectData.review_question,'proctoring':subjectData.proctoring,'photo_capture':subjectData.photo_capture,'capture_interval':subjectData.capture_interval,'negative_marking':subjectData.negative_marking,'negative_marks':subjectData.negative_marks,'time_remaining_reminder':subjectData.time_remaining_reminder,'exam_switch_alerts':subjectData.exam_switch_alerts,'option_shuffle':subjectData.option_shuffle,'question_marks':subjectData.question_marks,'ph_time':subjectData.ph_time,'static_assign':subjectData.static_assign};
 
     return (
         !loading && subjectData ? <Formik 
@@ -57,7 +57,7 @@ const ConfigureTest = (props) => {
                             </div>
                         </div>
                         <form id="form-config" method="post" className="form-horizontal" onSubmit={handleSubmit}>
-                        <div className="row col-lg-12">
+                        <div className="row col-lg-12 animate__animated animate__pulse animate_slower">
                             <div className="col-lg-12">
                             <table className="table table-bordered" style={{width:"100%"}}>
                                 <thead>
@@ -167,6 +167,21 @@ const ConfigureTest = (props) => {
                                         <td> <input type="text" className="form-control" id="ph_time" name="ph_time" value={values.ph_time} onChange={handleChange} onBlur={handleBlur} /></td>
                                     </tr>
                                     <tr>
+                                        <td>
+                                        Static Exam Assignment
+                                        </td>
+                                        <td><center>
+                                            <label className="switch">
+                                                <input type="checkbox" name="static_assign" id="static_assign" onChange={() => setFieldValue("static_assign", !values.static_assign ?true:false)} onBlur={handleBlur} checked={values.static_assign ? true:false}/>
+                                                <span className="slider round"></span>
+                                            </label></center>
+                                        </td>
+                                        <td>
+                                        
+                                        </td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
                                         <td colSpan={4} bgcolor="aqua">
                                             <center>
                                             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Submit</button>
@@ -200,7 +215,7 @@ const ConfigureTest = (props) => {
 async function saveExamConfig(values,setLoading,setMyMsg,paperId,props,history)
 {
     setLoading(true);
-    await API.put('/subject/config/'+paperId, {'score_view':values.score_view,'review_question':values.review_question,'proctoring':values.proctoring,'photo_capture':values.photo_capture,'capture_interval':values.capture_interval,'negative_marking':values.negative_marking,'negative_marks':values.negative_marks,'time_remaining_reminder':values.time_remaining_reminder,'exam_switch_alerts':values.exam_switch_alerts,'option_shuffle':values.option_shuffle,'question_marks':values.question_marks,'ph_time':values.ph_time})
+    await API.put('/subject/config/'+paperId, {'score_view':values.score_view,'review_question':values.review_question,'proctoring':values.proctoring,'photo_capture':values.photo_capture,'capture_interval':values.capture_interval,'negative_marking':values.negative_marking,'negative_marks':values.negative_marks,'time_remaining_reminder':values.time_remaining_reminder,'exam_switch_alerts':values.exam_switch_alerts,'option_shuffle':values.option_shuffle,'question_marks':values.question_marks,'ph_time':values.ph_time,'static_assign':values.static_assign})
     .then(function (res) 
     {
         setMyMsg(res.data.message);
@@ -218,6 +233,7 @@ async function saveExamConfig(values,setLoading,setMyMsg,paperId,props,history)
             props.location.state.data.option_shuffle          =   values.option_shuffle;
             props.location.state.data.question_marks          =   values.question_marks;
             props.location.state.data.ph_time                 =   values.ph_time;
+            props.location.state.data.static_assign           =   values.static_assign;
 
             let obj = { paperId: props.location.state.paperId,
                         paperCode:props.location.state.paperCode,

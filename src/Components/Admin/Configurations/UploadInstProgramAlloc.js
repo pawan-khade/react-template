@@ -3,12 +3,15 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
 
+
+
 const validationSchema = Yup.object({
     file: Yup.string()
     .required("Please Upload Excel/Csv file"),
 });
 
-const UploadSubjects = (props) => {
+
+const UploadInstProgramAlloc = (props) => {
     const ref                           =   React.useRef();
     const [myMsg, setMyMsg]             =   useState('');
     const myInitialValues               =   { file: ''};
@@ -19,7 +22,7 @@ const UploadSubjects = (props) => {
         onSubmit: async (values,actions) => 
         {
             setMyMsg('');
-            await UpSubjects(values.file,setMyMsg,props.myList,props.setMyList,setLoading);
+            await UpInstProgram(values.file,setMyMsg,props.myList,props.setMyList,setLoading);
             actions.setSubmitting(false);
             ref.current.value='';
         },
@@ -27,12 +30,12 @@ const UploadSubjects = (props) => {
     });
 
     return (
-            <div className="col-xl-4">
+            <div className="col-lg-12">
                 <div className="card mb-4">
                     <form id="form-GCA" method="post" className="form-horizontal" onSubmit={formik.handleSubmit}>
                         <div className="card-header">
                             <i className="fas fa-table mr-1"></i>
-                            Upload Programs
+                            Upload Institute Programs Allocation Excel
                         </div>
                         <div className="card-body">
                             <div className="form-group">
@@ -75,7 +78,7 @@ const UploadSubjects = (props) => {
     );
 };
 
-async function UpSubjects(file,setMyMsg,myList,setMyList,setLoading)
+async function UpInstProgram(file,setMyMsg,myList,setMyList,setLoading)
 {
     setLoading(true);
     let fd = new FormData();
@@ -87,7 +90,7 @@ async function UpSubjects(file,setMyMsg,myList,setMyList,setLoading)
         }
     }
 
-    await API.post('/subject/upload',fd,config)
+    await API.post('/program/inst/upload',fd,config)
     .then(function (res) 
     {
         if(res.data.status==='success')
@@ -95,15 +98,15 @@ async function UpSubjects(file,setMyMsg,myList,setMyList,setLoading)
             setLoading(false);
             setMyMsg(res.data.message);
             setMyList(!myList);
-            
+            //setTimeout(()=>{setMyMsg('')}, 20000);
         }
     })
     .catch(function (error) 
     {
         setLoading(false);
         setMyMsg(error.response.data.message);
-        
+        //setTimeout(()=>{setMyMsg('')}, 20000);
     });
 }
 
-export default UploadSubjects;
+export default UploadInstProgramAlloc;

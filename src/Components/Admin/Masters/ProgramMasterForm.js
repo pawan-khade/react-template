@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
 import {ShowContext} from '../../../App';
-import ClipLoader from "react-spinners/ClipLoader";
 
 const ProgramMasterForm = (props) => {
     const [myMsg, setMyMsg]         = useState('');
@@ -127,9 +126,8 @@ const ProgramMasterForm = (props) => {
                                     <div className="alert alert-dark animate__animated animate__tada animate_slower">{myMsg}</div>)}
 
                                 {loading && (
-                                    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-                                        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-                                    </div>)}
+                                    <div className="custom-loader"></div>
+                                )}
                             </div>
                         </div>
                     </form>

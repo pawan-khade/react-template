@@ -28,7 +28,6 @@ function Startexam(props)
 
   if(props.location.state)
   {
-    //console.log(props.location.state.questions);
     var originalSelectedOptions        = getSelectedOptions(props.location.state.questions);
     var questionIndex                  = props.location.state.currentQuestionIndex;
     var myReviewArray                  = getReviewOptions(props.location.state.questions);
@@ -93,11 +92,12 @@ useEffect(() => {
 
   return (
     props.location.state ?
-      <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+      <div className="row animate__animated animate__pulse animate_slower">
           <div className='card col-lg-12'>
               <div className="card-header bg-primary row" style={{color:"white"}}>
                 <div className="col-lg-8">
-                  <h5><b>Subject Name: {props.location.state.exam.paper.paper_name} ({props.location.state.exam.paper.paper_code}) </b></h5>
+                  <br/>
+                  <h6><b>Subject Name: {props.location.state.exam.paper.paper_name} ({props.location.state.exam.paper.paper_code}) </b></h6>
                 </div>
                 <div className="col-lg-4">
                       <i className="fas fa-clock fa-lg" style={{float:"right"}}></i> &nbsp;&nbsp;
@@ -111,25 +111,40 @@ useEffect(() => {
             {myCameraPerm && (<QuestionAnswer questions={props} setMyOption={setMyOption}  selectedOptions={selectedOptions}/>)}
               <hr/>
               <div className="col-lg-12 row">
-              {myCameraPerm && (<PreviousButton data={props} setMyOption={setMyOption}/>)}
-
-              {myCameraPerm && !props.location.state.preview && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
-
-              {myCameraPerm && props.location.state.preview && (<NextButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
-
-              {myCameraPerm && props.location.state.preview && (<EndPreviewButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
-
-              {myCameraPerm && !props.location.state.preview && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
-
-              {parseInt(props.location.state.exam.paper.review_question) ? myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>) : null}
-
-                {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm} CaptureTime={props.location.state.exam.paper.capture_interval} isProctored={props.location.state.exam.paper.proctoring}/>)}
+                <span>
+                {myCameraPerm && (<PreviousButton data={props} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions}/>)}
+                </span>
+                <span style={{"margin-left":"10px"}}>
+                {myCameraPerm && !props.location.state.preview && (<NextSaveButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
+                </span>
+                <span style={{"margin-left":"10px"}}>
+                  {myCameraPerm && !props.location.state.preview && (<EndExamButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
+                </span>
+                <span style={{"margin-left":"10px"}}>
+                  {myCameraPerm && props.location.state.preview && (<NextButton data={props} myOption={myOption} setMyOption={setMyOption} setSelectedOptions={setSelectedOptions} />)}
+                </span>
+                <span style={{"margin-left":"10px"}}>
+                  {myCameraPerm && props.location.state.preview && (<EndPreviewButton index={questionIndex} length={props.location.state.questions.length} data={props}/>)}
+                </span>
+                <span style={{"margin-left":"10px"}}>
+                  {parseInt(props.location.state.exam.paper.review_question) ? myCameraPerm && !props.location.state.preview && (<ReviewLater data={props} myReviewQuestions={myReviewArray} index={questionIndex}/>) : null}
+                </span>
               </div>
+              {questionIndex !== props.location.state.questions.length - 1 ?
+              <div>
+                <center><font color="red"><b>End Exam Button Available on Last Question</b></font></center>
+              </div>
+              :null}
             </div>
           </div>
           <div className="col-lg-4" style={{float: "right"}}>
           {myCameraPerm && (<QuestionButtons qas={props} setSelectedOptions={setSelectedOptions} setMyOption={setMyOption}/>)}
           {myCameraPerm && (<OverallSummery data={props}/>)}
+          </div>
+          <div class="col-lg-12">
+            <center>
+              {myPhotoCapture && (<WebCamCapture exam={props.location.state.exam.id} setMyCameraPerm={setMyCameraPerm} CaptureTime={props.location.state.exam.paper.capture_interval} isProctored={props.location.state.exam.paper.proctoring}/>)}
+            </center>
           </div>
       </div> : null
   );

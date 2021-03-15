@@ -34,6 +34,9 @@ import StudSubjectAlloc from '../Components/Admin/Masters/StudSubjectAlloc';
 import TestMaster from '../Components/Admin/Masters/TestMaster';
 import AddTopic from '../Components/Admin/Masters/AddTopic';
 import ConfigureTest from '../Components/Admin/Masters/ConfigureTest';
+import InstProgramAllocation from '../Components/Admin/Configurations/InstProgramAllocation';
+import examQuestionSpecificationReport from '../Components/Admin/Reports/examQuestionSpecificationReport';
+import examQuestionSpecificationMatchReport from '../Components/Admin/Reports/examQuestionSpecificationMatchReport';
 
 
 function Content() 
@@ -79,6 +82,9 @@ function Content()
                             <Route exact path="/addTest" component={TestMaster} />
                             <Route exact path="/addTopic" component={AddTopic} />
                             <Route exact path="/configureTest" component={ConfigureTest} />
+                            <Route exact path="/instProgramAllocation" component={InstProgramAllocation} />
+                            <Route exact path="/examQuestionSpecificationReport" component={examQuestionSpecificationReport} />
+                            <Route exact path="/examQuestionSpecificationMatchReport" component={examQuestionSpecificationMatchReport} />
                         </main>
                         <footer className="py-4 bg-light mt-auto">
                             <Footer />

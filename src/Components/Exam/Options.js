@@ -31,14 +31,14 @@ function Options(props)
     return (
       selectedOptions!== undefined && questionIndex!== undefined ?
           <div className="col-lg-12 row" onClick={() => {props.setMyOption(optType);}} >
-            <div className="col-lg-1">
+            <span>
               <input checked={verifyOption(questionIndex, selectedOptions, optType)} type="radio" name="option"  value={optType} onChange={() => {
               props.setMyOption(optType);
             }} />
-            </div>
-            <div className="col-lg-11">
+            </span>
+            <span style={{"margin-left":"10px"}}>
               <MathJax math={opt} />
-            </div>
+            </span>
             {isOpen && (<Lightbox
               mainSrc={opt_path}
               onCloseRequest={() => setIsOpen(false)}

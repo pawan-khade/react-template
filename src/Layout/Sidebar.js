@@ -73,6 +73,10 @@ function Sidebar()
                                     <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
                                     Inst-Cluster Alloc
                                 </Link>
+                                <Link className="nav-link" to={{pathname: "/instProgramAllocation"}}>
+                                    <div className="sb-nav-link-icon"><i className="fas fa-university"></i></div>
+                                    Inst-Program Alloc
+                                </Link>
                             </nav>
                         </div>
 

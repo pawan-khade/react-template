@@ -12,7 +12,7 @@ const ClusterController = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Add Cluster Controller Form</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <ClusterControllerForm setMyList={setMyList} myList={myList}/>
                     <UploadClusterController setMyList={setMyList} myList={myList}/>
                     <UserList setMyList={setMyList} myList={myList} role={'CADMIN'}/>

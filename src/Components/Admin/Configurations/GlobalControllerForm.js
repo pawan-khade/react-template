@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
-import ClipLoader from "react-spinners/ClipLoader";
+
 
 const validationSchema = Yup.object({
     regType: Yup.string()
@@ -112,7 +112,7 @@ const GlobalControllerForm = (props) =>
                                         Mobile of Admin
                                     </div>
                                     <div className="col-lg-8">
-                                        <input type="text" id="mobile" name="mobile" onChange={formik.handleChange} value={formik.values.mobile} onBlur={formik.handleBlur} className="form-control" placeholder="Enter Mobile Number..." />
+                                        <input type="text" id="mobile" name="mobile" onChange={formik.handleChange} value={formik.values.mobile} onBlur={formik.handleBlur} className="form-control" placeholder="Enter Mobile Number..." maxLength="10"/>
 
                                         {formik.errors.mobile ? <div className="alert alert-info">{formik.errors.mobile}</div> : null}
                                     </div>
@@ -143,9 +143,8 @@ const GlobalControllerForm = (props) =>
                             <div className="alert alert-dark animate__animated animate__tada animate_slower">{myMsg}</div>)}
 
                         {loading && (
-                            <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-                                <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-                            </div>)}
+                            <div className="custom-loader"></div>
+                        )}
                     </div>
                 </div>
             </form>

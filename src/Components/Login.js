@@ -5,7 +5,6 @@ import API from '../api';
 import ReCAPTCHA   from "react-google-recaptcha";
 import { useHistory } from 'react-router-dom';
 import {UserContext} from '../App';
-import ClipLoader from "react-spinners/ClipLoader";
 
 window.recaptchaOptions = {
     useRecaptchaNet: true,
@@ -28,7 +27,8 @@ export default function Login(props)
         initialValues={{ username: "", password: "", flag:flag ,instId:"" }}
         onSubmit={async (values,actions) =>
         {
-          if (myRecaptcha !== undefined){
+          if (myRecaptcha !== undefined)
+          {
             await checkLogin(values.username,values.password,values.instId,flag,myRecaptcha,setMyMsg,history,setCurrentUser,recaptchaRef);
             actions.setSubmitting(false);
             actions.resetForm({
@@ -39,6 +39,10 @@ export default function Login(props)
                   instId:''
                 },
             });
+          }
+          else
+          {
+              setMyMsg('Please Use Recaptcha For Login...');
           }
         }}
         validationSchema={Yup.object().shape({
@@ -66,7 +70,7 @@ export default function Login(props)
             } = props;
             return (
 
-                <div style={{marginBottom:"30px"}}>
+                <div style={{marginBottom:"30px",marginTop:"30px"}}>
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-lg-6">
@@ -137,7 +141,7 @@ export default function Login(props)
                                         </form>
                                     </div>
                                     <div className="card-footer text-center">
-                                        <div className="small"><a href="/register">Need an account? Sign up!</a></div>
+                                        <div className="small"></div>
                                     </div>
                                 </div>
                             </div>
@@ -149,9 +153,7 @@ export default function Login(props)
     }
     </Formik>
     :
-    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-        <ClipLoader color={'#ff0000'} loading={loading} size={100} />
-    </div>
+    <div className="custom-loader"></div>
   );
 }
 

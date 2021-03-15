@@ -3,6 +3,7 @@ import {useLocation,useHistory} from 'react-router-dom';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import API from '../../../api';
 
 function InstExamStudtReport() 
 {
@@ -35,10 +36,8 @@ function InstExamStudtReport()
             }
         ]
     };
-
-    console.log(result);
     return (
-        location.state ?
+        location.state && allExams ?
         <div>
             <div className="container-fluid">
                 <h1 className="mt-4">Student Count Report</h1>
@@ -107,40 +106,45 @@ function getData(result)
 
 function searchResult(allExams,paper_id,type)
 {
-    let newArr = [];
-    if(type === 'over')
+    if(allExams && allExams.length > 0)
     {
-        for(let i=0;i < allExams.length; i++)
+        let newArr = [];
+        if(type === 'over')
         {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'over')
+            for(let i=0;i < allExams.length; i++)
             {
-                newArr.push(allExams[i])
+                if(allExams[i].paper && parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'over')
+                {
+                    newArr.push(allExams[i])
+                }
             }
+            return newArr;
         }
-        return newArr;
-    }
-    else if(type === 'inprogress')
-    {
-        for(let i=0;i < allExams.length; i++)
+        else if(type === 'inprogress')
         {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'inprogress')
+            for(let i=0;i < allExams.length; i++)
             {
-                newArr.push(allExams[i])
+                if(allExams[i].paper && parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'inprogress')
+                {
+                    newArr.push(allExams[i])
+                }
             }
+            return newArr;
         }
-        return newArr;
-    }
-    else if(type === 'notattend')
-    {
-        for(let i=0;i < allExams.length; i++)
+        else if(type === 'notattend')
         {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === '')
+            for(let i=0;i < allExams.length; i++)
             {
-                newArr.push(allExams[i])
+                console.log(allExams[i].examstatus);
+                if(allExams[i].paper && parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === null)
+                {
+                    newArr.push(allExams[i])
+                }
             }
+            return newArr;
         }
-        return newArr;
     }
+    
 }
 
 
@@ -157,9 +161,7 @@ function useData()
         
         if(location.state)
         {
-            setAllExams(location.state.data);
-            setPaperId(location.state.paper_id);
-            setType(location.state.type);
+            getExamData(location.state.paper_id,location.state.type,setAllExams,setPaperId,setType);
         }
         else
         {
@@ -171,4 +173,24 @@ function useData()
         allExams,paper_id,type
     ];
 }
+
+async function getExamData(paper_id,type,setAllExams,setPaperId,setType)
+{
+    await API.get('exam/bypaperid/type',{params:{"paper_id":paper_id,"type":type}})
+    .then(function (res) 
+    {
+        if(res.data.status === 'success')
+        {
+            setPaperId(paper_id);
+            setType(type);
+            setAllExams(res.data.data);
+        }
+        
+    })
+    .catch(function (error) 
+    {
+        console.log(error);
+    });
+}
+
 export default InstExamStudtReport;

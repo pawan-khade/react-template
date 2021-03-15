@@ -18,8 +18,8 @@ function NextSaveButton(props) {
 
         //console.log('myOption', props.myOption);
         return (
-            <div className="col-lg-3">
-                <button className="btn btn-primary"
+            <div>
+                <button className="btn btn-primary btn-sm ans-btns-mg-btm"
                 onClick={() => {
                   saveAndChangeIndex(props,(myIndex+1),history,maxQuestions,props.myOption,setShow,setMsg)
                 }}

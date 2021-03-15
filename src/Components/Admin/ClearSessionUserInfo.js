@@ -105,7 +105,7 @@ async function clearSession(uid,setSessionCleared,setUserData,setMessage)
             setMessage(res.data.message);
             setTimeout(() => {
                 setUserData(undefined);
-            }, 7000);
+            }, 25000);
         }
         else 
         {
@@ -113,7 +113,7 @@ async function clearSession(uid,setSessionCleared,setUserData,setMessage)
             setMessage(res.data.message);
             setTimeout(() => {
                 setUserData(undefined);
-            }, 7000);
+            }, 25000);
         }
     })
     .catch(function (error) 

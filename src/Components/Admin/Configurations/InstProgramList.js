@@ -1,18 +1,20 @@
 import React,{useState,useEffect,useContext} from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import API from '../../../api';
+import ClipLoader from "react-spinners/ClipLoader";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {ShowContext} from '../../../App';
+import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 
-const SubjectList = (props) => 
+const InstProgramList = (props) => 
 {
     const {setShow,setMsg}                          =   useContext(ShowContext);
     let [loading, setLoading]                       =   useState(true);
-    let [subjectList, setSubjectList]               =   useState([]);
+    let [instProgramList, setInstProgramList]       =   useState([]);
     const header                                    =   getHeader();
-    const data                                      =   getData(subjectList,props.setMyList,props.myList,setShow,setMsg);
+    const data                                      =   getData(instProgramList,props.setMyList,props.myList,setShow,setMsg);
     
 
     const options = {
@@ -40,31 +42,33 @@ const SubjectList = (props) =>
 
     useEffect(() => 
     {
-        getSubjects(setSubjectList,setLoading);
+        getInstProgramAlloc(setInstProgramList,setLoading);
     },[props.myList]);
 
     return (
-        subjectList.length > 0 && !loading ?
+        instProgramList.length > 0 && !loading ?
         <div className="col-lg-12" style={{overflow:"auto"}}>
             <BootstrapTable keyField='srno' data={ data } columns={ header } filter={ filterFactory() } pagination={ paginationFactory(options) }/>
         </div>
         :   
-        null
+        <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
+            <ClipLoader color={'#ff0000'} loading={loading} size={200} />
+        </div>
     );
 };
 
-async function getSubjects(setSubjectList,setLoading)
+async function getInstProgramAlloc(setTestList,setLoading)
 {
-    await API.get('/subject',{params:{'type':'all'}})
+    await API.get('/program/inst',{params:{'type':'all'}})
     .then(function (res) 
     {
-        setSubjectList(res.data.data);
+        setTestList(res.data.data);
         console.log(res.data.data);
         setLoading(false);
     })
     .catch(function (error) 
     {
-        setSubjectList(undefined);
+        setTestList(undefined);
         setLoading(false);
     });   
 }
@@ -73,35 +77,37 @@ function getHeader()
 {
     let myHeader = [
         { text: 'Sr No', dataField: 'srno'},
-        { text: 'Paper Code', dataField: 'paperCode',filter: textFilter()},
-        { text: 'Paper Name', dataField: 'paperName',filter: textFilter()},
-        { text: 'Add Topic Data', dataField: 'topicData'},
-        { text: 'Delete', dataField: 'delete'},
+        { text: 'Inst ID', dataField: 'instid',filter: textFilter()},
+        { text: 'Inst Name', dataField: 'instname',filter: textFilter()},
+        { text: 'Program Code', dataField: 'programcode'},
+        { text: 'Program Name', dataField: 'programname'},
+        { text: 'Delete', dataField: 'del'},
     ];
     return myHeader;
 }
 
-function getData(subjectList,setMyList,myList,setShow,setMsg)
+function getData(instProgramList,setMyList,myList,setShow,setMsg)
 {
     let myData = [];
     let i = 1;
-    subjectList.map((data, index) => 
+    instProgramList.map((data, index) => 
     {
         myData.push({
             srno                    : i++,
-            paperCode               : data.paper_code,
-            paperName               : data.paper_name,
-            topicData               : <Link className="nav-link" to={{pathname: "/addTopic",state:{paperId: data.id,paperCode:data.paper_code,paperName:data.paper_name}}}>Add Topics</Link>,
-            delete                  : <button className="btn btn-danger" onClick={()=>{deleteRecord(data.id,setMyList,myList,setShow,setMsg);}}>Delete</button>
+            instid                  : data.inst.username,
+            instname                : data.inst.college_name,
+            programcode             : data.program.program_code,
+            programname             : data.program.program_name,
+            del                   : <button className="btn btn-danger" onClick={()=>{delRecord(data.id,setMyList,myList,setShow,setMsg);}}>Delete</button>,
         });
     })
 
     return myData;
 }
 
-async function deleteRecord(id,setMyList,myList,setShow,setMsg)
+async function delRecord(id,setMyList,myList,setShow,setMsg)
 {
-    await API.delete('/subject/'+id)
+    await API.delete('/program/inst/'+id)
     .then(function (res) 
     {
         if(res.data.status==='success')
@@ -120,4 +126,4 @@ async function deleteRecord(id,setMyList,myList,setShow,setMsg)
     });
 }
 
-export default SubjectList;
+export default InstProgramList;

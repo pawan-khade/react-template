@@ -2,6 +2,7 @@ import React, { useState , useEffect, useContext } from 'react';
 import LoginButton from '../Components/LoginButton';
 import { useHistory, useLocation } from 'react-router-dom';
 import {ShowContext} from '../App';
+import {UserContext} from '../App';
 import {LogoContext} from '../App';
 import API from '../api';
 
@@ -9,7 +10,7 @@ function Header()
 {
     const {setShow,setMsg}      = useContext(ShowContext);
     const {logoVal, setLogoVal} = useContext(LogoContext);
-
+    const {currentUser }                  = useContext(UserContext);
     let history                         =   useHistory();
     let location                        =   useLocation();
     let [toggle, setToggle]             =   useState(true);
@@ -33,7 +34,7 @@ function Header()
         else
         {
             setIsStartExam(true);
-            setToggle(true);
+            setToggle(false);
             document.body.classList.add('sb-sidenav-toggled');document.body.classList.remove('sb-nav-fixed');
         }
       }
@@ -64,7 +65,10 @@ function Header()
           !isStartExam ?
             <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 <a href={void(0)} className="navbar-brand"><img src={imgPath+'?val='+logoVal} height="50" width="50" alt="Logo" style={{borderRadius:"45%"}}></img> {myHeader}</a>
+
+                {(location.pathname !== '/login') ?
                 <button className="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" onClick={() => {toggleSidebar(setToggle,toggle)}}><i className="fas fa-bars"></i></button>
+                :null}
 
                <form className="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
                      

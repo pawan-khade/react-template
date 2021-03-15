@@ -16,7 +16,6 @@ function useOptions()
   if(location.state && location.state.exam)
   {
     myExam = location.state.exam;
-    //console.log(myExam);
   }
   useEffect(() =>
   {
@@ -134,11 +133,6 @@ function Instructions(props)
     );
 }
 
-/*function checkCameraPermissions(setStartexam)
-{
-  setStartexam(true);
-}*/
-
 async function ExamPreview(history,exam,setStartexam,location)
 {
 
@@ -192,6 +186,7 @@ async function ExamStart(history,exam,setStartexam,location)
           markedUnsolvedIndexes               :   getIndexes(myQuestions,'unansweredandreview'),
         }
         setStartexam(true);
+        
         history.replace("/startexam", examDetails) ;
       }
     }
@@ -237,7 +232,7 @@ async function getQuestions(exam)
 
 async function getPreviewQuestions(exam)
 {
-  const PaperId = exam.paper.id;
+  const PaperId = exam.paper.paper_code;
 
   const res = await API.get('/questions/'+PaperId,{params: {"type" : "preview"}});
   if(res.data.status === 'success')

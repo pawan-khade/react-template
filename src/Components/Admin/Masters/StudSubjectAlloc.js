@@ -11,7 +11,7 @@ const StudSubjectAlloc = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Student Subject Allocation</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <UploadStudentSubjectAlloc setMyList={setMyList} myList={myList}/>
                     <StudentSubjectList setMyList={setMyList} myList={myList}/>
                 </div>

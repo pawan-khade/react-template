@@ -10,7 +10,7 @@ function AdminReports(props)
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Admin Reports</li>
             </ol>
-            <div className="row col-lg-12 animate__animated animate__fadeInDown animate_slower">
+            <div className="row col-lg-12 animate__animated animate__pulse animate_slower">
                 <table className="table table-bordered">
                     <thead>
                         <tr style={{backgroundColor:"aqua"}}>
@@ -24,8 +24,16 @@ function AdminReports(props)
                                     Examination Report
                                 </Link>
                             </td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <Link  className="nav-link" to={{pathname: "/examQuestionSpecificationMatchReport"}}>
+                                    Examination Question Specification Match Report
+                                </Link>
+                            </td>
+                            <td>
+                                <Link  className="nav-link" to={{pathname: "/examQuestionSpecificationReport"}}>
+                                    Examination Question Specification Mis-Match Report
+                                </Link>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

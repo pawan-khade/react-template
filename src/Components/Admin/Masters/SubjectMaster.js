@@ -13,7 +13,7 @@ const SubjectMaster = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Subject Master</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <SubjectMasterForm setMyList={setMyList} myList={myList}/>
                     <UploadSubjects setMyList={setMyList} myList={myList}/>
                     <SubjectList setMyList={setMyList} myList={myList} />

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../../api';
-import Axios from 'axios';
-import ClipLoader from "react-spinners/ClipLoader";
 import Moment from 'react-moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
@@ -13,11 +11,11 @@ import {ShowContext} from '../../../App';
 function InstExamReport(props)
 {
     const {setShow,setMsg}                          =   useContext(ShowContext);
-    const [allPapers, setAllPapers]                 =   useState([]);
-    const [allExams, setAllExams]                   =   useState([]);
+    const [allData, setAllData]                     =   useState([]);
     let [loading, setLoading]                       =   useState(true);
-    const header                                    =   getHeader(allExams);
-    const data                                      =   getData(allPapers,allExams,props);
+    const header                                    =   getHeader();
+    const data                                      =   getData(allData,props);
+
     const options = {
         sizePerPageList: [
             {
@@ -43,11 +41,11 @@ function InstExamReport(props)
    
     useEffect(() => 
     {
-        getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props);
-    },[props.instId,setMsg,setShow]);
+        getExamData(setAllData,setLoading,setShow,setMsg,props);
+    },[]);
 
     return (
-    allPapers.length > 0 && !loading ?
+        allData && allData.length > 0 && !loading ?
       <div>
         <div className="container-fluid">
             {(props.role==='' || props.role===undefined) &&(<h1 className="mt-4">Institute Examination Report</h1>)}
@@ -60,13 +58,11 @@ function InstExamReport(props)
             </div>
         </div>
       </div>
-      : <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"50%"}}>
-            <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-        </div>
+      : <div className="custom-loader"></div>
     );
 }
 
-function getHeader(allExams)
+function getHeader()
 {
     let myHeader = [
         { text: 'Sr No', dataField: 'srno'},
@@ -76,129 +72,75 @@ function getHeader(allExams)
         { text: 'Marks', dataField: 'marks'},
         { text: 'Total Q\'s', dataField: 'totquestions'},
         { text: 'Duration', dataField: 'duration'},
-        { text: 'Total Students', dataField: 'totstud'},
-        { text: 'Total End', dataField: 'totend'},
-        { text: 'Total Inprogress', dataField: 'totinprogress'},
-        { text: 'Total Not Attend', dataField: 'totnotattend'},
+        { text: 'Total Students', dataField: 'totstud',filter: textFilter()},
+        { text: 'Total End', dataField: 'totend',filter: textFilter()},
+        { text: 'Total Inprogress', dataField: 'totinprogress',filter: textFilter()},
+        { text: 'Total Not Attend', dataField: 'totnotattend',filter: textFilter()},
     ];
     return myHeader;
 }
 
-function getData(allPapers,allExams,props)
+function getData(allData,props)
 {
-    let myData = [];
-    let i = 1;
+    let myData      = [];
+    let i           = 1;
+    let paper_name  = '';
 
-    allPapers.map((data, index) => {
-        //console.log('index:'+index+' Data:'+allExams[index]);
-        let paper_name = (props.role==='ADMIN') ?  <Link to={{pathname: '/instructions',state: {exam:allExams[index],role:'ADMIN'}}}>{data.paper_name}</Link> :  data.paper_name ;
-
-        myData.push({
-            srno                    : i++,
-            datenstarttime          : <Moment format="YYYY-MM-DD H:mm:ss">{data.from_date}</Moment>,
-            code                    : data.paper_code,
-            subjectname             : paper_name,
-            marks                   : data.marks,
-            totquestions            : data.questions,
-            duration                : data.durations,
-            totstud                 : getCount(allExams,'total',data.id),
-            totend                  : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'over',paper_code:data.paper_code}}}> {getCount(allExams,'end',data.id)}</Link>,
-            totinprogress           : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'inprogress',paper_code:data.paper_code}}}> {getCount(allExams,'inprogress',data.id)}  </Link>,
-            totnotattend            : <Link to={{pathname: "/instexamstudentreport", state:{data:allExams,paper_id:data.id,type:'notattend',paper_code:data.paper_code}}}>{getCount(allExams,'notattend',data.id)} </Link>
-        })   
-    })
-
+        allData.map((data, index) => 
+        {
+            if(allData[index] && Object.keys(allData[index]).length === 0 && allData[index].constructor === Object)
+            {
+                paper_name = data.paper_name;
+            }
+            else
+            {
+                paper_name= (props.role==='ADMIN') ?  <Link to={{pathname: '/instructions',state: {exam:data.exam,role:'ADMIN'}}}>{data.paper_name}</Link> :  data.paper_name ;
+            }
+            myData.push({
+                srno                    : i++,
+                datenstarttime          : <Moment format="YYYY-MM-DD H:mm:ss">{data.from_date}</Moment>,
+                code                    : data.paper_code,
+                subjectname             : paper_name,
+                marks                   : data.marks,
+                totquestions            : data.questions,
+                duration                : data.duration,
+                totstud                 : data.allStudents,
+                totend                  : <Link to={{pathname: "/instexamstudentreport", state:{data:allData,paper_id:data.id,type:'over',paper_code:data.paper_code}}}>{data.overStudents}</Link>,
+                totinprogress           : <Link to={{pathname: "/instexamstudentreport", state:{data:allData,paper_id:data.id,type:'inprogress',paper_code:data.paper_code}}}> {data.inprogressStudents}</Link>,
+                totnotattend            : <Link to={{pathname: "/instexamstudentreport", state:{data:allData,paper_id:data.id,type:'notattend',paper_code:data.paper_code}}}>{data.unattendStudents}</Link>
+            })   
+        });
     return myData;
 }
 
-async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,props)
+async function getExamData(setAllData,setLoading,setShow,setMsg,props)
 {
-    let allPapers = [];
-    let allExams  = [];
-    let res       = [];
+    let res         = [];
     if(props.role==='ADMIN')
     {
         if(props.instId === '')
         {
             setMsg('Please Select Institute to get its report...');
             setShow(true);
-            setAllPapers([]);
-            setAllExams([]);
+            setAllData([]);
         }
-        res = await API.get('/program/'+props.instId);
+        //----------fetch exam report from institute id----------------------------------------
+        res = await API.get('exam/report/count',{params:{"type":"instwise",instId:props.instId}});
+        //----------------------------------------------------------------------------------
     }
     else
     {
-        res = await API.get('/program');
+        res = await API.get('exam/report/count');
     }
         if(res.data.status==='success')
         {
-            if(res.data.data.length > 0)
+            if(res.data.data !== undefined)
             {
-                //console.log(res.data.data.length);
-                let totalSubjects = 0;
-                for(let i=0;i<res.data.data.length;i++)
-                {
-                    await Axios.all([
-                            API.get('/paper',{ params: {"program_id":res.data.data[i].id}}),
-                            API.get('/exam/'+res.data.data[i].id,{ params: {"type":"byprogramid"}})
-                    ])
-                    .then(responseArr => 
-                    {
-                        if(responseArr[0].data.status==='success')
-                        {
-                            if(responseArr[0].data.data.length > 0)
-                            {
-                                totalSubjects=totalSubjects+responseArr[0].data.data.length;
-                                console.log(responseArr[0].data.data);
-                                allPapers.push(...responseArr[0].data.data);
-                            }
-                            else
-                            {
-                                totalSubjects=totalSubjects+0;
-                            }
-                        }   
-                        
-                        if(responseArr[1].data.status==='success')
-                        {
-                            if(responseArr[1].data.data.length > 0)
-                            {
-                                totalSubjects=totalSubjects+responseArr[1].data.data.length;
-                                allExams.push(...responseArr[1].data.data);
-                            }
-                            else
-                            {
-                                totalSubjects=totalSubjects+0;
-                            }
-                        }
-
-                        if(totalSubjects === 0)
-                        {
-                            setShow(true);
-                            setMsg('No Program Data found for this Institute.Please Add data or Configure it Properly...');
-                            setLoading(false);
-                        }
-                    });
-                }
-                allPapers = [...allPapers];
-                allPapers = [...new Set(allPapers)];
-
-                allPapers.sort(function(a,b)
-                {
-                    return a.from_date - b.from_date;
-                });
-                
-                if(allPapers.length > 0 && allExams.length > 0)
-                {
-                    setAllPapers(allPapers);
-                    setAllExams(allExams);
-                    setLoading(false);
-                } 
+                setAllData(res.data.data);
             }
             else
             {
-                setAllPapers([]);
-                setAllExams([]);
+                setAllData([]);
                 setShow(true);
                 setMsg('No Program Data found for this Institute.Please Add data or Configure it Properly...');
                 setLoading(false);
@@ -206,8 +148,7 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
         }
         else
         {
-            setAllPapers([]);
-            setAllExams([]);
+            setAllData([]);
             setShow(true);
             setMsg('Problem fetching data from Server...');
             setLoading(false);
@@ -215,57 +156,5 @@ async function getPrograms(setAllPapers,setAllExams,setLoading,setShow,setMsg,pr
         setLoading(false);
 }
 
-function getCount(allExams,str,paper_id)
-{
-    let total=0;
-    let end=0;
-    let inprogress=0;
-    let absent=0;
-
-    if(str === 'total')
-    {
-        for(let i=0;i < allExams.length; i++)
-        {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id))
-            {
-                total++;
-            }
-        }
-        return total;
-    }
-    else if(str === 'end')
-    {
-        for(let i=0;i < allExams.length; i++)
-        {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'over')
-            {
-                end++;
-            }
-        }
-        return end;
-    }
-    else if(str === 'inprogress')
-    {
-        for(let i=0;i < allExams.length; i++)
-        {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === 'inprogress')
-            {
-                inprogress++;
-            }
-        }
-        return inprogress;
-    }
-    else if(str === 'notattend')
-    {
-        for(let i=0;i < allExams.length; i++)
-        {
-            if(parseInt(paper_id) === parseInt(allExams[i].paper.id) && allExams[i].examstatus === '')
-            {
-                absent++;
-            }
-        }
-        return absent;
-    }
-}
 
 export default InstExamReport;

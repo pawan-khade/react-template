@@ -24,7 +24,7 @@ const InstClusterAlloc = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Institutes to Cluster Allocation</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                         <div className="col-lg-4">{instList.length > 0 && 
                         <InstList instList={instList} setInstList={setInstList} uid={null}/>}</div>
 

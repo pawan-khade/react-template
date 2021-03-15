@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
@@ -13,18 +13,24 @@ function ConfigureFooter(props)
     const [msg ,setMsg]                 =   useState('');
     let [loading, setLoading]           =   useState(false);
     const {footerVal, setFooterVal}     = useContext(FooterContext);
+    const [databaseFooter,setDatabaseFooter] = useState('');
+
+    useEffect(() => {
+        getFooterData(setDatabaseFooter);
+    },[]);
     
     return(
+        databaseFooter !== '' ?
         <>
             <Formik
-            initialValues={{ orgName: ""}}
+            initialValues={{ orgName: databaseFooter}}
             onSubmit={async (values,actions) =>
             {
                 await updateFooterData(values.orgName,setFooterData,setMsg,setLoading,setFooterVal);
                 actions.setSubmitting(false);
                 actions.resetForm({
                         values: {
-                        orgName: ''
+                        orgName: values.orgName
                         },
                 });
             }}
@@ -53,7 +59,7 @@ function ConfigureFooter(props)
                                 <ol className="breadcrumb mb-4">
                                     <li className="breadcrumb-item active">Configure Footer</li>
                                 </ol>
-                                <div className="col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
+                                <div className="col-lg-12 animate__animated animate__pulse animate_slower">
                                     <Form className="col-lg-12 row" onSubmit={handleSubmit}>
                                         <Form.Group className="col-lg-10 row">
                                             <Form.Control 
@@ -92,7 +98,29 @@ function ConfigureFooter(props)
                 }
             </div>
         </>
+        :null
     );
+}
+
+async function getFooterData(setDatabaseFooter)
+{
+    await API.get('/configurations/1')
+    .then(function (res) 
+    {
+        if(res.data.status === 'success')
+        {
+            setDatabaseFooter(res.data.footer);
+        }
+        else
+        {
+            setDatabaseFooter('GudExams');
+        }
+        
+    })
+    .catch(function (error) 
+    {
+        setDatabaseFooter('GudExams');
+    });
 }
 
 async function updateFooterData(orgName,setFooterData,setMsg,setLoading,setFooterVal)

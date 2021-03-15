@@ -12,7 +12,7 @@ const ProgramMaster = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Program Master</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <ProgramMasterForm setMyList={setMyList} myList={myList}/>
                     <UploadPrograms setMyList={setMyList} myList={myList}/>
                     <ProgramList setMyList={setMyList} myList={myList}/>

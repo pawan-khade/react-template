@@ -12,7 +12,7 @@ const TestMaster = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Test Master</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <TestMasterForm myList={myList} setMyList={setMyList} />
                     <UploadTests myList={myList} setMyList={setMyList} />
                     <TestList myList={myList} setMyList={setMyList} />

@@ -11,7 +11,7 @@ function AdminExamReport()
 
     useEffect(() => {
         getInsts(setInsts,setShow,setMsg);
-    },[setMsg,setShow]);
+    },[]);
 
     return (
       <>
@@ -22,7 +22,7 @@ function AdminExamReport()
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item active">Admin Exam Report</li>
             </ol>
-            <div className="row col-lg-12 animate__animated animate__fadeInDown animate_slower">
+            <div className="row col-lg-12 animate__animated animate__pulse animate_slower">
               <select id="inst_id" name="inst_id" className="form-control" onChange={e => {setValue(e.currentTarget.value);}}>
                 <option value="">Select Institute</option>
                 {

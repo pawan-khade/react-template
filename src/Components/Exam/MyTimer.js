@@ -44,7 +44,7 @@ function MyTimer(props)
         },[examId,currentUser,exam]);
 
         return (
-            timer ? <CountdownTimer count={timer} hideDay size={24} backgroundColor="#007bff" color={changeColor} onEnd={() => {handleEndExam(props,history);}} className={blinking}/> : null
+            timer ? <CountdownTimer count={timer} hideDay size={20} backgroundColor="#007bff" color={changeColor} onEnd={() => {handleEndExam(props,history);}} className={blinking}/> : null
         );
 }
 

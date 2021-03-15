@@ -17,23 +17,27 @@ function QuestionAnswer(props) {
   let question_path   =  '';
   //----------------------------------------------------------------------------
 
-  if(!questions[index].question.qu_fig)
+  if(questions[index] && !questions[index].question.qu_fig)
   {
     question = questions[index].question.question;
   }
   else
   {
-    question = questions[index].question.question;
-    question_path = projpath+""+questions[index].question.qu_fig;
+    if(questions[index])
+    {
+      question = questions[index].question.question;
+      question_path = projpath+""+questions[index].question.qu_fig;
+    }
   }
 
   return (
+    questions[index] ?
           <div className="col-lg-12 row">
-            {question_path}
+            
             <div className="col-lg-12">
               <b>Question {questions[index].qnid_sr}:</b>
             </div>
-            <div className="col-lg-12" style={{height:"200px", overflow:"auto"}}>
+            <div className="col-lg-12" style={{height:"150px", overflow:"auto"}}>
                 {showMarks ? <div style={{float:'right'}}><b>{'Marks: '+questions[index].marks}</b></div>:null}
 
                 <MathJax math={question} /> 
@@ -51,9 +55,7 @@ function QuestionAnswer(props) {
               <hr/>
             </div>
 
-            <div className="col-lg-12" style={{height:"250px", overflow:"auto"}}>
-
-
+            <div className="col-lg-12" style={{height:"255px", overflowY:"scroll"}}>
 
               <Options id="optiona" opt={questions[index].question.optiona} optimage={questions[index].question.a1} qu={questions[index]} setMyOption={props.setMyOption} data={props} selectedOptions={props.selectedOptions} />
               <hr/>
@@ -65,15 +67,8 @@ function QuestionAnswer(props) {
 
             </div>
           </div>
+          :null
   );
 }
-
-/*function shuffleArray(array) 
-{
-  for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-}*/
 
 export default QuestionAnswer;

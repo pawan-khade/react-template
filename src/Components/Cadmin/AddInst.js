@@ -12,7 +12,7 @@ const AddInst = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Add/Upload Institutes</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                     <AddInstForm setMyList={setMyList} myList={myList}/>
                     <UploadInst setMyList={setMyList} myList={myList}/>
                     <UserList setMyList={setMyList} myList={myList} role={'EADMIN'}/>

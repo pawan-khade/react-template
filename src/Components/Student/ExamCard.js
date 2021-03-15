@@ -1,10 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React,{useEffect,useContext} from 'react';
+import { Link,useHistory } from 'react-router-dom';
 import Moment from 'react-moment';
 import CountDownButton from './CountDownButton';
+import API from '../../api';
+import Axios from 'axios';
+import {PopupContext} from '../../App';
 
 function ExamCard(props)
-{
+{   
+    const {setPopupShow,setPopupMsg}  =   useContext(PopupContext);
+    let history         = useHistory();
     let BtnCaption      = '';
     let StartTime       = '';
     let EndTime         = '';
@@ -73,11 +78,14 @@ function ExamCard(props)
         }
         else
         {
-          myLink = <Link to={{pathname: '/instructions',state: {exam:props.exam,role:'STUDENT'}}} className={BtnTheme}>{BtnCaption}</Link>;
+          myLink = <Link onClick={() => {
+            getParallelData(props.exam.paper.id,setPopupShow,setPopupMsg,history,props);
+          }} className={BtnTheme}>{BtnCaption}</Link>;
         }
       }
       else
       {
+        console.log(props.exam);
         BtnCaption='Continue Exam';
         Theme = 'text-white bg-primary';
         BtnTheme = 'btn btn-primary';
@@ -111,7 +119,83 @@ function ExamCard(props)
             </div>
     );
 }
+async function getParallelData(paperId,setPopupShow,setPopupMsg,history,props)
+{
+  let subjectData = null;
+    let topicData   = null;
+    let TotalMarks  =   0;
+    let TotalQuest  =   0;
+    let TopicSumMarks=  0;
+    let TopicSumQuest=  0;
 
+    //--------------Get Topic Data---------------------------------------------------
+    await Axios.all([
+        API.get('/paper/'+paperId),
+        API.get('/subject/topic',{params:{'type':'single','paperId':paperId}})
+    ])
+    .then(responseArr => 
+    {
+        if(responseArr[0].data.status==='success')
+        {
+            subjectData = responseArr[0].data.data;
+            
+            if(subjectData)
+            {
+                TotalMarks = subjectData.marks;
+                TotalQuest = subjectData.questions;
+            }
+        }
+        
+        if(responseArr[1].data.status==='success')
+        {
+            topicData = responseArr[1].data.data;
+            if(topicData)
+            {
+                topicData.forEach(record => {
+                    TopicSumMarks = TopicSumMarks + record.questions*record.marks;
+                    TopicSumQuest = TopicSumQuest + record.questions;
+                });
+            }
+        }
+
+        if((TotalMarks !==  TopicSumMarks))
+        {
+          setPopupShow(true);
+          setPopupMsg('Total Marks for Subject not matching with Topic wise Total Marks. Can not start Examination.');
+        }
+        if(TotalMarks === 0)
+        {
+          setPopupShow(true);
+          setPopupMsg('Total Marks for this Subject not yet set. Can not start Examination.');
+        }
+        if(TopicSumMarks === 0)
+        {
+          setPopupShow(true);
+          setPopupMsg('Topic Entry for this subject not yet done. Can not start Examination.');
+        }
+
+        if((TotalQuest !==  TopicSumQuest))
+        {
+          setPopupShow(true);
+          setPopupMsg('Total Questions for Subject not matching with Topic wise Total Questions. Can not start Examination.');
+        }
+        if(TotalQuest === 0)
+        {
+          setPopupShow(true);
+          setPopupMsg('Total Questions for this Subject not yet set. Can not start Examination.');
+        }
+        if(TopicSumQuest === 0)
+        {
+          setPopupShow(true);
+          setPopupMsg('Topic Entry for this subject not yet done. Can not start Examination.');
+        }
+
+        if((TotalMarks ===  TopicSumMarks) && (TotalQuest ===  TopicSumQuest))
+        {
+          history.push({pathname: '/instructions',state: {exam:props.exam,role:'STUDENT'}});
+        }
+    });
+}
 function getTimezoneName()
 {
   const today         = new Date();

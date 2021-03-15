@@ -23,7 +23,7 @@ const GlobClusterAlloc = () => {
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item active">Global to Cluster Admin Allocation</li>
                 </ol>
-                <div className="row animate__animated animate__lightSpeedInLeft animate_slower">
+                <div className="row animate__animated animate__pulse animate_slower">
                         <div className="col-lg-4">{clusterList.length > 0 > 0 && 
                         <ClusterList clusterList={clusterList} setClusterList={setClusterList} uid={null}/>}</div>
 

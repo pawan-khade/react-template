@@ -13,8 +13,8 @@ function NextButton(props) {
         },[myIndex,maxQuestions]);
 
         return (
-            <div className="col-lg-3">
-                <button className="btn btn-primary" onClick={() => {props.setMyOption(undefined);
+            <div>
+                <button className="btn btn-primary btn-sm ans-btns-mg-btm" onClick={() => {props.setMyOption(undefined);
                   changeIndex(props,(myIndex+1),history)}}
                 disabled={isLast}>Next</button>
             </div>
@@ -23,6 +23,8 @@ function NextButton(props) {
 
 function changeIndex(props,index,history)
 {
+  var originalSelectedOptions        = getSelectedOptions(props.data.location.state.questions);
+
   if(index >= 0)
   {
     const examDetailsButtons = {
@@ -34,9 +36,20 @@ function changeIndex(props,index,history)
       markedSolvedIndexes                :  props.data.location.state.markedSolvedIndexes,
       markedUnsolvedIndexes              :  props.data.location.state.markedUnsolvedIndexes
     }
+    props.setSelectedOptions(originalSelectedOptions);
+    props.setMyOption(undefined);
     history.replace("/startexam", examDetailsButtons) ;
   }
 }
 
+function getSelectedOptions(questions)
+{
+  let originalSelectedOptions = {};
+  originalSelectedOptions = questions.map((question,index) =>
+  {
+    return question.stdanswer
+  });
+  return originalSelectedOptions;
+}
 
 export default NextButton;

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
-import ClipLoader from "react-spinners/ClipLoader";
 
 const validationSchema = Yup.object({
     file: Yup.string()
@@ -66,9 +65,8 @@ const UploadStudentSubjectAlloc = (props) => {
                                 <div className="alert alert-dark animate__animated animate__tada animate_slower">{myMsg}</div>)}
 
                                 {loading && (
-                                <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-                                    <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-                                </div>)}
+                                    <div className="custom-loader"></div>
+                                )}
 
                         </div>
                     </form>
@@ -96,14 +94,15 @@ async function UpStudentSubjectAlloc(file,setMyMsg,myList,setMyList,setLoading)
             setLoading(false);
             setMyMsg(res.data.message);
             setMyList(!myList);
-            setTimeout(()=>{setMyMsg('')}, 20000);
+            
         }
     })
     .catch(function (error) 
     {
         setLoading(false);
         setMyMsg(error.response.data.message);
-        setTimeout(()=>{setMyMsg('')}, 20000);
+        setMyList(!myList);
+        
     });
 }
 

@@ -6,8 +6,8 @@ function EndPreviewButton(props)
   let history                             = useHistory();
     return (
           <>
-            <div className="col-lg-3">
-              <button className="btn btn-warning" onClick={() => history.replace("/adminhome")}>End Preview</button>
+            <div>
+              <button className="btn btn-warning btn-sm ans-btns-mg-btm" onClick={() => history.replace("/adminhome")}>End Preview</button>
             </div>
           </>
     );

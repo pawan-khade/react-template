@@ -3,12 +3,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../../api';
 import {ShowContext} from '../../../App';
-import ClipLoader from "react-spinners/ClipLoader";
 
 const AddTopicForm = (props) => {
     const [myMsg, setMyMsg]         = useState('');
     const [loading, setLoading]     = useState(false);
-    const myInitialValues           = { paperId: '', topic: '', subTopic:'' , questions:'', marks:''};
+    const myInitialValues           = { paperId: '', topic: '', subTopic:'' ,questType:'' ,questions:'', marks:''};
     const {setShow,setMsg}          = useContext(ShowContext);
     const paperId                   = props.paperId;
     const paperCode                 = props.paperCode;
@@ -19,12 +18,12 @@ const AddTopicForm = (props) => {
         initialValues= {myInitialValues}
         onSubmit= {async (values,actions) => 
         {
-            setMyMsg('');
+            console.log(values);
             saveTopics(values,setLoading,setShow,setMsg,setMyMsg,props.setMyList,props.myList);
             actions.setSubmitting(false);
             actions.resetForm({
             values: {
-                        paperId: '', topic: '', subTopic:'' , questions:'', marks:''
+                        paperId: '', topic: '', subTopic:'' ,questType:'' ,questions:'', marks:''
                     },
             });
         }}
@@ -34,6 +33,7 @@ const AddTopicForm = (props) => {
             topic: Yup.number()
             .required("Topic number is Required."),
             subTopic: Yup.number(),
+            questType: Yup.string(),
             questions: Yup.number()
             .required("Number of Questions are Required"),
             marks: Yup.number()
@@ -101,6 +101,23 @@ const AddTopicForm = (props) => {
                                 <div className="form-group">
                                     <div className="col-lg-12 row">
                                         <div className="col-lg-4">
+                                            Select Question Type
+                                        </div>
+                                        <div className="col-lg-8">
+                                            <select id="questType" name="questType" className="form-control" onChange={handleChange} onBlur={handleBlur} value={values.questType}>
+                                                <option value="">Select Question Type</option>
+                                                <option value="R">R</option>
+                                                <option value="U">U</option>
+                                                <option value="A">A</option>
+                                            </select> 
+
+                                            {errors.questType ? <div className="alert alert-info">{errors.questType}</div> : null}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <div className="col-lg-12 row">
+                                        <div className="col-lg-4">
                                             Enter Number of Questions
                                         </div>
                                         <div className="col-lg-8">
@@ -134,9 +151,8 @@ const AddTopicForm = (props) => {
                                     <div className="alert alert-dark animate__animated animate__tada animate_slower">{myMsg}</div>)}
 
                                 {loading && (
-                                    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-                                        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-                                    </div>)}
+                                    <div className="custom-loader"></div>
+                                )}
                             </div>
                         </div>
                     </form>
@@ -156,10 +172,11 @@ async function saveTopics(values,setLoading,setShow,setMsg,setMyMsg,setMyList,my
     let paperId     = values.paperId;
     let topic       = values.topic;
     let subTopic    = values.subTopic;
+    let questType   = values.questType;
     let questions   = values.questions;
     let marks       = values.marks;
 
-    await API.post('/subject/topic',{'paperId':paperId,'topic':topic,'subTopic':subTopic,'questions':questions,'marks':marks})
+    await API.post('/subject/topic',{'paperId':paperId,'topic':topic,'subTopic':subTopic,'questType':questType,'questions':questions,'marks':marks})
         .then((res) => 
         {
             if(res.data.status === 'success')
@@ -172,13 +189,13 @@ async function saveTopics(values,setLoading,setShow,setMsg,setMyMsg,setMyList,my
             {
                 setMyMsg(res.data.message);
                 setLoading(false);
+                setMyList(!myList);
             }
         })
         .catch(function (error) {
             setMyMsg(error.response.data.message);
             setLoading(false);
         });
-
 }
 
 export default AddTopicForm;

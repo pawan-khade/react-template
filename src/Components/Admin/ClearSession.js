@@ -6,7 +6,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import API from '../../api';
 import ClearSessionUserInfo from './ClearSessionUserInfo';
-import ClipLoader from "react-spinners/ClipLoader";
 
 
 function ClearSession(props)
@@ -66,7 +65,7 @@ function ClearSession(props)
                                 <ol className="breadcrumb mb-4">
                                     <li className="breadcrumb-item active">Fill Form to Clear the Session</li>
                                 </ol>
-                                <div className="col-lg-12 animate__animated animate__lightSpeedInLeft animate_slower">
+                                <div className="col-lg-12 animate__animated animate__pulse animate_slower">
                                     <Form className="row" onSubmit={handleSubmit}>
                                         <Form.Group className="col-lg-12">
                                             <Form.Control 
@@ -110,9 +109,7 @@ function ClearSession(props)
                 {fetchedUserData !== undefined && !loading ?
                     <ClearSessionUserInfo userData={fetchedUserData} setUserData={setUserData}/>
                 :
-                    <div className="col-lg-12" style={{position:"absolute",top:"40%",left:"40%"}}>
-                        <ClipLoader color={'#ff0000'} loading={loading} size={200} />
-                    </div>
+                null
                 }
             </div>
         </>
@@ -120,7 +117,7 @@ function ClearSession(props)
     }
     else
     {
-        return null;
+        return <div className="custom-loader"></div>;
     }
 }
 
@@ -140,7 +137,7 @@ async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag
             setLoading(false);
             setUserData(undefined);
             setShow(true);
-            setMsg('Unable to fetch Data of specified user...');
+            setMsg('Unable to fetch Data of specified user. Invalid User Details Provided.');
         }
     })
     .catch((error) =>
@@ -148,7 +145,7 @@ async function fetchUserData(enrollNo,setUserData,setShow,setMsg,setLoading,flag
         setLoading(false);
         setUserData(undefined);
         setShow(true);
-        setMsg('Unable to fetch Data of specified user...');
+        setMsg('Unable to fetch Data of specified user.Invalid User Details Provided.');
     });
 }
 
